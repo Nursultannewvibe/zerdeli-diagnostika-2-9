@@ -1,0 +1,251 @@
+{
+ "tests": [
+  {
+   "id": "2-matematika",
+   "grade": 2,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 25,
+   "questions": 15,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "3-matematika",
+   "grade": 3,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "4-english",
+   "grade": 4,
+   "subject": {
+    "ru": "Английский язык",
+    "kz": "Ағылшын тілі"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "4-matematika",
+   "grade": 4,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "5-english",
+   "grade": 5,
+   "subject": {
+    "ru": "Английский язык",
+    "kz": "Ағылшын тілі"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "5-kazak",
+   "grade": 5,
+   "subject": {
+    "ru": "Казахский язык",
+    "kz": "Қазақ тілі"
+   },
+   "minutes": 30,
+   "questions": 18,
+   "ready": true,
+   "proposed": false,
+   "hidden": 2
+  },
+  {
+   "id": "5-matematika",
+   "grade": 5,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 60,
+   "questions": 39,
+   "ready": true,
+   "proposed": false,
+   "hidden": 1
+  },
+  {
+   "id": "5-russkiy",
+   "grade": 5,
+   "subject": {
+    "ru": "Русский язык",
+    "kz": "Орыс тілі"
+   },
+   "minutes": 30,
+   "questions": 19,
+   "ready": true,
+   "proposed": false,
+   "hidden": 1
+  },
+  {
+   "id": "5-sandyq",
+   "grade": 5,
+   "subject": {
+    "ru": "Количественные характеристики",
+    "kz": "Сандық сипаттама"
+   },
+   "minutes": 90,
+   "questions": 41,
+   "ready": true,
+   "proposed": false,
+   "hidden": 19
+  },
+  {
+   "id": "5-zharatylystanu",
+   "grade": 5,
+   "subject": {
+    "ru": "Естествознание",
+    "kz": "Жаратылыстану"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "6-matematika",
+   "grade": 6,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 60,
+   "questions": 39,
+   "ready": true,
+   "proposed": false,
+   "hidden": 1
+  },
+  {
+   "id": "7-algebra",
+   "grade": 7,
+   "subject": {
+    "ru": "Алгебра и геометрия",
+    "kz": "Алгебра-геометрия"
+   },
+   "minutes": 25,
+   "questions": 14,
+   "ready": true,
+   "proposed": false,
+   "hidden": 1
+  },
+  {
+   "id": "7-english",
+   "grade": 7,
+   "subject": {
+    "ru": "Английский язык (General English)",
+    "kz": "Ағылшын тілі (General English)"
+   },
+   "minutes": 60,
+   "questions": 40,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "7-fizika",
+   "grade": 7,
+   "subject": {
+    "ru": "Физика",
+    "kz": "Физика"
+   },
+   "minutes": 25,
+   "questions": 15,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "7-himiya",
+   "grade": 7,
+   "subject": {
+    "ru": "Химия",
+    "kz": "Химия"
+   },
+   "minutes": 25,
+   "questions": 15,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "8-fizika",
+   "grade": 8,
+   "subject": {
+    "ru": "Физика",
+    "kz": "Физика"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": false,
+   "proposed": true,
+   "hidden": 0
+  },
+  {
+   "id": "8-himiya",
+   "grade": 8,
+   "subject": {
+    "ru": "Химия",
+    "kz": "Химия"
+   },
+   "minutes": 25,
+   "questions": 15,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "8-matematika",
+   "grade": 8,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 30,
+   "questions": 20,
+   "ready": true,
+   "proposed": false,
+   "hidden": 0
+  },
+  {
+   "id": "9-matematika",
+   "grade": 9,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 30,
+   "questions": 19,
+   "ready": true,
+   "proposed": false,
+   "hidden": 1
+  }
+ ]
+}
