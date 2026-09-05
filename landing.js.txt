@@ -1,0 +1,598 @@
+/* Собрано из landing/diagnostika-body.html скриптом landing/build.py.
+   Правится там, не здесь: этот файл перезаписывается при каждой сборке. */
+(function(){var s=document.createElement("style");s.textContent="/* ============================================================\n   ZERDELI · Лендинг «Онлайн-диагностика знаний 1–11 класс»\n   Правки текстов — в объекте T внизу файла.\n   Правки списка предметов — в объекте SUBJECTS внизу файла.\n   ============================================================ */\n\n:root{\n  --ground:#FAFAF5;\n  --surface:#FFFFFF;\n  --surface-2:#F1F2E9;\n  --line:#E2E4D6;\n  --ink:#191C12;\n  --ink-2:#4A4D40;\n  --muted:#6C6D6D;\n  --lime:#ACDF08;\n  --lime-deep:#6F8F05;\n  --lime-wash:#F0F8D2;\n  --copper:#B07446;\n  --copper-wash:#F6EAE0;\n  --blue:#8BA5EF;\n  --blue-wash:#EAEEFC;\n  --on-lime:#161A0C;\n  --shadow:0 1px 2px rgba(25,28,18,.05), 0 12px 32px -18px rgba(25,28,18,.35);\n  --r-s:10px; --r-m:16px; --r-l:24px;\n  --maxw:1120px;\n}\n@media (prefers-color-scheme: dark){\n  :root:not([data-theme=\"light\"]){\n    --ground:#12140D;\n    --surface:#1B1E14;\n    --surface-2:#22261A;\n    --line:#333929;\n    --ink:#EFF1E6;\n    --ink-2:#C3C7B6;\n    --muted:#9EA096;\n    --lime:#ACDF08;\n    --lime-deep:#C7EF4E;\n    --lime-wash:#25300A;\n    --copper:#D49A6B;\n    --copper-wash:#33241A;\n    --blue:#A6B9F4;\n    --blue-wash:#1E2438;\n    --on-lime:#161A0C;\n    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.9);\n  }\n}\n:root[data-theme=\"dark\"]{\n  --ground:#12140D;\n  --surface:#1B1E14;\n  --surface-2:#22261A;\n  --line:#333929;\n  --ink:#EFF1E6;\n  --ink-2:#C3C7B6;\n  --muted:#9EA096;\n  --lime:#ACDF08;\n  --lime-deep:#C7EF4E;\n  --lime-wash:#25300A;\n  --copper:#D49A6B;\n  --copper-wash:#33241A;\n  --blue:#A6B9F4;\n  --blue-wash:#1E2438;\n  --on-lime:#161A0C;\n  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 32px -18px rgba(0,0,0,.9);\n}\n\n*,*::before,*::after{box-sizing:border-box}\nbody{\n  margin:0;\n  background:var(--ground);\n  color:var(--ink);\n  font-family:'Onest','Noto Sans',system-ui,-apple-system,'Segoe UI',sans-serif;\n  font-size:17px;\n  line-height:1.55;\n  -webkit-font-smoothing:antialiased;\n  overflow-x:hidden;\n}\nh1,h2,h3,.display{\n  font-family:'Unbounded','Onest','Noto Sans',system-ui,sans-serif;\n  font-weight:700;\n  line-height:1.08;\n  letter-spacing:-.02em;\n  text-wrap:balance;\n  margin:0;\n}\nh1{font-size:clamp(30px,6.2vw,54px);font-weight:900}\nh2{font-size:clamp(24px,4.4vw,40px)}\nh3{font-size:clamp(17px,2.2vw,21px);line-height:1.25}\np{margin:0}\na{color:inherit}\nbutton{font:inherit;color:inherit}\n:focus-visible{outline:3px solid var(--lime-deep);outline-offset:3px;border-radius:6px}\n\n[id]{scroll-margin-top:78px}\n.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 20px}\nsection{padding:clamp(52px,8vw,96px) 0}\n.eyebrow{\n  font-family:'Unbounded','Onest',sans-serif;\n  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;\n  color:var(--muted);\n}\n.lead{font-size:clamp(16px,2.2vw,19px);color:var(--ink-2);max-width:60ch}\n\n/* ---------- header ---------- */\n.hdr{\n  position:sticky;top:0;z-index:60;\n  background:color-mix(in srgb,var(--ground) 88%,transparent);\n  backdrop-filter:blur(12px);\n  border-bottom:1px solid var(--line);\n}\n.hdr-in{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}\n.brand{font-family:'Unbounded',sans-serif;font-weight:900;font-size:17px;letter-spacing:.02em;text-decoration:none}\n.brand span{color:var(--lime-deep)}\n.hdr-right{display:flex;align-items:center;gap:10px}\n.langs{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}\n.langs button{\n  border:0;background:transparent;padding:6px 13px;font-size:13px;font-weight:600;\n  cursor:pointer;color:var(--muted);\n}\n.langs button[aria-pressed=\"true\"]{background:var(--lime);color:var(--on-lime)}\n.hdr-phone{font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}\n@media (max-width:600px){.hdr-phone{display:none}}\n\n/* ---------- buttons ---------- */\n.btn{\n  display:inline-flex;align-items:center;justify-content:center;gap:9px;\n  padding:15px 26px;border-radius:999px;border:1px solid transparent;\n  font-weight:600;font-size:16px;text-decoration:none;cursor:pointer;\n  transition:transform .12s ease, background .15s ease, border-color .15s ease;\n  min-height:52px;\n}\n.btn:active{transform:translateY(1px) scale(.995)}\n.btn-primary{background:var(--lime);color:var(--on-lime);box-shadow:var(--shadow)}\n.btn-primary:hover{background:#BCEE1C}\n.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}\n.btn-ghost:hover{border-color:var(--ink-2)}\n.btn-wa{background:var(--surface);border-color:var(--line)}\n.btn-wa:hover{border-color:#25D366}\n.btn-block{width:100%}\n\n/* ---------- hero ---------- */\n.hero{padding-top:clamp(34px,5vw,64px)}\n.hero-grid{display:grid;grid-template-columns:1fr;gap:clamp(30px,4vw,52px);align-items:start}\n@media (min-width:940px){.hero-grid{grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}}\n.hero-copy{display:flex;flex-direction:column;gap:20px}\n.hero-cta{display:flex;flex-wrap:wrap;gap:12px}\n.hero-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}\n.fact{\n  display:inline-flex;align-items:center;gap:7px;\n  padding:7px 13px;border-radius:999px;border:1px solid var(--line);\n  background:var(--surface);font-size:13.5px;color:var(--ink-2);font-weight:500;\n}\n.fact b{color:var(--ink);font-weight:700}\n\n/* ---------- signature: карта пробелов ---------- */\n.report{\n  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);\n  padding:clamp(18px,3vw,26px);box-shadow:var(--shadow);\n}\n.report-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:18px}\n.report-title{font-family:'Unbounded',sans-serif;font-weight:700;font-size:15px;letter-spacing:-.01em}\n.report-sub{font-size:12.5px;color:var(--muted);margin-top:3px}\n.report-tag{\n  font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;\n  padding:5px 10px;border-radius:999px;background:var(--lime-wash);color:var(--lime-deep);white-space:nowrap;\n}\n.rows{display:flex;flex-direction:column;gap:14px}\n.row-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px}\n.row-name{font-size:14.5px;font-weight:500}\n.row-val{font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted)}\n.track{height:9px;border-radius:999px;background:var(--surface-2);overflow:hidden}\n.bar{display:block;height:100%;width:0;border-radius:999px;transition:width 1.1s cubic-bezier(.22,.8,.28,1)}\n.bar.ok{background:var(--lime)}\n.bar.mid{background:var(--blue)}\n.bar.gap{background:var(--copper)}\n.report-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}\n.lg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted)}\n.dot{width:9px;height:9px;border-radius:50%;flex:none}\n.dot.ok{background:var(--lime)}.dot.mid{background:var(--blue)}.dot.gap{background:var(--copper)}\n\n/* ---------- pains ---------- */\n.pains{display:grid;grid-template-columns:1fr;gap:12px;margin-top:28px}\n@media (min-width:700px){.pains{grid-template-columns:1fr 1fr}}\n.pain{\n  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);\n  padding:20px 22px;font-size:16px;color:var(--ink-2);\n  display:flex;gap:13px;align-items:flex-start;\n}\n.pain::before{content:\"\";width:6px;height:6px;border-radius:50%;background:var(--copper);flex:none;margin-top:11px}\n\n/* ---------- steps ---------- */\n.steps{display:grid;grid-template-columns:1fr;gap:14px;margin-top:32px;counter-reset:s}\n@media (min-width:820px){.steps{grid-template-columns:repeat(3,1fr)}}\n.step{\n  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);\n  padding:24px;display:flex;flex-direction:column;gap:11px;position:relative;\n}\n.step-n{\n  font-family:'Unbounded',sans-serif;font-weight:900;font-size:13px;\n  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;\n  background:var(--lime-wash);color:var(--lime-deep);\n}\n.step-when{font-size:12.5px;font-weight:600;color:var(--muted)}\n.step p{font-size:15.5px;color:var(--ink-2)}\n\n/* ---------- получаете ---------- */\n.gets{display:grid;grid-template-columns:1fr;gap:0;margin-top:28px;border-top:1px solid var(--line)}\n@media (min-width:760px){.gets{grid-template-columns:1fr 1fr}}\n.get{padding:22px 0;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:flex-start}\n@media (min-width:760px){.get:nth-child(odd){padding-right:32px}.get:nth-child(even){padding-left:32px;border-left:1px solid var(--line)}}\n.get-ic{\n  width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;\n  background:var(--blue-wash);\n}\n.get-ic svg{width:19px;height:19px;stroke:var(--blue);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}\n.get h3{margin-bottom:5px}\n.get p{font-size:15px;color:var(--ink-2)}\n\n/* ---------- конструктор ---------- */\n.builder-sec{background:var(--surface-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}\n.builder{\n  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);\n  padding:clamp(20px,3.4vw,34px);box-shadow:var(--shadow);margin-top:26px;\n}\n.bstep{padding-bottom:24px;margin-bottom:24px;border-bottom:1px dashed var(--line)}\n.bstep:last-child{padding-bottom:0;margin-bottom:0;border-bottom:0}\n.bstep-h{display:flex;align-items:center;gap:11px;margin-bottom:15px}\n.bstep-n{\n  font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;\n  width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none;\n  background:var(--ink);color:var(--ground);\n}\n.bstep-t{font-weight:600;font-size:16.5px}\n.bstep.is-off{opacity:.42;pointer-events:none}\n.bstep.is-off .bstep-n{background:var(--surface-2);color:var(--muted)}\n\n.grade-group{margin-bottom:16px}\n.grade-group:last-child{margin-bottom:0}\n.grade-label{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}\n.chips{display:flex;flex-wrap:wrap;gap:8px}\n.chip{\n  border:1px solid var(--line);background:var(--surface);border-radius:999px;\n  padding:10px 16px;font-size:15px;font-weight:500;cursor:pointer;min-height:44px;\n  transition:border-color .14s ease,background .14s ease,transform .1s ease;\n}\n.chip:hover{border-color:var(--ink-2)}\n.chip:active{transform:scale(.97)}\n.chip[aria-pressed=\"true\"]{background:var(--lime);border-color:var(--lime);color:var(--on-lime);font-weight:600}\n.chip.grade{min-width:52px;justify-content:center;font-variant-numeric:tabular-nums}\n.subj-hint{font-size:14.5px;color:var(--muted)}\n\n/* состав комплекса */\n.kit{display:flex;flex-direction:column;gap:10px}\n.kit-list{display:grid;grid-template-columns:1fr;gap:9px}\n@media (min-width:640px){.kit-list{grid-template-columns:1fr 1fr}}\n.kit-item{\n  display:flex;align-items:center;gap:11px;\n  padding:12px 15px;border:1px solid var(--line);border-radius:var(--r-s);\n  background:var(--surface-2);font-size:15.5px;font-weight:500;\n}\n.kit-item svg{width:16px;height:16px;flex:none;stroke:var(--lime-deep);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}\n.kit-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}\n.kit-note{font-size:13.5px;color:var(--muted);margin-top:6px}\n\n.form-grid{display:grid;grid-template-columns:1fr;gap:13px}\n@media (min-width:640px){.form-grid{grid-template-columns:1fr 1fr}}\n.field{display:flex;flex-direction:column;gap:6px}\n.field label{font-size:13px;font-weight:600;color:var(--ink-2)}\n.field input,.field select{\n  font:inherit;font-size:16px;padding:13px 15px;border-radius:var(--r-s);\n  border:1px solid var(--line);background:var(--surface);color:var(--ink);min-height:50px;width:100%;\n}\n.field input:focus,.field select:focus{border-color:var(--lime-deep);outline:none;box-shadow:0 0 0 3px var(--lime-wash)}\n.field.err input{border-color:var(--copper)}\n.err-msg{font-size:12.5px;color:var(--copper);display:none}\n.field.err .err-msg{display:block}\n.form-foot{display:flex;flex-direction:column;gap:12px;margin-top:16px}\n.summary{\n  display:flex;flex-wrap:wrap;gap:8px;align-items:center;\n  font-size:14px;color:var(--ink-2);\n}\n.summary b{font-weight:600}\n.pill{\n  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;\n  background:var(--lime-wash);color:var(--lime-deep);font-weight:600;font-size:13.5px;\n}\n.consent{font-size:12.5px;color:var(--muted);max-width:62ch}\n.consent a{color:var(--muted)}\n\n.done{display:none;text-align:center;padding:14px 0}\n.done.on{display:block}\n.done-ic{width:56px;height:56px;border-radius:50%;background:var(--lime);display:grid;place-items:center;margin:0 auto 16px}\n.done-ic svg{width:26px;height:26px;stroke:var(--on-lime);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}\n.done p{color:var(--ink-2);margin:10px auto 20px;max-width:44ch}\n.tests{display:flex;flex-direction:column;gap:10px;margin:0 auto 20px;max-width:520px;text-align:left}\n.tests a{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);\n  border-radius:16px;background:var(--surface-2);color:inherit;text-decoration:none;\n  transition:border-color .14s ease,transform .1s ease}\n.tests a:hover{border-color:var(--lime-deep);transform:translateY(-1px)}\n.tests a i{flex:none;width:32px;height:32px;border-radius:50%;background:var(--lime);color:var(--on-lime);\n  display:grid;place-items:center;font-style:normal;font-weight:700;font-size:14px}\n/* название и подпись — колонкой: на телефоне «20 вопросов · ~30 мин» в строку не влезает */\n.tests .tt{display:flex;flex-direction:column;gap:3px;min-width:0}\n.tests .tt b{font-weight:600;line-height:1.25}\n.tests .tt em{font-style:normal;font-size:13px;color:var(--muted)}\n.tests-note{font-size:13.5px;color:var(--muted);margin:0 auto 20px;max-width:44ch}\n\n/* ---------- каталог предметов ---------- */\n.catalog{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px;align-items:start}\n@media (min-width:760px){.catalog{grid-template-columns:1fr 1fr}}\n@media (min-width:1040px){.catalog{grid-template-columns:repeat(4,1fr)}}\n.cat{\n  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);\n  padding:20px;display:flex;flex-direction:column;gap:12px;\n}\n.cat-h{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px}\n.cat-g{font-size:12.5px;color:var(--muted);margin-top:3px}\n.cat ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}\n.cat li{font-size:14.5px;color:var(--ink-2);display:flex;gap:9px;align-items:flex-start}\n.cat li::before{content:\"\";width:5px;height:5px;border-radius:50%;background:var(--lime);flex:none;margin-top:9px}\n\n/* ---------- proof ---------- */\n.proof{background:var(--ink);color:var(--ground)}\n.proof .eyebrow{color:rgba(250,250,245,.55)}\n.proof-grid{display:grid;grid-template-columns:1fr;gap:26px;align-items:center}\n@media (min-width:860px){.proof-grid{grid-template-columns:1fr 1fr;gap:48px}}\n.big{\n  font-family:'Unbounded',sans-serif;font-weight:900;\n  font-size:clamp(56px,12vw,110px);line-height:.92;color:var(--lime);letter-spacing:-.04em;\n  font-variant-numeric:tabular-nums;\n}\n.big small{display:block;font-size:clamp(15px,2vw,19px);font-weight:500;color:var(--ground);letter-spacing:0;margin-top:14px;font-family:'Onest',sans-serif;line-height:1.4}\n.proof p{color:rgba(250,250,245,.78);font-size:16.5px}\n.proof-note{margin-top:16px;font-size:14.5px;color:rgba(250,250,245,.55)}\n\n/* ---------- faq ---------- */\n.faq{margin-top:26px;border-top:1px solid var(--line)}\n.faq details{border-bottom:1px solid var(--line)}\n.faq summary{\n  cursor:pointer;list-style:none;padding:20px 44px 20px 0;position:relative;\n  font-weight:600;font-size:16.5px;\n}\n.faq summary::-webkit-details-marker{display:none}\n.faq summary::after{\n  content:\"\";position:absolute;right:8px;top:50%;width:11px;height:11px;\n  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);\n  transform:translateY(-70%) rotate(45deg);transition:transform .2s ease;\n}\n.faq details[open] summary::after{transform:translateY(-30%) rotate(225deg)}\n.faq .ans{padding:0 8px 22px 0;color:var(--ink-2);font-size:15.5px;max-width:66ch}\n\n/* ---------- final ---------- */\n.final{background:var(--lime-wash);border-top:1px solid var(--line)}\n.final-in{display:flex;flex-direction:column;gap:20px;align-items:flex-start}\n.price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}\n.price-num{font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(34px,6vw,52px);letter-spacing:-.03em}\n.price-note{font-size:15px;color:var(--ink-2)}\n\n/* ---------- footer ---------- */\n.ftr{background:var(--surface);border-top:1px solid var(--line);padding:44px 0 110px}\n.ftr-grid{display:grid;grid-template-columns:1fr;gap:26px}\n@media (min-width:760px){.ftr-grid{grid-template-columns:1.2fr 1fr 1fr}}\n.ftr h4{font-family:'Unbounded',sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;font-weight:700}\n.ftr p,.ftr li{font-size:14.5px;color:var(--ink-2)}\n.ftr ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}\n.ftr a{text-decoration:none}\n.ftr a:hover{text-decoration:underline}\n.ftr-bottom{margin-top:30px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}\n\n/* ---------- sticky ---------- */\n.sticky{\n  position:fixed;left:0;right:0;bottom:0;z-index:70;\n  background:color-mix(in srgb,var(--ground) 92%,transparent);\n  backdrop-filter:blur(12px);border-top:1px solid var(--line);\n  padding:10px 16px calc(10px + env(safe-area-inset-bottom));\n  display:flex;gap:10px;align-items:center;\n  transform:translateY(120%);transition:transform .28s ease;\n}\n.sticky.on{transform:translateY(0)}\n.sticky .btn{flex:1;padding:14px 18px;min-height:50px}\n.sticky .btn-wa{flex:none;width:54px;padding:0}\n.wa-ic{width:22px;height:22px;flex:none}\n\n@media (prefers-reduced-motion:reduce){\n  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}\n}\n.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.22,.8,.28,1)}\n.reveal.in{opacity:1;transform:none}";document.head.appendChild(s);})();
+var ZD_HOST = document.getElementById("zd-landing") || document.body;
+ZD_HOST.innerHTML = "<svg width=\"0\" height=\"0\" style=\"position:absolute\" aria-hidden=\"true\"><symbol id=\"wa-ic\" viewBox=\"0 0 24 24\"><path d=\"M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.19 8.19 0 0 1-1.26-4.38c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.79.97-.14.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42l-.47-.01c-.16 0-.43.06-.65.31-.22.25-.85.83-.85 2.03 0 1.2.87 2.35.99 2.51.12.16 1.71 2.61 4.14 3.66.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z\"/></symbol></svg>\n<header class=\"hdr\">\n  <div class=\"wrap hdr-in\">\n    <a class=\"brand\" href=\"#top\">ZERDELI<span>.</span></a>\n    <div class=\"hdr-right\">\n      <a class=\"hdr-phone\" href=\"tel:+77780403999\">+7 778 040 3999</a>\n      <div class=\"langs\" role=\"group\" aria-label=\"Тіл / Язык\">\n        <button type=\"button\" data-lang=\"kz\" aria-pressed=\"false\">KZ</button>\n        <button type=\"button\" data-lang=\"ru\" aria-pressed=\"true\">RU</button>\n      </div>\n    </div>\n  </div>\n</header>\n\n<main id=\"top\">\n\n  <!-- ============ HERO ============ -->\n  <section class=\"hero\">\n    <div class=\"wrap hero-grid\">\n      <div class=\"hero-copy\">\n        <span class=\"eyebrow\" data-t=\"heroEyebrow\"></span>\n        <h1 data-t=\"heroH1\"></h1>\n        <p class=\"lead\" data-t=\"heroLead\"></p>\n        <div class=\"hero-cta\">\n          <a class=\"btn btn-primary\" href=\"#zayavka\" data-t=\"ctaMain\"></a>\n          <a class=\"btn btn-wa\" href=\"https://wa.me/77780403999\" target=\"_blank\" rel=\"noopener\" data-wa>\n            <svg class=\"wa-ic\" fill=\"#25D366\" aria-hidden=\"true\"><use href=\"#wa-ic\"/></svg>\n            <span data-t=\"ctaWa\"></span>\n          </a>\n        </div>\n        <div class=\"hero-facts\">\n          <span class=\"fact\" data-t=\"fact1\"></span>\n          <span class=\"fact\" data-t=\"fact2\"></span>\n          <span class=\"fact\" data-t=\"fact3\"></span>\n        </div>\n      </div>\n\n      <!-- SIGNATURE: карта пробелов -->\n      <div class=\"report\" id=\"report\">\n        <div class=\"report-top\">\n          <div>\n            <div class=\"report-title\" data-t=\"repTitle\"></div>\n            <div class=\"report-sub\" data-t=\"repSub\"></div>\n          </div>\n          <span class=\"report-tag\" data-t=\"repTag\"></span>\n        </div>\n        <div class=\"rows\" id=\"reportRows\"></div>\n        <div class=\"report-legend\">\n          <span class=\"lg\"><i class=\"dot ok\"></i><span data-t=\"legOk\"></span></span>\n          <span class=\"lg\"><i class=\"dot mid\"></i><span data-t=\"legMid\"></span></span>\n          <span class=\"lg\"><i class=\"dot gap\"></i><span data-t=\"legGap\"></span></span>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"builder-sec\" id=\"zayavka\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"bldEyebrow\"></span>\n      <h2 data-t=\"bldH2\" style=\"margin-top:12px\"></h2>\n      <p class=\"lead\" data-t=\"bldLead\" style=\"margin-top:12px\"></p>\n\n      <div class=\"builder\">\n        <form id=\"form\" novalidate>\n          <!-- шаг 1 -->\n          <div class=\"bstep\" id=\"s1\">\n            <div class=\"bstep-h\"><span class=\"bstep-n\">1</span><span class=\"bstep-t\" data-t=\"s1t\"></span></div>\n            <div id=\"grades\"></div>\n          </div>\n\n          <!-- шаг 2 -->\n          <div class=\"bstep is-off\" id=\"s2\">\n            <div class=\"bstep-h\"><span class=\"bstep-n\">2</span><span class=\"bstep-t\" data-t=\"s2t\"></span></div>\n            <div id=\"kit\" class=\"kit\"></div>\n            <p class=\"subj-hint\" id=\"subjHint\" data-t=\"s2hint\"></p>\n          </div>\n\n          <!-- шаг 3 -->\n          <div class=\"bstep is-off\" id=\"s3\">\n            <div class=\"bstep-h\"><span class=\"bstep-n\">3</span><span class=\"bstep-t\" data-t=\"s3t\"></span></div>\n\n            <div class=\"summary\" id=\"summary\" hidden>\n              <span data-t=\"sumLabel\"></span>\n              <span class=\"pill\" id=\"pillGrade\"></span>\n              <span class=\"pill\" id=\"pillCount\"></span>\n            </div>\n\n            <div class=\"form-grid\" style=\"margin-top:14px\">\n              <div class=\"field\" id=\"fName\">\n                <label for=\"name\" data-t=\"fldName\"></label>\n                <input id=\"name\" name=\"name\" type=\"text\" autocomplete=\"name\" data-ph=\"phName\">\n                <span class=\"err-msg\" data-t=\"errName\"></span>\n              </div>\n              <div class=\"field\" id=\"fPhone\">\n                <label for=\"phone\" data-t=\"fldPhone\"></label>\n                <input id=\"phone\" name=\"phone\" type=\"tel\" inputmode=\"tel\" autocomplete=\"tel\" placeholder=\"+7 (___) ___-__-__\">\n                <span class=\"err-msg\" data-t=\"errPhone\"></span>\n              </div>\n              <div class=\"field\">\n                <label for=\"when\" data-t=\"fldWhen\"></label>\n                <select id=\"when\" name=\"when\">\n                  <option value=\"asap\" data-t=\"optAsap\"></option>\n                  <option value=\"evening\" data-t=\"optEvening\"></option>\n                  <option value=\"weekend\" data-t=\"optWeekend\"></option>\n                </select>\n              </div>\n            </div>\n\n            <div class=\"form-foot\">\n              <button type=\"submit\" class=\"btn btn-primary btn-block\" id=\"submitBtn\" data-t=\"ctaSubmit\"></button>\n              <p class=\"consent\" data-t=\"consent\"></p>\n            </div>\n          </div>\n        </form>\n\n        <div class=\"done\" id=\"done\">\n          <div class=\"done-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M4 12.5 9.5 18 20 7\"/></svg></div>\n          <h3 data-t=\"doneH\"></h3>\n          <p data-t=\"doneP\"></p>\n          <!-- сюда после отправки подставляются тесты выбранного класса -->\n          <div class=\"tests\" id=\"doneTests\"></div>\n          <a class=\"btn btn-wa\" href=\"https://wa.me/77780403999\" target=\"_blank\" rel=\"noopener\">\n            <svg class=\"wa-ic\" fill=\"#25D366\" aria-hidden=\"true\"><use href=\"#wa-ic\"/></svg>\n            <span data-t=\"ctaWa\"></span>\n          </a>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <!-- ============ ЗНАКОМО ============ -->\n  <section class=\"reveal\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"painEyebrow\"></span>\n      <h2 data-t=\"painH2\" style=\"margin-top:12px\"></h2>\n      <div class=\"pains\">\n        <div class=\"pain\" data-t=\"pain1\"></div>\n        <div class=\"pain\" data-t=\"pain2\"></div>\n        <div class=\"pain\" data-t=\"pain3\"></div>\n        <div class=\"pain\" data-t=\"pain4\"></div>\n      </div>\n    </div>\n  </section>\n\n  <!-- ============ КАК ПРОХОДИТ ============ -->\n  <section class=\"reveal\" style=\"padding-top:0\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"howEyebrow\"></span>\n      <h2 data-t=\"howH2\" style=\"margin-top:12px\"></h2>\n      <div class=\"steps\">\n        <div class=\"step\">\n          <div class=\"step-n\">1</div>\n          <span class=\"step-when\" data-t=\"how1when\"></span>\n          <h3 data-t=\"how1h\"></h3>\n          <p data-t=\"how1p\"></p>\n        </div>\n        <div class=\"step\">\n          <div class=\"step-n\">2</div>\n          <span class=\"step-when\" data-t=\"how2when\"></span>\n          <h3 data-t=\"how2h\"></h3>\n          <p data-t=\"how2p\"></p>\n        </div>\n        <div class=\"step\">\n          <div class=\"step-n\">3</div>\n          <span class=\"step-when\" data-t=\"how3when\"></span>\n          <h3 data-t=\"how3h\"></h3>\n          <p data-t=\"how3p\"></p>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <!-- ============ ЧТО ПОЛУЧАЕТЕ ============ -->\n  <section class=\"reveal\" style=\"padding-top:0\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"getEyebrow\"></span>\n      <h2 data-t=\"getH2\" style=\"margin-top:12px\"></h2>\n      <div class=\"gets\">\n        <div class=\"get\">\n          <span class=\"get-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M3 6h18M3 12h12M3 18h7\"/></svg></span>\n          <div><h3 data-t=\"get1h\"></h3><p data-t=\"get1p\"></p></div>\n        </div>\n        <div class=\"get\">\n          <span class=\"get-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M4 19V9m5 10V5m5 14v-7m5 7V8\"/></svg></span>\n          <div><h3 data-t=\"get2h\"></h3><p data-t=\"get2p\"></p></div>\n        </div>\n        <div class=\"get\">\n          <span class=\"get-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M8 3h8a2 2 0 0 1 2 2v14l-6-3-6 3V5a2 2 0 0 1 2-2Z\"/></svg></span>\n          <div><h3 data-t=\"get3h\"></h3><p data-t=\"get3p\"></p></div>\n        </div>\n        <div class=\"get\">\n          <span class=\"get-ic\"><svg viewBox=\"0 0 24 24\"><path d=\"M9 12l2 2 4-4\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg></span>\n          <div><h3 data-t=\"get4h\"></h3><p data-t=\"get4p\"></p></div>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <!-- ============ КОНСТРУКТОР ============ -->\n\n  <!-- ============ КАТАЛОГ ПРЕДМЕТОВ ============ -->\n  <section class=\"reveal\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"catEyebrow\"></span>\n      <h2 data-t=\"catH2\" style=\"margin-top:12px\"></h2>\n      <div class=\"catalog\" id=\"catalog\"></div>\n    </div>\n  </section>\n\n  <!-- ============ PROOF ============ -->\n  <section class=\"proof\">\n    <div class=\"wrap proof-grid\">\n      <div class=\"big\">133<small data-t=\"proofBig\"></small></div>\n      <div>\n        <span class=\"eyebrow\" data-t=\"proofEyebrow\"></span>\n        <p style=\"margin-top:12px\" data-t=\"proofP\"></p>\n        <p class=\"proof-note\" data-t=\"proofNote\"></p>\n      </div>\n    </div>\n  </section>\n\n  <!-- ============ FAQ ============ -->\n  <section class=\"reveal\">\n    <div class=\"wrap\">\n      <span class=\"eyebrow\" data-t=\"faqEyebrow\"></span>\n      <h2 data-t=\"faqH2\" style=\"margin-top:12px\"></h2>\n      <div class=\"faq\" id=\"faq\"></div>\n    </div>\n  </section>\n\n  <!-- ============ FINAL ============ -->\n  <section class=\"final\">\n    <div class=\"wrap final-in\">\n      <h2 data-t=\"finH2\"></h2>\n      <div class=\"price\">\n        <span class=\"price-num\" id=\"priceNum\"></span>\n        <span class=\"price-note\" data-t=\"priceNote\"></span>\n      </div>\n      <p class=\"lead\" data-t=\"finLead\"></p>\n      <a class=\"btn btn-primary\" href=\"#zayavka\" data-t=\"ctaMain\"></a>\n    </div>\n  </section>\n\n  <!-- ============ FOOTER ============ -->\n  <footer class=\"ftr\">\n    <div class=\"wrap\">\n      <div class=\"ftr-grid\">\n        <div>\n          <h4 data-t=\"ftrWhere\"></h4>\n          <p data-t=\"ftrAddr\"></p>\n          <p style=\"margin-top:10px\"><a href=\"tel:+77780403999\">+7 778 040 3999</a></p>\n          <p><a href=\"https://wa.me/77780403999\" target=\"_blank\" rel=\"noopener\">WhatsApp</a></p>\n        </div>\n        <div>\n          <h4 data-t=\"ftrBranches\"></h4>\n          <ul>\n            <li>Бұхар Жырау 66</li>\n            <li>Сейфуллина 458</li>\n            <li>Наурызбай батыр 99/1</li>\n            <li>Розыбакиева 247</li>\n            <li>Ақсай 4</li>\n            <li>Шұғыла 350/4 к9</li>\n          </ul>\n        </div>\n        <div>\n          <h4 data-t=\"ftrNav\"></h4>\n          <ul>\n            <li><a href=\"#zayavka\" data-t=\"ftrNav1\"></a></li>\n            <li><a href=\"#top\" data-t=\"ftrNav2\"></a></li>\n          </ul>\n        </div>\n      </div>\n      <div class=\"ftr-bottom\">© <span id=\"yr\"></span> Zerdeli Education · Алматы</div>\n    </div>\n  </footer>\n</main>\n\n<div class=\"sticky\" id=\"sticky\">\n  <a class=\"btn btn-primary\" href=\"#zayavka\" data-t=\"ctaSticky\"></a>\n  <a class=\"btn btn-wa\" href=\"https://wa.me/77780403999\" target=\"_blank\" rel=\"noopener\" aria-label=\"WhatsApp\">\n    <svg class=\"wa-ic\" fill=\"#25D366\" aria-hidden=\"true\"><use href=\"#wa-ic\"/></svg>\n  </a>\n</div>";
+
+/* ============================================================
+   1. НАСТРОЙКИ — правьте здесь
+   ============================================================ */
+const CONFIG = {
+  // язык определяется по адресу страницы: .../diagnostika-znaniy-kz → казахский
+  lang: (typeof location !== 'undefined' && /-kz\/?$/.test(location.pathname)) ? 'kz' : 'ru',
+  urlRu: '/diagnostika-znaniy',      // адрес русской версии
+  urlKz: '/diagnostika-znaniy-kz',   // адрес казахской версии
+  price: 2990,                // цена диагностики, ₸  ← УТОЧНИТЬ
+  whatsapp: '77780403999',
+  endpoint: '',               // сюда вставить ссылку на веб-приложение Google Apps Script
+  testRu: '/test',            // страница прохождения теста
+  testKz: '/test-kz',
+  // манифест тестов из репозитория. Из него берутся классы и предметы:
+  // так лендинг не расходится с тем, что на самом деле лежит в тестах.
+  manifest: 'https://nursultannewvibe.github.io/zerdeli-diagnostika-2-9/manifest.json'
+};
+
+/* ============================================================
+   2. ПРОГРАММА ДИАГНОСТИКИ — правьте здесь
+   Ключ — класс. subjects — что реально входит в комплекс.
+   minutes — примерное время на весь комплекс.
+   Источник: папка «Сынақ тесті Примеры» на Google Диске.
+   ⚠ 9 класс — состав по аналогии с 7–8, папка была недоступна: сверить.
+   ============================================================ */
+const PROGRAM = {
+  2: {minutes:30, subjects:[{ru:'Математика',            kz:'Математика'}]},
+  3: {minutes:35, subjects:[{ru:'Математика',            kz:'Математика'}]},
+  4: {minutes:45, subjects:[{ru:'Математика',            kz:'Математика'},
+                            {ru:'Английский язык',       kz:'Ағылшын тілі'}]},
+  5: {minutes:90, subjects:[{ru:'Математика',            kz:'Математика'},
+                            {ru:'Естествознание',        kz:'Жаратылыстану'},
+                            {ru:'Количественные характеристики', kz:'Сандық сипаттама'},
+                            {ru:'Казахский язык',        kz:'Қазақ тілі'},
+                            {ru:'Русский язык',          kz:'Орыс тілі'},
+                            {ru:'Английский язык',       kz:'Ағылшын тілі'}]},
+  6: {minutes:35, subjects:[{ru:'Математика',            kz:'Математика'}]},
+  7: {minutes:70, subjects:[{ru:'Алгебра и геометрия',   kz:'Алгебра-геометрия'},
+                            {ru:'Физика',                kz:'Физика'},
+                            {ru:'Химия',                 kz:'Химия'},
+                            {ru:'Английский язык',       kz:'Ағылшын тілі'}]},
+  8: {minutes:70, subjects:[{ru:'Алгебра и геометрия',   kz:'Алгебра-геометрия'},
+                            {ru:'Физика',                kz:'Физика'},
+                            {ru:'Химия',                 kz:'Химия'},
+                            {ru:'Английский язык',       kz:'Ағылшын тілі'}]},
+  9: {minutes:70, subjects:[{ru:'Алгебра и геометрия',   kz:'Алгебра-геометрия'},
+                            {ru:'Физика',                kz:'Физика'},
+                            {ru:'Химия',                 kz:'Химия'},
+                            {ru:'Английский язык',       kz:'Ағылшын тілі'}]}
+};
+
+const STAGES = [
+  {id:'primary', from:2, to:4, ru:'Начальная школа', kz:'Бастауыш сынып'},
+  {id:'middle',  from:5, to:6, ru:'5–6 класс',       kz:'5–6 сынып'},
+  {id:'senior',  from:7, to:9, ru:'7–9 класс',       kz:'7–9 сынып'}
+];
+
+/* ============================================================
+   3. ТЕКСТЫ — правьте здесь
+   ============================================================ */
+const T = {
+ru:{
+  title:'Онлайн-диагностика знаний · 2–9 класс · Zerdeli',
+  heroEyebrow:'Онлайн-диагностика · 2–9 класс',
+  heroH1:'Сначала диагностика — потом подготовка',
+  heroLead:'Ребёнок проходит онлайн-тест дома. Вы получаете карту пробелов по темам школьной программы и приходите на разбор с педагогом — Гагарина 93.',
+  ctaMain:'Выбрать класс',
+  ctaSticky:'Записаться на диагностику',
+  ctaWa:'Написать в WhatsApp',
+  fact1:'Тест дома, онлайн',
+  fact2:'Отчёт по темам, не одна оценка',
+  fact3:'Вопросы на двух языках',
+
+  repTitle:'Карта пробелов · Математика',
+  repSub:'Так выглядит отчёт, который вы получаете',
+  repTag:'Пример',
+  legOk:'Тема усвоена',
+  legMid:'Требует повторения',
+  legGap:'Пробел',
+  rows:[
+    {n:'Числа и действия над ними',   v:85, s:'ok'},
+    {n:'Периметр, площадь, объём',    v:38, s:'gap'},
+    {n:'Пространственные фигуры',     v:72, s:'ok'},
+    {n:'Текстовые задачи',            v:30, s:'gap'},
+    {n:'Доли и дроби',                v:56, s:'mid'}
+  ],
+
+  painEyebrow:'Знакомо?',
+  painH2:'Оценки есть, а понимания нет',
+  pain1:'В дневнике четвёрки, а базовых тем прошлого года ребёнок не помнит.',
+  pain2:'Репетитор начинает с нуля — он тоже не знает, где именно пробел.',
+  pain3:'Ребёнок говорит «всё понятно», а на контрольной результат другой.',
+  pain4:'Непонятно, какой предмет подтягивать в первую очередь и сколько это займёт.',
+
+  howEyebrow:'Как проходит',
+  howH2:'Три шага за одну неделю',
+  how1when:'День 1 · дома',
+  how1h:'Онлайн-тест',
+  how1p:'Ссылка приходит в WhatsApp. Тест по программе своего класса, с телефона или компьютера. Вопросы продублированы на казахском и русском — ребёнок отвечает на удобном языке. Без оценок и сравнения с одноклассниками.',
+  how2when:'День 2 · автоматически',
+  how2h:'Отчёт по темам',
+  how2p:'Каждый вопрос теста привязан к теме программы. Поэтому результат — не «4» и «3», а разбивка по темам: где усвоено, где нужно повторение, где настоящий пробел.',
+  how3when:'День 3–5 · Гагарина 93',
+  how3h:'Разбор с педагогом',
+  how3p:'30 минут в центре: показываем отчёт, объясняем причины пробелов и даём план подготовки на 3 месяца. Приходить лучше вместе с ребёнком.',
+
+  getEyebrow:'Что остаётся у вас',
+  getH2:'Вы уходите с документом, а не с впечатлением',
+  get1h:'Карта пробелов по темам',
+  get1p:'Полный список тем программы класса с отметкой уровня по каждой.',
+  get2h:'Уровень относительно программы',
+  get2p:'Насколько ребёнок идёт вровень со своим классом — и по каким темам отстаёт.',
+  get3h:'План на 3 месяца',
+  get3p:'С какой темы начинать, в каком порядке и сколько занятий на это нужно.',
+  get4h:'Рекомендация формата',
+  get4p:'Группа, мини-группа или индивидуально — исходя из объёма пробелов, а не из прайса.',
+
+  bldEyebrow:'Запись',
+  bldH2:'Выберите класс — покажем, что входит',
+  bldLead:'Диагностика идёт комплектом: ребёнок проходит все тесты своего класса, отчёт собирается по всем предметам сразу.',
+  s1t:'Класс ребёнка',
+  s2t:'Что входит в диагностику',
+  s2hint:'Выберите класс — покажем состав комплекта.',
+  s3t:'Контакты для записи',
+  sumLabel:'Вы выбрали:',
+  kitTime:'Примерно __MIN__ минут на всё',
+  kitNote:'Тесты можно проходить не подряд — ребёнок делает их в удобное время в течение недели.',
+  subjOne:'предмет', subjFew:'предмета', subjMany:'предметов',
+  fldName:'Ваше имя',
+  phName:'Как к вам обращаться',
+  fldPhone:'Телефон (WhatsApp)',
+  fldWhen:'Когда удобно начать',
+  optAsap:'Как можно скорее',
+  optEvening:'В будни после 18:00',
+  optWeekend:'В выходные',
+  ctaSubmit:'Записаться на диагностику',
+  errName:'Напишите имя',
+  errPhone:'Проверьте номер: нужно 11 цифр',
+  consent:'Нажимая кнопку, вы соглашаетесь на обработку персональных данных. Мы звоним только по этой заявке.',
+  doneH:'Заявка принята — можно начинать',
+  doneP:'Ниже тесты Вашего класса. Проходите прямо сейчас, каждый занимает 25–90 минут. Менеджер напишет в WhatsApp и подберёт время разбора.',
+  testsOne:'Открыть тест', testsSoon:'Тест готовится',
+  qOne:'вопрос', qFew:'вопроса', qMany:'вопросов',
+  testsNone:'Тесты для этого класса ещё готовятся — менеджер пришлёт ссылку в WhatsApp.',
+
+
+  catEyebrow:'Охват',
+  catH2:'Что входит по классам',
+  proofEyebrow:'Результат центра',
+  proofBig:'из 288 грантов НИШ по Алматы в 2026 году — у учеников Zerdeli',
+  proofP:'Диагностика — тот же инструмент, с которого начинается подготовка всех наших учеников. Сначала мы находим пробелы, потом строим программу.',
+  proofNote:'Большинство поступивших начали заниматься в 4–5 классе.',
+
+  faqEyebrow:'Вопросы',
+  faqH2:'Что обычно спрашивают',
+  faq:[
+    {q:'Диагностика платная?',           a:'Да, __PRICE__ ₸ за весь комплект. В стоимость входят все тесты класса, отчёт по темам и 30-минутный разбор с педагогом в центре.'},
+    {q:'Сколько времени занимает тест?', a:'Зависит от класса: во 2–3 классе это один тест на полчаса, в 5-м — шесть предметов, около полутора часов. Проходить всё подряд не нужно — можно разбить на несколько дней.'},
+    {q:'Почему нельзя выбрать один предмет?', a:'Пробел редко сидит в одном месте. Ребёнок «не тянет математику», а причина — в чтении условия задачи. Комплект по классу показывает картину целиком, поэтому план подготовки получается точнее.'},
+    {q:'А если ребёнок не хочет тест?',  a:'В тесте нет оценок и сравнения с одноклассниками — результат видят только родители и педагог. Обычно это снимает напряжение.'},
+    {q:'Нужно ли потом записываться на курс?', a:'Нет. Отчёт и план на 3 месяца остаются у вас в любом случае — с ними можно заниматься и самостоятельно, и с другим педагогом.'},
+    {q:'На каком языке проходит тест?',  a:'Вопросы продублированы на казахском и русском в самом тесте — ребёнок читает на том языке, который ему привычнее.'},
+    {q:'Где проходит разбор?',           a:'В головном филиале на Гагарина 93. Тест — онлайн из дома, очно нужно прийти только на разбор.'}
+  ],
+
+  finH2:'Записаться на диагностику',
+  priceNote:'все тесты класса + отчёт по темам + разбор с педагогом',
+  finLead:'Одна встреча вместо трёх месяцев занятий вслепую.',
+
+  ftrWhere:'Разбор проходит здесь',
+  ftrAddr:'Алматы, Гагарина 93 — головной филиал Zerdeli',
+  ftrBranches:'Филиалы в Алматы',
+  ftrNav:'Навигация',
+  ftrNav1:'Записаться на диагностику',
+  ftrNav2:'В начало страницы'
+},
+kz:{
+  title:'Білім деңгейін онлайн диагностикалау · 2–9 сынып · Zerdeli',
+  heroEyebrow:'Онлайн диагностика · 2–9 сынып',
+  heroH1:'Алдымен диагностика жасап, сосын дайындықты бастаймыз',
+  heroLead:'Бала үйде онлайн тест тапсырады. Сіз мектеп бағдарламасының тақырыптары бойынша олқылықтар картасын аласыз және Гагарин 93-тегі мұғаліммен талдауға келесіз.',
+  ctaMain:'Сыныпты таңдау',
+  ctaSticky:'Диагностикаға жазылу',
+  ctaWa:'WhatsApp-қа жазу',
+  fact1:'Тест үйде, онлайн',
+  fact2:'Бір баға емес — тақырып бойынша есеп',
+  fact3:'Сұрақтар екі тілде',
+
+  repTitle:'Олқылықтар картасы · Математика',
+  repSub:'Сіз алатын есеп осылай көрінеді',
+  repTag:'Үлгі',
+  legOk:'Тақырып меңгерілген',
+  legMid:'Қайталауды қажет етеді',
+  legGap:'Олқылық',
+  rows:[
+    {n:'Сандар және оларға амалдар қолдану',       v:85, s:'ok'},
+    {n:'Периметр, аудан, көлем',                   v:38, s:'gap'},
+    {n:'Кеңістіктік геометриялық фигуралар',       v:72, s:'ok'},
+    {n:'Мәтінді есептер',                          v:30, s:'gap'},
+    {n:'Үлестер мен бөлшектер',                    v:56, s:'mid'}
+  ],
+
+  painEyebrow:'Таныс жағдай ма?',
+  painH2:'Бағасы бар, бірақ түсінігі жоқ',
+  pain1:'Күнделікте бағасы жақсы, ал өткен жылдың негізгі тақырыптарын есінде сақтамаған.',
+  pain2:'Репетитор нөлден бастайды — ол да олқылықтың нақты қайда екенін білмейді.',
+  pain3:'Бала «бәрі түсінікті» дейді, ал бақылау жұмысында нәтиже басқаша.',
+  pain4:'Қай пәнді бірінші тарту керегі және оған қанша уақыт кететіні белгісіз.',
+
+  howEyebrow:'Қалай өтеді',
+  howH2:'Бір аптада үш қадам',
+  how1when:'1-күн · үйде',
+  how1h:'Онлайн тест',
+  how1p:'Сілтеме WhatsApp-қа келеді. Тест өз сыныбының бағдарламасы бойынша, телефоннан немесе компьютерден. Сұрақтар қазақ және орыс тілінде қатар берілген — бала өзіне ыңғайлы тілде жауап береді. Баға қойылмайды, сыныптастармен салыстырылмайды.',
+  how2when:'2-күн · автоматты түрде',
+  how2h:'Тақырып бойынша есеп',
+  how2p:'Тесттің әр сұрағы бағдарламаның тақырыбына байланған. Сондықтан нәтиже «4» пен «3» емес, тақырып бойынша бөлінген: қайсысы меңгерілген, қайсысын қайталау керек, қайда шынайы олқылық бар.',
+  how3when:'3–5-күн · Гагарин 93',
+  how3h:'Мұғаліммен талдау',
+  how3p:'Орталықта 30 минут: есепті көрсетеміз, олқылықтың себебін түсіндіреміз және 3 айға дайындық жоспарын береміз. Баламен бірге келген дұрыс.',
+
+  getEyebrow:'Сізде не қалады',
+  getH2:'Әсер емес, нақты құжат аласыз',
+  get1h:'Тақырып бойынша олқылықтар картасы',
+  get1p:'Сынып бағдарламасының толық тақырып тізімі және әрқайсысы бойынша деңгей белгісі.',
+  get2h:'Бағдарламаға қатысты деңгей',
+  get2p:'Бала өз сыныбымен қатар жүр ме — және қай тақырыптардан артта қалған.',
+  get3h:'3 айға жоспар',
+  get3p:'Қай тақырыптан бастау керек, қандай ретпен және оған қанша сабақ қажет.',
+  get4h:'Формат бойынша ұсыныс',
+  get4p:'Топ, шағын топ немесе жеке — прайсқа емес, олқылық көлеміне қарап ұсынамыз.',
+
+  bldEyebrow:'Жазылу',
+  bldH2:'Сыныпты таңдаңыз — құрамын көрсетеміз',
+  bldLead:'Диагностика жинақ түрінде өтеді: бала өз сыныбының барлық тестін тапсырады, есеп барлық пән бойынша бірден жиналады.',
+  s1t:'Баланың сыныбы',
+  s2t:'Диагностика құрамы',
+  s2hint:'Сыныпты таңдаңыз — жинақтың құрамын көрсетеміз.',
+  s3t:'Жазылуға арналған байланыс',
+  sumLabel:'Сіз таңдадыңыз:',
+  kitTime:'Барлығына шамамен __MIN__ минут',
+  kitNote:'Тестерді қатарынан тапсыру міндетті емес — бала оларды апта ішінде ыңғайлы уақытта орындайды.',
+  subjOne:'пән', subjFew:'пән', subjMany:'пән',
+  fldName:'Атыңыз',
+  phName:'Сізге қалай жүгінейік',
+  fldPhone:'Телефон (WhatsApp)',
+  fldWhen:'Қашан бастаған ыңғайлы',
+  optAsap:'Мүмкіндігінше тезірек',
+  optEvening:'Жұмыс күндері 18:00-ден кейін',
+  optWeekend:'Демалыс күндері',
+  ctaSubmit:'Диагностикаға жазылу',
+  errName:'Атыңызды жазыңыз',
+  errPhone:'Нөмірді тексеріңіз: 11 сан болуы керек',
+  consent:'Батырманы басу арқылы жеке деректерді өңдеуге келісім бересіз. Тек осы өтінім бойынша хабарласамыз.',
+  doneH:'Өтінім қабылданды — бастауға болады',
+  doneP:'Төменде сыныбыңыздың тестері. Дәл қазір тапсыруға болады, әрқайсысы 25–90 минут алады. Менеджер WhatsApp-қа жазып, талдау уақытын келіседі.',
+  testsOne:'Тестті ашу', testsSoon:'Тест әзірленуде',
+  qOne:'сұрақ', qFew:'сұрақ', qMany:'сұрақ',
+  testsNone:'Бұл сыныпқа тестер әзірленуде — менеджер WhatsApp-қа сілтеме жібереді.',
+
+
+  catEyebrow:'Қамту',
+  catH2:'Сыныптар бойынша құрамы',
+  proofEyebrow:'Орталық нәтижесі',
+  proofBig:'2026 жылы Алматы бойынша берілген 288 НЗМ грантының — Zerdeli оқушыларында',
+  proofP:'Диагностика — біздің барлық оқушыларымыздың дайындығы басталатын дәл сол құрал. Алдымен олқылықты табамыз, содан кейін бағдарлама құрамыз.',
+  proofNote:'Түскендердің көбі 4–5 сыныпта оқи бастаған.',
+
+  faqEyebrow:'Сұрақтар',
+  faqH2:'Жиі сұралатыны',
+  faq:[
+    {q:'Диагностика ақылы ма?',              a:'Иә, толық жинақ үшін __PRICE__ ₸. Бағаға сыныптың барлық тесті, тақырып бойынша есеп және орталықта мұғаліммен 30 минуттық талдау кіреді.'},
+    {q:'Тест қанша уақыт алады?',            a:'Сыныпқа байланысты: 2–3 сыныпта бұл жарты сағаттық бір тест, 5-сыныпта — алты пән, шамамен бір жарым сағат. Барлығын қатарынан тапсыру міндетті емес, бірнеше күнге бөлуге болады.'},
+    {q:'Неге бір пәнді таңдауға болмайды?',  a:'Олқылық сирек бір жерде отырады. Бала «математиканы тартпайды» дейміз, ал себебі — есептің шартын оқуында. Сынып бойынша жинақ жалпы көріністі көрсетеді, сондықтан дайындық жоспары дәлірек шығады.'},
+    {q:'Бала тест тапсырғысы келмесе ше?',   a:'Тестте баға қойылмайды және сыныптастармен салыстыру жоқ — нәтижені тек ата-ана мен мұғалім көреді. Әдетте бұл қысымды азайтады.'},
+    {q:'Кейін курсқа жазылу міндетті ме?',   a:'Жоқ. Есеп пен 3 айлық жоспар кез келген жағдайда сізде қалады — онымен өз бетінше де, басқа мұғаліммен де жұмыс істей аласыз.'},
+    {q:'Тест қай тілде өтеді?',              a:'Сұрақтар тесттің өзінде қазақ және орыс тілінде қатар берілген — бала өзіне таныс тілде оқиды.'},
+    {q:'Талдау қайда өтеді?',                a:'Гагарин 93-тегі бас филиалда. Тест — үйден онлайн, орталыққа тек талдауға келу керек.'}
+  ],
+
+  finH2:'Диагностикаға жазылу',
+  priceNote:'сыныптың барлық тесті + тақырып бойынша есеп + мұғаліммен талдау',
+  finLead:'Үш ай көзсіз оқудың орнына — бір кездесу.',
+
+  ftrWhere:'Талдау осында өтеді',
+  ftrAddr:'Алматы, Гагарин 93 — Zerdeli бас филиалы',
+  ftrBranches:'Алматыдағы филиалдар',
+  ftrNav:'Навигация',
+  ftrNav1:'Диагностикаға жазылу',
+  ftrNav2:'Беттің басына'
+}
+};
+
+/* ============================================================
+   4. ЛОГИКА
+   ============================================================ */
+(function(){
+  const $  = (s,r)=> (r||document).querySelector(s);
+  const $$ = (s,r)=> Array.from((r||document).querySelectorAll(s));
+  let lang = CONFIG.lang === 'kz' ? 'kz' : 'ru';
+  const state = {grade:null};
+  const GRADES = Object.keys(PROGRAM).map(Number).sort((a,b)=> a-b);
+
+  const track = (name, params) => {
+    try{ if(window.fbq) window.fbq('trackCustom', name, params||{}); }catch(e){}
+  };
+
+  function nf(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+
+  function render(){
+    const t = T[lang];
+    document.documentElement.lang = lang === 'kz' ? 'kk' : 'ru';
+    document.title = t.title;
+
+    $$('[data-t]').forEach(el=>{
+      const v = t[el.dataset.t];
+      if(typeof v === 'string') el.textContent = v;
+    });
+    $$('[data-ph]').forEach(el=>{ el.placeholder = t[el.dataset.ph] || ''; });
+    $$('.langs button').forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    $('#priceNum').textContent = nf(CONFIG.price) + ' ₸';
+
+    // отчёт-подпись
+    $('#reportRows').innerHTML = t.rows.map(r=>`
+      <div>
+        <div class="row-head"><span class="row-name">${r.n}</span><span class="row-val">${r.v}%</span></div>
+        <div class="track"><span class="bar ${r.s}" data-w="${r.v}"></span></div>
+      </div>`).join('');
+    requestAnimationFrame(()=> setTimeout(()=> $$('#reportRows .bar').forEach(b=> b.style.width = b.dataset.w + '%'), 120));
+
+    // классы
+    $('#grades').innerHTML = STAGES.map(st=>{
+      const gs = GRADES.filter(g=> g >= st.from && g <= st.to);
+      if(!gs.length) return '';
+      return `<div class="grade-group">
+        <div class="grade-label">${st[lang]}</div>
+        <div class="chips">${gs.map(g=>`<button type="button" class="chip grade" data-grade="${g}" aria-pressed="${state.grade===g}">${g}</button>`).join('')}</div>
+      </div>`;
+    }).join('');
+
+    renderKit();
+
+    // каталог: карточка на каждый класс
+    $('#catalog').innerHTML = GRADES.map(g=>{
+      const p = PROGRAM[g];
+      return `<div class="cat">
+        <div><div class="cat-h">${gradeLabel(g)}</div>
+        <div class="cat-g">${p.subjects.length} ${plural(p.subjects.length)} · ~${p.minutes} ${lang==='kz'?'минут':'мин'}</div></div>
+        <ul>${p.subjects.map(s=>`<li>${s[lang]}</li>`).join('')}</ul>
+      </div>`;
+    }).join('');
+
+    // faq
+    $('#faq').innerHTML = t.faq.map((f,i)=>`
+      <details${i===0?' open':''}>
+        <summary>${f.q}</summary>
+        <div class="ans">${f.a.replace('__PRICE__', nf(CONFIG.price))}</div>
+      </details>`).join('');
+
+    updateSummary();
+  }
+
+  function gradeLabel(g){ return lang === 'kz' ? g + '-сынып' : g + ' класс'; }
+
+  function plural(n){
+    const t = T[lang];
+    if(lang === 'kz') return t.subjMany;
+    const d10 = n % 10, d100 = n % 100;
+    if(d10 === 1 && d100 !== 11) return t.subjOne;
+    if(d10 >= 2 && d10 <= 4 && (d100 < 12 || d100 > 14)) return t.subjFew;
+    return t.subjMany;
+  }
+
+  const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5 9.5 18 20 7"/></svg>';
+
+  function renderKit(){
+    const t = T[lang], box = $('#kit');
+    if(!state.grade){ box.innerHTML = ''; $('#subjHint').hidden = false; return; }
+    $('#subjHint').hidden = true;
+    const p = PROGRAM[state.grade];
+    box.innerHTML = `
+      <div class="kit-list">${p.subjects.map(s=>`<div class="kit-item">${CHECK}<span>${s[lang]}</span></div>`).join('')}</div>
+      <div class="kit-meta">
+        <span class="fact"><b>${p.subjects.length}</b> ${plural(p.subjects.length)}</span>
+        <span class="fact">${t.kitTime.replace('__MIN__', p.minutes)}</span>
+      </div>
+      <p class="kit-note">${t.kitNote}</p>`;
+  }
+
+  function updateSummary(){
+    $('#s2').classList.toggle('is-off', !state.grade);
+    $('#s3').classList.toggle('is-off', !state.grade);
+    const sum = $('#summary');
+    if(state.grade){
+      const p = PROGRAM[state.grade];
+      $('#pillGrade').textContent = gradeLabel(state.grade);
+      $('#pillCount').textContent = p.subjects.length + ' ' + plural(p.subjects.length);
+      sum.hidden = false;
+    } else {
+      sum.hidden = true;
+    }
+  }
+
+  // выбор класса
+  document.addEventListener('click', e=>{
+    const g = e.target.closest('.chip.grade');
+    if(!g) return;
+    state.grade = Number(g.dataset.grade);
+    $$('.chip.grade').forEach(c=> c.setAttribute('aria-pressed', String(Number(c.dataset.grade) === state.grade)));
+    renderKit(); updateSummary();
+    track('DiagGradePick', {grade: state.grade});
+    setTimeout(()=> $('#name').focus({preventScroll:true}), 60);
+  });
+
+  // переключение языка
+  $$('.langs button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const next = b.dataset.lang;
+      if(next === lang) return;
+      const url = next === 'kz' ? CONFIG.urlKz : CONFIG.urlRu;
+      // если казахская/русская версия лежит на отдельном URL — уходим туда,
+      // иначе переключаем язык на месте (нужно для превью)
+      if(url && location.pathname !== url && location.protocol.startsWith('http') && !location.host.includes('claude')){
+        location.href = url + location.search + '#' + (location.hash.slice(1) || 'top');
+        return;
+      }
+      lang = next; render();
+    });
+  });
+
+  // телефон
+  const phone = $('#phone');
+  phone.addEventListener('input', ()=>{
+    let d = phone.value.replace(/\D/g,'');
+    if(d.startsWith('8')) d = '7' + d.slice(1);
+    if(!d.startsWith('7')) d = '7' + d;
+    d = d.slice(0,11);
+    let out = '+7';
+    if(d.length > 1) out += ' (' + d.slice(1,4);
+    if(d.length >= 4) out += ')';
+    if(d.length > 4) out += ' ' + d.slice(4,7);
+    if(d.length > 7) out += '-' + d.slice(7,9);
+    if(d.length > 9) out += '-' + d.slice(9,11);
+    phone.value = out;
+  });
+  phone.addEventListener('focus', ()=>{ if(!phone.value) phone.value = '+7 ('; });
+
+  let started = false;
+  $('#form').addEventListener('input', ()=>{
+    if(!started){ started = true; track('DiagFormStart', {}); }
+  });
+
+  // отправка
+  /* Манифест тестов — единственный источник правды о том, какие тесты есть.
+     Пока он не загрузился, работает список PROGRAM, вписанный руками.
+     Как только загрузился — классы и предметы берутся из него, и лендинг
+     перестаёт расходиться с содержимым репозитория. */
+  let MANIFEST = null;
+
+  async function loadManifest(){
+    if(!CONFIG.manifest) return;
+    try{
+      const r = await fetch(CONFIG.manifest, {cache:'no-cache'});
+      if(!r.ok) throw new Error(r.status);
+      MANIFEST = await r.json();
+    }catch(err){ console.warn('манифест тестов не загрузился, работаем по списку в коде', err); return; }
+
+    const byGrade = {};
+    MANIFEST.tests.forEach(t=>{
+      (byGrade[t.grade] = byGrade[t.grade] || []).push(t);
+    });
+    Object.keys(byGrade).forEach(g=>{
+      const list = byGrade[g];
+      PROGRAM[g] = {
+        minutes: list.reduce((a,t)=> a + (t.minutes || 0), 0),
+        subjects: list.map(t=> ({ru: t.subject.ru, kz: t.subject.kz}))
+      };
+    });
+    GRADES.length = 0;
+    Object.keys(byGrade).map(Number).sort((a,b)=> a-b).forEach(g=> GRADES.push(g));
+    if(state.grade && !GRADES.includes(state.grade)) state.grade = null;
+    render();
+  }
+
+  function testsFor(grade){
+    if(!MANIFEST) return null;
+    return MANIFEST.tests.filter(t=> t.grade === grade);
+  }
+
+  function qPlural(n){
+    const t = T[lang];
+    if(lang === 'kz') return t.qMany;
+    const d10 = n % 10, d100 = n % 100;
+    if(d10 === 1 && d100 !== 11) return t.qOne;
+    if(d10 >= 2 && d10 <= 4 && (d100 < 12 || d100 > 14)) return t.qFew;
+    return t.qMany;
+  }
+
+  function renderDoneTests(){
+    const t = T[lang], box = $('#doneTests');
+    const list = testsFor(state.grade);
+    if(!list || !list.length){
+      box.innerHTML = `<p class="tests-note">${t.testsNone}</p>`;
+      return;
+    }
+    const page = lang === 'kz' ? CONFIG.testKz : CONFIG.testRu;
+    box.innerHTML = list.map((x,i)=>`
+      <a href="${page}?test=${encodeURIComponent(x.id)}">
+        <i>${i+1}</i>
+        <span class="tt">
+          <b>${x.subject[lang]}</b>
+          <em>${x.questions} ${qPlural(x.questions)} · ~${x.minutes} мин${x.ready?'':' · '+t.testsSoon}</em>
+        </span>
+      </a>`).join('');
+  }
+
+  $('#form').addEventListener('submit', async e=>{
+    e.preventDefault();
+    const t = T[lang];
+    const name = $('#name').value.trim();
+    const digits = phone.value.replace(/\D/g,'');
+    let ok = true;
+    $('#fName').classList.toggle('err', name.length < 2); if(name.length < 2) ok = false;
+    $('#fPhone').classList.toggle('err', digits.length !== 11); if(digits.length !== 11) ok = false;
+    if(!ok || !state.grade) return;
+
+    const p = PROGRAM[state.grade];
+    const payload = {
+      date: new Date().toISOString(),
+      name: name,
+      phone: '+' + digits,
+      grade: state.grade,
+      subjects: p.subjects.map(s=> s.ru).join(', '),
+      when: $('#when').value,
+      pageLang: lang,
+      page: location.pathname || 'diagnostika',
+      source: 'landing-diagnostika'
+    };
+
+    const btn = $('#submitBtn');
+    btn.disabled = true; btn.style.opacity = '.6';
+
+    try{
+      if(CONFIG.endpoint){
+        await fetch(CONFIG.endpoint, {
+          method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify(payload)
+        });
+      } else {
+        console.log('Заявка (endpoint не настроен):', payload);
+      }
+    }catch(err){ console.warn(err); }
+
+    track('DiagLead', {grade: payload.grade, subjects: payload.subjects});
+    if(window.fbq) window.fbq('track','Lead');
+    $('#form').style.display = 'none';
+    renderDoneTests();
+    $('#done').classList.add('on');
+    $('#done').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  // липкая кнопка
+  const sticky = $('#sticky'), zone = $('#zayavka');
+  const io = new IntersectionObserver(es=>{
+    es.forEach(en=>{
+      if(en.target.id === 'zayavka') sticky.classList.toggle('on', !en.isIntersecting && window.scrollY > 400);
+    });
+  }, {threshold:0});
+  io.observe(zone);
+  window.addEventListener('scroll', ()=>{
+    if(window.scrollY < 400) sticky.classList.remove('on');
+  }, {passive:true});
+
+  // reveal + скролл 50%
+  const rio = new IntersectionObserver(es=>{
+    es.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); rio.unobserve(en.target); } });
+  }, {threshold:.12});
+  $$('.reveal').forEach(el=> rio.observe(el));
+
+  let half = false;
+  window.addEventListener('scroll', ()=>{
+    if(half) return;
+    const p = (window.scrollY + innerHeight) / document.body.scrollHeight;
+    if(p > .5){ half = true; track('Scroll50', {}); }
+  }, {passive:true});
+
+  $('#yr').textContent = new Date().getFullYear();
+  render();
+  loadManifest();               // подтянет реальный состав тестов и перерисует
+  track('DiagPageView', {lang: lang});
+})();
