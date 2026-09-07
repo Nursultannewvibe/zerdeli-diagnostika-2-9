@@ -16,7 +16,7 @@
     // задаётся одной строкой в эмбеде Webflow
     base: (window.ZERDELI_TESTS_BASE || './'),
     // веб-приложение Google Apps Script, куда падают результаты
-    endpoint: (window.ZERDELI_ENDPOINT || ''),
+    endpoint: (window.ZERDELI_ENDPOINT || 'https://script.google.com/macros/s/AKfycbz9bLV1C3Pd38h1L24uf0hG9xx_RLyvLfXSmOm8Bz2HWsqgzdfD2_DlS2L5Nf5Q-VTN/exec'),
     whatsapp: '77780403999',
     landingRu: '/diagnostika-znaniy',
     landingKz: '/diagnostika-znaniy-kz'
@@ -74,7 +74,7 @@
   // карточкой клиента, а язык переключается кнопкой на странице
   var hooks = {};
 
-  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false };
+  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false, sent: false };
   var KEY = 'zd-test-';
 
   // короткий код отчёта: по нему потом собирается PDF на стороне Google.
@@ -430,8 +430,10 @@
     // А вот следующий предмет контакта уже не спрашивает, ворот не будет,
     // и его результат отправляем отсюда.
     if (state.gated) {
+      // «сохранено» пишем, только если лендинг подтвердил, что запись ушла:
+      // обещать сохранность, когда отправка не удалась, — обманывать
       var box = root.querySelector('#zd-save');
-      if (box) box.textContent = CONFIG.endpoint ? t.saved : '';
+      if (box) box.textContent = state.sent ? t.saved : '';
       return;
     }
     send(Object.assign({
@@ -441,15 +443,40 @@
     }, state.res));
   }
 
+  /* Сначала обычным запросом, с чтением ответа: приёмник отвечает {ok:true},
+     и тогда «сохранено» — правда, а не предположение. Если ответ прочитать
+     не дали, повторяем «слепо»: до сервера запрос доходит всё равно.
+     Итог пишем в консоль — по нему видно, страница виновата или приёмник. */
   function send(payload) {
     var box = root.querySelector('#zd-save');
-    if (!CONFIG.endpoint) { if (box) box.textContent = ''; console.log('Результат (endpoint не настроен):', payload); return; }
-    fetch(CONFIG.endpoint, {
-      method: 'POST', mode: 'no-cors',
+    function skazat(s) { if (box) box.textContent = s; }
+    if (!CONFIG.endpoint) {
+      skazat('');
+      console.log('Результат (адрес приёмника не задан):', payload);
+      return;
+    }
+    var opts = {
+      method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
-    }).then(function () { if (box) box.textContent = t.saved; })
-      .catch(function () { if (box) box.textContent = ''; });
+    };
+    function slepo(prichina) {
+      opts.mode = 'no-cors';
+      return fetch(CONFIG.endpoint, opts).then(function () {
+        skazat(t.saved);
+        console.log('Zerdeli: результат отправлен вслепую —', prichina);
+      }).catch(function (e) {
+        skazat('');
+        console.log('Zerdeli: результат НЕ отправлен —', e.message);
+      });
+    }
+    opts.mode = 'cors';
+    fetch(CONFIG.endpoint, opts).then(function (r) {
+      return r.json().catch(function () { return null; });
+    }).then(function (d) {
+      skazat(t.saved);
+      console.log('Zerdeli: результат отправлен, ответ приёмника —', d);
+    }).catch(function (e) { return slepo(e.message); });
   }
 
   /* ---------- 8. ВНЕШНИЙ ИНТЕРФЕЙС ----------
@@ -466,9 +493,11 @@
       openTest(id);
     },
     // контакт получен — показываем отчёт
-    reveal: function (student) {
+    // second argument — дошла ли отправка: лендинг знает это, а движок нет
+    reveal: function (student, sent) {
       if (!state.res || !student) return;
       state.student = student;
+      state.sent = !!sent;
       showResult();
     },
     // отчёт посчитан и ждёт контакта
