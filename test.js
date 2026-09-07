@@ -40,7 +40,8 @@
       notReady: 'Этот тест ещё готовится', notReadyNote: 'Правильные ответы пока не заполнены — результат посчитать нельзя. Напишите нам, подберём тест вручную.',
       loadErr: 'Не удалось загрузить тест', again: 'Обновить страницу',
       resume: 'Продолжить с вопроса', restart: 'Начать заново',
-      back: 'К списку предметов'
+      back: 'К списку предметов',
+      pdf: 'Скачать отчёт (PDF)'
     },
     kz: {
       pickTest: 'Тестті таңдаңыз', pickHint: 'Сыныбыңыздың тестері',
@@ -58,7 +59,8 @@
       notReady: 'Бұл тест әзірленуде', notReadyNote: 'Дұрыс жауаптар әлі толтырылмаған — нәтижені санау мүмкін емес. Бізге жазыңыз, тестті қолмен таңдаймыз.',
       loadErr: 'Тестті жүктеу мүмкін болмады', again: 'Бетті жаңарту',
       resume: 'Мына сұрақтан жалғастыру', restart: 'Қайтадан бастау',
-      back: 'Пәндер тізіміне'
+      back: 'Пәндер тізіміне',
+      pdf: 'Есепті жүктеу (PDF)'
     }
   };
 
@@ -72,8 +74,16 @@
   // карточкой клиента, а язык переключается кнопкой на странице
   var hooks = {};
 
-  var state = { test: null, answers: {}, i: 0, student: null };
+  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false };
   var KEY = 'zd-test-';
+
+  // короткий код отчёта: по нему потом собирается PDF на стороне Google.
+  // Случайный, чтобы чужую ссылку нельзя было подобрать перебором.
+  function uid() {
+    var s = '';
+    for (var i = 0; i < 12; i++) s += 'abcdefghijkmnpqrstuvwxyz23456789'[Math.floor(Math.random() * 32)];
+    return s;
+  }
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -157,13 +167,18 @@
       return loadImages(data).then(function () { return data; });
     }).then(function (data) {
       state.test = data;
+      state.res = null; state.view = null;
+      state.student = (hooks.student && hooks.student.name) ? hooks.student : null;
       var kept = load(id);
-      if (kept && kept.s) {
-        state.answers = kept.a || {}; state.i = kept.i || 0; state.student = kept.s;
+      // недописанный тест: возвращаем на том же вопросе. Контакта в нём может
+      // и не быть — его теперь спрашивают в конце, а не в начале
+      if (kept && kept.a && Object.keys(kept.a).length) {
+        state.answers = kept.a; state.i = kept.i || 0;
+        if (kept.s) state.student = kept.s;
         return screenResume();
       }
-      if (hooks.student && hooks.student.name) {
-        state.student = hooks.student;
+      // лендинг сам собирает контакт после теста — стартовый экран не нужен
+      if (hooks.gate || state.student) {
         state.i = 0; state.answers = {};
         save();
         return screenQuestion();
@@ -184,7 +199,7 @@
 
   function screenResume() {
     el('<div class="zd-card">' + head() +
-      '<h1 class="zd-h1">' + esc(state.student.name) + '</h1>' +
+      '<h1 class="zd-h1">' + esc(state.student ? state.student.name : state.test.subject[lang]) + '</h1>' +
       '<p class="zd-sub">' + esc(t.resume) + ' ' + (state.i + 1) + '</p>' +
       '<button class="zd-btn" id="go">' + esc(t.next) + '</button>' +
       '<button class="zd-btn zd-ghost" id="re">' + esc(t.restart) + '</button></div>');
@@ -330,11 +345,51 @@
     rows.sort(function (a, b) { return a.pct - b.pct; });
 
     var overall = scored ? Math.round(right / scored * 100) : null;
+
+    state.view = { rows: rows, right: right, scored: scored, overall: overall,
+                   missed: missed, hasTopics: hasTopics };
+    state.res = {
+      grade: d.grade,
+      subject: d.subject.ru,
+      testId: d.id,
+      right: right,
+      scored: scored,
+      percent: overall,
+      // объектом, а не строкой: в названиях тем встречаются точки с запятой
+      // («There is / There are; some / any / no»), и склеенную строку потом
+      // не разобрать обратно на темы
+      topics: rows.reduce(function (o, r) { o[r.name] = r.pct; return o; }, {}),
+      answers: d.questions.map(function (q) { return q.n + '=' + (state.answers[q.n] === undefined ? '-' : state.answers[q.n]); }).join(','),
+      lang: lang,
+      page: location.pathname,
+      uid: uid()
+    };
+    // Ответы держим до показа отчёта: если человек обновит страницу на форме,
+    // тест не пропадёт — движок вернёт его на последний вопрос
+    // Отчёт посчитан, но контакта ещё нет: лендинг показывает форму и вернётся
+    // сюда через reveal(). Отправляет в этом случае он же — одной записью,
+    // чтобы заявка и результат не разъехались на две.
+    if (!state.student && hooks.gate) { state.gated = true; return hooks.gate(state.res); }
+    state.gated = false;
+    showResult();
+  }
+
+  function showResult() {
+    var d = state.test, v = state.view;
+    clear(d.id);
+    var rows = v.rows, right = v.right, scored = v.scored, overall = v.overall;
+    var missed = v.missed, hasTopics = v.hasTopics;
+
     var wa = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
       encodeURIComponent((lang === 'kz' ? 'Сәлеметсіз бе! ' : 'Здравствуйте! ') +
         state.student.name + ' — ' + d.subject.ru + ', ' + d.grade +
         (lang === 'kz' ? '-сынып' : ' класс') +
         (overall === null ? '' : ', ' + overall + '%'));
+    // Отчёт собирается на стороне Google по коду: ссылка обычная, открывается
+    // в новой вкладке и работает с телефона без сохранения страницы.
+    var pdf = CONFIG.endpoint
+      ? CONFIG.endpoint + (CONFIG.endpoint.indexOf('?') < 0 ? '?' : '&') + 'pdf=' + state.res.uid
+      : '';
 
     el('<div class="zd-card">' + head() +
       '<h1 class="zd-h1">' + esc(t.resultTitle) + '</h1>' +
@@ -361,6 +416,8 @@
                   }).join('') + '</div>' +
                   '<p class="zd-sub" style="margin-top:12px">' + esc(t.missedNote) + '</p>'
                 : ''))) +
+      (pdf ? '<a class="zd-btn zd-ghost" href="' + esc(pdf) + '" target="_blank" rel="noopener">' +
+             esc(t.pdf) + '</a>' : '') +
       '<p class="zd-sub" style="margin-top:18px">' + esc(t.ctaNote) + '</p>' +
       '<a class="zd-btn" href="' + wa + '" target="_blank" rel="noopener">' + esc(t.cta) + '</a>' +
       (hooks.onBack ? '<button class="zd-btn zd-ghost" id="zd-back">' + esc(t.back) + '</button>' : '') +
@@ -369,22 +426,19 @@
     if (hooks.onBack) root.querySelector('#zd-back').onclick = function () { hooks.onBack(); };
     if (hooks.onFinish) hooks.onFinish({ id: d.id, percent: overall, right: right, scored: scored });
 
-    clear(d.id);
-    send({
+    // Через ворота лендинг отправил всё сам — второй записи не нужно.
+    // А вот следующий предмет контакта уже не спрашивает, ворот не будет,
+    // и его результат отправляем отсюда.
+    if (state.gated) {
+      var box = root.querySelector('#zd-save');
+      if (box) box.textContent = CONFIG.endpoint ? t.saved : '';
+      return;
+    }
+    send(Object.assign({
       date: new Date().toISOString(),
       name: state.student.name,
-      phone: state.student.phone,
-      grade: d.grade,
-      subject: d.subject.ru,
-      testId: d.id,
-      right: right,
-      scored: scored,
-      percent: overall,
-      topics: rows.map(function (r) { return r.name + ': ' + r.pct + '%'; }).join('; '),
-      answers: d.questions.map(function (q) { return q.n + '=' + (state.answers[q.n] === undefined ? '-' : state.answers[q.n]); }).join(','),
-      lang: lang,
-      page: location.pathname
-    });
+      phone: state.student.phone
+    }, state.res));
   }
 
   function send(payload) {
@@ -399,9 +453,11 @@
   }
 
   /* ---------- 8. ВНЕШНИЙ ИНТЕРФЕЙС ----------
-     Лендинг вызывает ZerdeliTest.open(id, {...}) и тест открывается прямо
-     на той же странице: карточка клиента уже заполнена, спрашивать имя заново
-     не нужно. Отдельная страница /test при этом продолжает работать. */
+     Лендинг вызывает ZerdeliTest.open(id, {gate: ...}) — тест открывается
+     прямо на странице и сразу с вопросов. Когда вопросы кончились, движок
+     отдаёт посчитанный отчёт в gate и ждёт: контакт собирает лендинг,
+     а reveal() показывает результат. Отдельная страница /test при этом
+     продолжает работать по-старому, спрашивая имя в начале. */
   window.ZerdeliTest = {
     open: function (id, opts) {
       opts = opts || {};
@@ -409,10 +465,20 @@
       if (opts.lang && T[opts.lang]) { lang = opts.lang; t = T[lang]; }
       openTest(id);
     },
+    // контакт получен — показываем отчёт
+    reveal: function (student) {
+      if (!state.res || !student) return;
+      state.student = student;
+      showResult();
+    },
+    // отчёт посчитан и ждёт контакта
+    isWaiting: function () { return !!(state.res && !state.student); },
     setLang: function (code) {
       if (!T[code] || code === lang) return;
       lang = code; t = T[lang];
-      if (state.test) screenQuestion();
+      if (!state.test) return;
+      if (state.res && state.student) showResult();
+      else if (!state.res) screenQuestion();
     },
     isOpen: function () { return !!state.test; }
   };
