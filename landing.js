@@ -564,6 +564,42 @@ kz:{
     $('#zd-test').scrollIntoView({behavior:'smooth', block:'start'});
   }
 
+  /* Отправка заявки.
+
+     Сначала пробуем обычным запросом и читаем ответ: приёмник отвечает
+     {ok:true}, и тогда мы точно знаем, что запись легла. Если ответ прочитать
+     не удалось (браузер не пустил из-за политики домена), повторяем «слепо» —
+     до сервера запрос при этом всё равно доходит, просто мы не видим ответа.
+
+     Что вернулось, пишем в консоль: когда заявки не приходят, это первое,
+     на что надо смотреть, — иначе непонятно, страница виновата или приёмник. */
+  async function otpravit(payload){
+    if(!CONFIG.endpoint){
+      console.log('Заявка (адрес приёмника не задан):', payload);
+      return {sent:false, note:'адрес приёмника не задан'};
+    }
+    const opts = {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    };
+    try{
+      const r = await fetch(CONFIG.endpoint, Object.assign({mode:'cors'}, opts));
+      const d = await r.json().catch(()=>null);
+      if(d && d.ok)    return {sent:true,  note:'принято приёмником'};
+      if(d && d.error) return {sent:true,  note:'приёмник ответил ошибкой: ' + d.error};
+      return {sent:true, note:'запрос дошёл, ответ непонятный, код ' + r.status};
+    }catch(err){
+      try{
+        await fetch(CONFIG.endpoint, Object.assign({mode:'no-cors'}, opts));
+        // запрос ушёл, но ответ нам читать не дали — считаем отправленным
+        return {sent:true, note:'отправлено вслепую: ' + err.message};
+      }catch(err2){
+        return {sent:false, note:'НЕ ОТПРАВЛЕНО: ' + err2.message};
+      }
+    }
+  }
+
   function backToSubjects(){
     $('#zd-test').hidden = true;
     $('#gate').hidden = true;
@@ -600,17 +636,8 @@ kz:{
     const btn = $('#submitBtn');
     btn.disabled = true; btn.style.opacity = '.6';
 
-    try{
-      if(CONFIG.endpoint){
-        await fetch(CONFIG.endpoint, {
-          method:'POST', mode:'no-cors',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
-          body: JSON.stringify(payload)
-        });
-      } else {
-        console.log('Заявка (endpoint не настроен):', payload);
-      }
-    }catch(err){ console.warn(err); }
+    const itog = await otpravit(payload);
+    console.log('Zerdeli: отправка заявки →', itog.note);
 
     track('DiagLead', {grade: payload.grade});
     if(window.fbq) window.fbq('track','Lead');
@@ -620,7 +647,7 @@ kz:{
     $('#zd-test').hidden = false;
     btn.disabled = false; btn.style.opacity = '';
     if(window.ZerdeliTest && window.ZerdeliTest.reveal){
-      window.ZerdeliTest.reveal(state.student);
+      window.ZerdeliTest.reveal(state.student, itog.sent);
     }
     $('#zd-test').scrollIntoView({behavior:'smooth', block:'start'});
   });
