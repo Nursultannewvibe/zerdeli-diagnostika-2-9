@@ -1,531 +1,6711 @@
-/* Zerdeli — движок диагностических тестов.
-   Стили лежат внутри этого же файла — отдельный .css не нужен. */
-(function(){var s=document.createElement("style");s.textContent="/* Zerdeli — стили движка тестов. Гамма совпадает с лендингом диагностики. */\n#zd-test{\n  --ground:#FAFAF5;--surface:#FFF;--surface-2:#F1F2E9;--line:#E2E4D6;\n  --ink:#191C12;--ink-2:#4A4D40;--muted:#6C6D6D;\n  --lime:#ACDF08;--lime-deep:#6F8F05;--lime-wash:#F0F8D2;\n  --copper:#B07446;--blue:#8BA5EF;--on-lime:#161A0C;\n  --r:16px;\n  font-family:'Onest','Noto Sans',system-ui,-apple-system,'Segoe UI',sans-serif;\n  color:var(--ink);font-size:17px;line-height:1.55;\n  max-width:720px;margin:0 auto;padding:20px 16px 60px;\n}\n@media (prefers-color-scheme:dark){\n  #zd-test:not([data-theme=light]){\n    --ground:#12140D;--surface:#1B1E14;--surface-2:#22261A;--line:#333929;\n    --ink:#EFF1E6;--ink-2:#C3C7B6;--muted:#9EA096;--lime-deep:#C7EF4E;--lime-wash:#25300A;\n    --copper:#D49A6B;--blue:#A6B9F4;\n  }\n}\n#zd-test *{box-sizing:border-box}\n#zd-test .zd-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:clamp(20px,4vw,32px);box-shadow:0 12px 32px -18px rgba(0,0,0,.35)}\n#zd-test .zd-center{display:grid;place-items:center;min-height:200px}\n#zd-test .zd-h1{font-family:'Unbounded','Onest',sans-serif;font-weight:800;font-size:clamp(22px,4.5vw,30px);line-height:1.15;letter-spacing:-.02em;margin:0 0 6px}\n#zd-test .zd-sub{color:var(--muted);font-size:15px;margin:0}\n#zd-test .zd-head{font-size:13px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}\n#zd-test .zd-badge{background:var(--lime-wash);color:var(--lime-deep);font-weight:700;font-size:12px;padding:4px 10px;border-radius:999px}\n\n#zd-test .zd-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin-top:14px;\n  padding:14px 22px;border:1px solid transparent;border-radius:999px;background:var(--lime);color:var(--on-lime);\n  font:inherit;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .1s ease,background .15s ease}\n#zd-test .zd-btn:active{transform:translateY(1px)}\n#zd-test .zd-btn:hover{background:#BCEE1C}\n#zd-test .zd-ghost{background:transparent;border-color:var(--line);color:var(--ink)}\n#zd-test .zd-ghost:hover{background:var(--surface-2)}\n#zd-test .zd-nav{display:flex;gap:10px}\n#zd-test .zd-nav .zd-btn{flex:1}\n\n#zd-test .zd-field{margin-top:16px;display:flex;flex-direction:column;gap:6px}\n#zd-test .zd-field label{font-size:13px;font-weight:600;color:var(--ink-2)}\n#zd-test .zd-field input{font:inherit;font-size:16px;min-height:50px;padding:12px 15px;border:1px solid var(--line);\n  border-radius:10px;background:var(--surface);color:var(--ink);width:100%}\n#zd-test .zd-field input:focus{outline:none;border-color:var(--lime-deep);box-shadow:0 0 0 3px var(--lime-wash)}\n#zd-test .zd-err{display:none;font-size:12.5px;color:var(--copper)}\n\n#zd-test .zd-list{display:flex;flex-direction:column;gap:10px;margin-top:18px}\n#zd-test .zd-pick{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;width:100%;\n  padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface-2);\n  font:inherit;color:inherit;cursor:pointer}\n#zd-test .zd-pick:hover{border-color:var(--lime-deep)}\n#zd-test .zd-pick-name{font-weight:600}\n#zd-test .zd-pick-meta{font-size:13px;color:var(--muted)}\n#zd-test .zd-tag{margin-top:6px;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;\n  color:var(--copper);background:rgba(176,116,70,.12);padding:3px 9px;border-radius:999px}\n\n#zd-test .zd-bar{height:5px;border-radius:999px;background:var(--surface-2);overflow:hidden;margin-bottom:18px}\n#zd-test .zd-bar span{display:block;height:100%;background:var(--lime);transition:width .3s ease}\n#zd-test .zd-qmeta{font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}\n#zd-test .zd-topic{background:var(--surface-2);padding:4px 10px;border-radius:999px;color:var(--ink-2)}\n#zd-test .zd-passage{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;\n  padding:14px 16px;margin-bottom:16px;font-size:15px;line-height:1.6;color:var(--ink-2);\n  white-space:pre-line;max-height:40vh;overflow-y:auto}\n#zd-test .zd-qtext{font-size:18px;line-height:1.45;font-weight:500;white-space:pre-line}\n#zd-test .zd-img{display:block;max-width:100%;margin:16px 0 0;border-radius:12px;border:1px solid var(--line);background:#fff}\n\n#zd-test .zd-opts{display:flex;flex-direction:column;gap:9px;margin:18px 0 20px}\n#zd-test .zd-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;min-height:52px;\n  padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);\n  font:inherit;color:inherit;cursor:pointer;transition:border-color .12s ease,background .12s ease}\n#zd-test .zd-opt:hover{border-color:var(--ink-2)}\n#zd-test .zd-opt i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;\n  background:var(--surface-2);color:var(--muted);font-style:normal;font-size:13px;font-weight:700}\n#zd-test .zd-opt.on{border-color:var(--lime);background:var(--lime-wash)}\n#zd-test .zd-opt.on i{background:var(--lime);color:var(--on-lime)}\n#zd-test .zd-block{margin:0 0 4px;border:0;background:transparent}\n#zd-test .zd-opts-letters{flex-direction:row;flex-wrap:wrap;gap:10px}\n#zd-test .zd-opts-letters .zd-opt{width:auto;flex:0 0 auto;min-width:0;justify-content:center;padding:10px 14px}\n#zd-test .zd-opts-letters .zd-opt i{width:30px;height:30px;font-size:15px}\n#zd-test .zd-opts-letters .zd-opt span{display:none}\n#zd-test .zd-opts-img{display:grid;grid-template-columns:1fr 1fr;gap:9px}\n#zd-test .zd-opts-img .zd-opt{flex-direction:column;align-items:flex-start;gap:8px;padding:12px}\n#zd-test .zd-opts-img img{width:100%;height:auto;border-radius:8px;background:#fff}\n#zd-test .zd-hint{min-height:20px;margin-top:10px;font-size:13.5px;color:var(--copper);text-align:center}\n\n#zd-test .zd-score{display:flex;align-items:baseline;gap:12px;margin:18px 0 6px}\n#zd-test .zd-score b{font-family:'Unbounded','Onest',sans-serif;font-size:44px;line-height:1;color:var(--lime-deep)}\n#zd-test .zd-score span{font-size:14px;color:var(--muted)}\n#zd-test .zd-sec{margin-top:22px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}\n#zd-test .zd-rows{display:flex;flex-direction:column;gap:13px;margin-top:12px}\n#zd-test .zd-row-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:5px;font-size:14.5px}\n#zd-test .zd-row-h b{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}\n#zd-test .zd-track{height:9px;border-radius:999px;background:var(--surface-2);overflow:hidden}\n#zd-test .zd-track i{display:block;height:100%;border-radius:999px;transition:width .8s cubic-bezier(.22,.8,.28,1)}\n#zd-test .zd-track i.ok,#zd-test .zd-legend i.ok{background:var(--lime)}\n#zd-test .zd-track i.mid,#zd-test .zd-legend i.mid{background:var(--blue)}\n#zd-test .zd-track i.gap,#zd-test .zd-legend i.gap{background:var(--copper)}\n#zd-test .zd-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n#zd-test .zd-chips span{display:inline-flex;align-items:center;justify-content:center;min-width:46px;\n  padding:8px 12px;border-radius:999px;background:rgba(176,116,70,.12);border:1px solid rgba(176,116,70,.3);\n  color:var(--copper);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums}\n#zd-test .zd-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}\n#zd-test .zd-legend span{display:inline-flex;align-items:center;gap:7px}\n#zd-test .zd-legend i{width:9px;height:9px;border-radius:50%;display:block}\n\n#zd-test .zd-warn{margin:16px 0;padding:14px 16px;border-radius:12px;background:rgba(176,116,70,.1);\n  border:1px solid rgba(176,116,70,.3);font-size:14.5px;color:var(--ink-2)}\n#zd-test .zd-spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--lime);animation:zd-spin .8s linear infinite}\n@keyframes zd-spin{to{transform:rotate(360deg)}}\n@media (prefers-reduced-motion:reduce){#zd-test *{animation-duration:.01ms!important;transition-duration:.01ms!important}}\n";document.head.appendChild(s);})();
-
-/* ============================================================
-   Zerdeli — движок диагностических тестов
-   Вставляется одним Embed на страницу Webflow /test
-   Контент тестов тянется из GitHub через jsDelivr.
-   ============================================================ */
-(function () {
-  'use strict';
-
-  /* ---------- 1. НАСТРОЙКИ — правьте здесь ---------- */
-  var CONFIG = {
-    // папка, где лежат manifest.json, tests.json и images.json.
-    // задаётся одной строкой в эмбеде Webflow
-    base: (window.ZERDELI_TESTS_BASE || './'),
-    // веб-приложение Google Apps Script, куда падают результаты
-    endpoint: (window.ZERDELI_ENDPOINT || 'https://script.google.com/macros/s/AKfycbz9bLV1C3Pd38h1L24uf0hG9xx_RLyvLfXSmOm8Bz2HWsqgzdfD2_DlS2L5Nf5Q-VTN/exec'),
-    whatsapp: '77780403999',
-    landingRu: '/diagnostika-znaniy',
-    landingKz: '/diagnostika-znaniy-kz'
-  };
-
-  /* ---------- 2. ТЕКСТЫ ---------- */
-  var T = {
-    ru: {
-      pickTest: 'Выберите тест', pickHint: 'Тесты вашего класса',
-      start: 'Начать тест', name: 'Имя и фамилия ученика', phone: 'Телефон родителя (WhatsApp)',
-      namePh: 'Как зовут ребёнка', errName: 'Напишите имя', errPhone: 'Проверьте номер: нужно 11 цифр',
-      q: 'Вопрос', of: 'из', next: 'Дальше', prev: 'Назад', finish: 'Завершить',
-      pickAnswer: 'Выберите вариант ответа',
-      resultTitle: 'Карта пробелов', score: 'Верных ответов',
-      byTopic: 'По темам программы',
-      missed: 'Где потеряны баллы', noMissed: 'Ошибок нет — все ответы верные',
-      missedNote: 'Разбора по темам для этого предмета пока нет: темы к вопросам ещё не проставлены. На разборе педагог пройдёт эти вопросы вместе с ребёнком.',
-      ok: 'Тема усвоена', mid: 'Требует повторения', gap: 'Пробел',
-      cta: 'Записаться на разбор', ctaNote: 'Педагог объяснит причины пробелов и даст план на 3 месяца.',
-      saving: 'Сохраняем результат…', saved: 'Результат сохранён',
-      notReady: 'Этот тест ещё готовится', notReadyNote: 'Правильные ответы пока не заполнены — результат посчитать нельзя. Напишите нам, подберём тест вручную.',
-      loadErr: 'Не удалось загрузить тест', again: 'Обновить страницу',
-      resume: 'Продолжить с вопроса', restart: 'Начать заново',
-      back: 'К списку предметов',
-      pdf: 'Скачать отчёт (PDF)'
+{
+ "note": "Все тесты одним файлом. Правится здесь же: найти нужный id, у вопроса поле correct — номер верного варианта, счёт с нуля.",
+ "tests": {
+  "2-matematika": {
+   "id": "2-matematika",
+   "grade": 2,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Математика_2_сынып_диагностикалық_тест.docx",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Теңдік орындалатындай етіп, бос торкөзге қоюға болатын санды тап. / Найди число, которое можно поставить в пустую клетку, чтобы равенство было выполнено.",
+     "options": [
+      "82",
+      "72",
+      "62"
+     ],
+     "image": "images/g2-q01.png",
+     "correct": 2
     },
-    kz: {
-      pickTest: 'Тестті таңдаңыз', pickHint: 'Сыныбыңыздың тестері',
-      start: 'Тестті бастау', name: 'Оқушының аты-жөні', phone: 'Ата-ананың телефоны (WhatsApp)',
-      namePh: 'Баланың аты', errName: 'Атын жазыңыз', errPhone: 'Нөмірді тексеріңіз: 11 сан болуы керек',
-      q: 'Сұрақ', of: '/', next: 'Әрі қарай', prev: 'Артқа', finish: 'Аяқтау',
-      pickAnswer: 'Жауап нұсқасын таңдаңыз',
-      resultTitle: 'Олқылықтар картасы', score: 'Дұрыс жауаптар',
-      byTopic: 'Бағдарлама тақырыптары бойынша',
-      missed: 'Ұпай қай жерде жоғалды', noMissed: 'Қате жоқ — барлық жауап дұрыс',
-      missedNote: 'Бұл пән бойынша тақырыптық талдау әзірге жоқ: сұрақтарға тақырып қойылмаған. Талдауда мұғалім осы сұрақтарды баламен бірге қарайды.',
-      ok: 'Тақырып меңгерілген', mid: 'Қайталауды қажет етеді', gap: 'Олқылық',
-      cta: 'Талдауға жазылу', ctaNote: 'Мұғалім олқылықтың себебін түсіндіріп, 3 айға жоспар береді.',
-      saving: 'Нәтиже сақталуда…', saved: 'Нәтиже сақталды',
-      notReady: 'Бұл тест әзірленуде', notReadyNote: 'Дұрыс жауаптар әлі толтырылмаған — нәтижені санау мүмкін емес. Бізге жазыңыз, тестті қолмен таңдаймыз.',
-      loadErr: 'Тестті жүктеу мүмкін болмады', again: 'Бетті жаңарту',
-      resume: 'Мына сұрақтан жалғастыру', restart: 'Қайтадан бастау',
-      back: 'Пәндер тізіміне',
-      pdf: 'Есепті жүктеу (PDF)'
-    }
-  };
-
-  /* ---------- 3. СЛУЖЕБНОЕ ---------- */
-  var qs = new URLSearchParams(location.search);
-  var lang = (qs.get('lang') || (/-kz\/?$/.test(location.pathname) ? 'kz' : 'ru')) === 'kz' ? 'kz' : 'ru';
-  var t = T[lang];
-  var root = document.getElementById('zd-test');
-  if (!root) return;
-  // когда движок работает внутри лендинга, имя и телефон уже собраны
-  // карточкой клиента, а язык переключается кнопкой на странице
-  var hooks = {};
-
-  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false, sent: false };
-  var KEY = 'zd-test-';
-
-  // короткий код отчёта: по нему потом собирается PDF на стороне Google.
-  // Случайный, чтобы чужую ссылку нельзя было подобрать перебором.
-  function uid() {
-    var s = '';
-    for (var i = 0; i < 12; i++) s += 'abcdefghijkmnpqrstuvwxyz23456789'[Math.floor(Math.random() * 32)];
-    return s;
-  }
-
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
-  }
-  function el(html) { root.innerHTML = html; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-  function save() {
-    try { localStorage.setItem(KEY + state.test.id, JSON.stringify({ a: state.answers, i: state.i, s: state.student })); } catch (e) {}
-  }
-  function load(id) {
-    try { return JSON.parse(localStorage.getItem(KEY + id) || 'null'); } catch (e) { return null; }
-  }
-  function clear(id) { try { localStorage.removeItem(KEY + id); } catch (e) {} }
-
-  function getJSON(url) {
-    return fetch(url, { cache: 'no-cache' }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
-      return r.json();
-    });
-  }
-
-  /* ---------- 4. ВЫБОР ТЕСТА ---------- */
-  function screenPick(manifest, grade) {
-    var list = manifest.tests.filter(function (x) { return !grade || x.grade === grade; });
-    if (!list.length) list = manifest.tests;
-    if (list.length === 1) return openTest(list[0].id);
-
-    el('<div class="zd-card">' +
-      '<h1 class="zd-h1">' + esc(t.pickTest) + '</h1>' +
-      '<p class="zd-sub">' + esc(t.pickHint) + '</p>' +
-      '<div class="zd-list">' + list.map(function (x) {
-        return '<button class="zd-pick" data-id="' + esc(x.id) + '">' +
-          '<span class="zd-pick-name">' + esc(x.subject[lang]) + '</span>' +
-          '<span class="zd-pick-meta">' + x.grade + (lang === 'kz' ? '-сынып' : ' класс') +
-          ' · ' + x.questions + (lang === 'kz' ? ' сұрақ' : ' вопросов') +
-          ' · ~' + x.minutes + ' мин</span>' +
-          (x.ready ? '' : '<span class="zd-tag">' + esc(t.notReady) + '</span>') +
-          '</button>';
-      }).join('') + '</div></div>');
-
-    root.querySelectorAll('.zd-pick').forEach(function (b) {
-      b.addEventListener('click', function () { openTest(b.dataset.id); });
-    });
-  }
-
-  /* Все тесты лежат одним файлом tests.json, картинки — отдельным images.json.
-     Так в репозитории не 130 файлов в пяти папках, а несколько штук рядом:
-     их проще загрузить и проще править. Картинки тянем только если они нужны
-     этому тесту — у языковых их нет вообще. */
-  var BANK = null, IMAGES = null;
-
-  function loadBank() {
-    if (BANK) return Promise.resolve(BANK);
-    return getJSON(CONFIG.base + 'tests.json').then(function (d) { return (BANK = d); });
-  }
-
-  function loadImages(test) {
-    var need = test.questions.some(function (q) {
-      return q.image || q.blockImage || q.optionImages;
-    });
-    if (!need || IMAGES) return Promise.resolve();
-    return getJSON(CONFIG.base + 'images.json')
-      .then(function (d) { IMAGES = d; })
-      .catch(function () { IMAGES = {}; });
-  }
-
-  function imgSrc(name) {
-    return (IMAGES && IMAGES[name]) || (CONFIG.base + name);
-  }
-
-  function openTest(id) {
-    el('<div class="zd-card zd-center"><div class="zd-spin"></div></div>');
-    loadBank().then(function (bank) {
-      var data = bank.tests && bank.tests[id];
-      if (!data) throw new Error('нет теста ' + id);
-      data = JSON.parse(JSON.stringify(data));
-      // вопросы с пометкой needsReview не показываем: у них потеряна формула,
-      // подчёркивание или рисунок — ответить на них честно нельзя
-      data.questions = data.questions.filter(function (q) { return !q.needsReview; });
-      return loadImages(data).then(function () { return data; });
-    }).then(function (data) {
-      state.test = data;
-      state.res = null; state.view = null;
-      state.student = (hooks.student && hooks.student.name) ? hooks.student : null;
-      var kept = load(id);
-      // недописанный тест: возвращаем на том же вопросе. Контакта в нём может
-      // и не быть — его теперь спрашивают в конце, а не в начале
-      if (kept && kept.a && Object.keys(kept.a).length) {
-        state.answers = kept.a; state.i = kept.i || 0;
-        if (kept.s) state.student = kept.s;
-        return screenResume();
-      }
-      // лендинг сам собирает контакт после теста — стартовый экран не нужен
-      if (hooks.gate || state.student) {
-        state.i = 0; state.answers = {};
-        save();
-        return screenQuestion();
-      }
-      screenStart();
-    }).catch(function () {
-      el('<div class="zd-card"><h1 class="zd-h1">' + esc(t.loadErr) + '</h1>' +
-        '<button class="zd-btn" onclick="location.reload()">' + esc(t.again) + '</button></div>');
-    });
-  }
-
-  /* ---------- 5. СТАРТ ---------- */
-  function head() {
-    var d = state.test;
-    return '<div class="zd-head"><span class="zd-badge">' + d.grade +
-      (lang === 'kz' ? '-сынып' : ' класс') + '</span> ' + esc(d.subject[lang]) + '</div>';
-  }
-
-  function screenResume() {
-    el('<div class="zd-card">' + head() +
-      '<h1 class="zd-h1">' + esc(state.student ? state.student.name : state.test.subject[lang]) + '</h1>' +
-      '<p class="zd-sub">' + esc(t.resume) + ' ' + (state.i + 1) + '</p>' +
-      '<button class="zd-btn" id="go">' + esc(t.next) + '</button>' +
-      '<button class="zd-btn zd-ghost" id="re">' + esc(t.restart) + '</button></div>');
-    root.querySelector('#go').onclick = screenQuestion;
-    root.querySelector('#re').onclick = function () {
-      clear(state.test.id); state.answers = {}; state.i = 0; screenStart();
-    };
-  }
-
-  function screenStart() {
-    var d = state.test;
-    el('<div class="zd-card">' + head() +
-      '<h1 class="zd-h1">' + esc(d.subject[lang]) + '</h1>' +
-      '<p class="zd-sub">' + d.questions.length + (lang === 'kz' ? ' сұрақ' : ' вопросов') +
-      ' · ~' + d.minutes + ' мин</p>' +
-      (d.answersFilled ? '' : '<div class="zd-warn"><b>' + esc(t.notReady) + '</b><br>' + esc(t.notReadyNote) + '</div>') +
-      '<div class="zd-field"><label for="zd-name">' + esc(t.name) + '</label>' +
-      '<input id="zd-name" autocomplete="name" placeholder="' + esc(t.namePh) + '">' +
-      '<span class="zd-err" id="zd-name-e">' + esc(t.errName) + '</span></div>' +
-      '<div class="zd-field"><label for="zd-phone">' + esc(t.phone) + '</label>' +
-      '<input id="zd-phone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__">' +
-      '<span class="zd-err" id="zd-phone-e">' + esc(t.errPhone) + '</span></div>' +
-      '<button class="zd-btn" id="zd-go">' + esc(t.start) + '</button></div>');
-
-    var ph = root.querySelector('#zd-phone');
-    // Маска: поле форматируем сами и всегда рисуем «+7» впереди, поэтому при
-    // новом вводе первая цифра — наша семёрка из префикса, её отбрасываем.
-    // Если префикса нет (номер вставили целиком) — 8 или лишняя 7 это код страны.
-    function fmtKz(d) {
-      var o = '+7 (';
-      if (d.length) o += d.slice(0, 3);
-      if (d.length >= 3) o += ')';
-      if (d.length > 3) o += ' ' + d.slice(3, 6);
-      if (d.length > 6) o += '-' + d.slice(6, 8);
-      if (d.length > 8) o += '-' + d.slice(8, 10);
-      return o;
-    }
-    ph.addEventListener('input', function () {
-      var raw = ph.value, d = raw.replace(/\D/g, '');
-      if (/^\+7/.test(raw)) d = d.slice(1);              // наша семёрка из префикса
-      if (d[0] === '8') d = d.slice(1);                   // человек начал с восьмёрки
-      if (d.length > 10 && d[0] === '7') d = d.slice(1);  // номер вставлен с кодом страны
-      ph.value = fmtKz(d.slice(0, 10));
-    });
-    ph.addEventListener('focus', function () { if (!ph.value) ph.value = '+7 ('; });
-
-    root.querySelector('#zd-go').onclick = function () {
-      var nm = root.querySelector('#zd-name').value.trim();
-      var digits = ph.value.replace(/\D/g, '');
-      var ok = true;
-      root.querySelector('#zd-name-e').style.display = nm.length < 2 ? 'block' : 'none';
-      root.querySelector('#zd-phone-e').style.display = digits.length !== 11 ? 'block' : 'none';
-      if (nm.length < 2 || digits.length !== 11) ok = false;
-      if (!ok) return;
-      state.student = { name: nm, phone: '+' + digits };
-      state.i = 0; state.answers = {};
-      save(); screenQuestion();
-    };
-  }
-
-  /* ---------- 6. ВОПРОСЫ ---------- */
-  function screenQuestion() {
-    var d = state.test, q = d.questions[state.i], total = d.questions.length;
-    var picked = state.answers[q.n];
-    var pct = Math.round(state.i / total * 100);
-
-    el('<div class="zd-card">' +
-      '<div class="zd-bar"><span style="width:' + pct + '%"></span></div>' +
-      '<div class="zd-qmeta">' + esc(t.q) + ' ' + (state.i + 1) + ' ' + esc(t.of) + ' ' + total +
-      (q.topic ? '<span class="zd-topic">' + esc(q.topic) + '</span>' : '') + '</div>' +
-      (q.passage ? '<div class="zd-passage">' + esc(q.passage) + '</div>' : '') +
-      // blockImage — вопрос вместе с вариантами снят картинкой из исходника
-      // (формулы и дроби, которые нельзя перенести текстом)
-      (q.blockImage
-        ? [].concat(q.blockImage).map(function (src) {
-            return '<img class="zd-img zd-block" src="' + esc(imgSrc(src)) + '" alt="">';
-          }).join('')
-        : '<div class="zd-qtext">' + esc(q.text) + '</div>' +
-          (q.image ? '<img class="zd-img" src="' + esc(imgSrc(q.image)) + '" alt="">' : '')) +
-      '<div class="zd-opts' + (q.optionImages ? ' zd-opts-img' : '') +
-      (q.blockImage ? ' zd-opts-letters' : '') + '">' +
-      (q.optionImages || q.options).map(function (o, k) {
-        var body = q.optionImages
-          ? '<img src="' + esc(imgSrc(o)) + '" alt="">'
-          : '<span>' + esc(o) + '</span>';
-        return '<button class="zd-opt' + (picked === k ? ' on' : '') + '" data-k="' + k + '">' +
-          '<i>' + String.fromCharCode(65 + k) + '</i>' + body + '</button>';
-      }).join('') + '</div>' +
-      '<div class="zd-nav">' +
-      (state.i > 0 ? '<button class="zd-btn zd-ghost" id="zd-prev">' + esc(t.prev) + '</button>' : '') +
-      '<button class="zd-btn" id="zd-next">' +
-      esc(state.i === total - 1 ? t.finish : t.next) + '</button></div>' +
-      '<div class="zd-hint" id="zd-hint"></div></div>');
-
-    root.querySelectorAll('.zd-opt').forEach(function (b) {
-      b.onclick = function () {
-        state.answers[q.n] = Number(b.dataset.k);
-        root.querySelectorAll('.zd-opt').forEach(function (x) { x.classList.remove('on'); });
-        b.classList.add('on');
-        root.querySelector('#zd-hint').textContent = '';
-        save();
-      };
-    });
-    var prev = root.querySelector('#zd-prev');
-    if (prev) prev.onclick = function () { state.i--; save(); screenQuestion(); };
-    root.querySelector('#zd-next').onclick = function () {
-      if (state.answers[q.n] === undefined) {
-        root.querySelector('#zd-hint').textContent = t.pickAnswer;
-        return;
-      }
-      if (state.i === total - 1) return finish();
-      state.i++; save(); screenQuestion();
-    };
-  }
-
-  /* ---------- 7. РЕЗУЛЬТАТ ---------- */
-  function grade(pct) { return pct >= 70 ? 'ok' : pct >= 45 ? 'mid' : 'gap'; }
-
-  function finish() {
-    var d = state.test, rows = [], right = 0, scored = 0;
-    var byTopic = {}, missed = [];
-    // темы проставлены не у всех тестов; без них сорок полосок по одному вопросу —
-    // не отчёт, поэтому показываем просто номера, где потеряны баллы
-    var hasTopics = d.questions.some(function (q) { return q.topic; });
-
-    d.questions.forEach(function (q) {
-      var a = state.answers[q.n];
-      if (q.correct === null || q.correct === undefined) return;
-      scored++;
-      var hit = a === q.correct;
-      if (hit) right++; else missed.push(q.n);
-      if (!hasTopics) return;
-      var key = q.topic || (lang === 'kz' ? 'Басқа' : 'Прочее');
-      byTopic[key] = byTopic[key] || { right: 0, total: 0 };
-      byTopic[key].total++;
-      if (hit) byTopic[key].right++;
-    });
-
-    Object.keys(byTopic).forEach(function (k) {
-      var v = byTopic[k], pct = Math.round(v.right / v.total * 100);
-      rows.push({ name: k, pct: pct, right: v.right, total: v.total, s: grade(pct) });
-    });
-    rows.sort(function (a, b) { return a.pct - b.pct; });
-
-    var overall = scored ? Math.round(right / scored * 100) : null;
-
-    state.view = { rows: rows, right: right, scored: scored, overall: overall,
-                   missed: missed, hasTopics: hasTopics };
-    state.res = {
-      grade: d.grade,
-      subject: d.subject.ru,
-      testId: d.id,
-      right: right,
-      scored: scored,
-      percent: overall,
-      // объектом, а не строкой: в названиях тем встречаются точки с запятой
-      // («There is / There are; some / any / no»), и склеенную строку потом
-      // не разобрать обратно на темы
-      topics: rows.reduce(function (o, r) { o[r.name] = r.pct; return o; }, {}),
-      answers: d.questions.map(function (q) { return q.n + '=' + (state.answers[q.n] === undefined ? '-' : state.answers[q.n]); }).join(','),
-      lang: lang,
-      page: location.pathname,
-      uid: uid()
-    };
-    // Ответы держим до показа отчёта: если человек обновит страницу на форме,
-    // тест не пропадёт — движок вернёт его на последний вопрос
-    // Отчёт посчитан, но контакта ещё нет: лендинг показывает форму и вернётся
-    // сюда через reveal(). Отправляет в этом случае он же — одной записью,
-    // чтобы заявка и результат не разъехались на две.
-    if (!state.student && hooks.gate) { state.gated = true; return hooks.gate(state.res); }
-    state.gated = false;
-    showResult();
-  }
-
-  function showResult() {
-    var d = state.test, v = state.view;
-    clear(d.id);
-    var rows = v.rows, right = v.right, scored = v.scored, overall = v.overall;
-    var missed = v.missed, hasTopics = v.hasTopics;
-
-    var wa = 'https://wa.me/' + CONFIG.whatsapp + '?text=' +
-      encodeURIComponent((lang === 'kz' ? 'Сәлеметсіз бе! ' : 'Здравствуйте! ') +
-        state.student.name + ' — ' + d.subject.ru + ', ' + d.grade +
-        (lang === 'kz' ? '-сынып' : ' класс') +
-        (overall === null ? '' : ', ' + overall + '%'));
-    // Отчёт собирается на стороне Google по коду: ссылка обычная, открывается
-    // в новой вкладке и работает с телефона без сохранения страницы.
-    var pdf = CONFIG.endpoint
-      ? CONFIG.endpoint + (CONFIG.endpoint.indexOf('?') < 0 ? '?' : '&') + 'pdf=' + state.res.uid
-      : '';
-
-    el('<div class="zd-card">' + head() +
-      '<h1 class="zd-h1">' + esc(t.resultTitle) + '</h1>' +
-      '<p class="zd-sub">' + esc(state.student.name) + '</p>' +
-      (overall === null
-        ? '<div class="zd-warn"><b>' + esc(t.notReady) + '</b><br>' + esc(t.notReadyNote) + '</div>'
-        : '<div class="zd-score"><b>' + overall + '%</b><span>' + esc(t.score) + ': ' +
-          right + ' / ' + scored + '</span></div>' +
-          (hasTopics
-            ? '<div class="zd-sec">' + esc(t.byTopic) + '</div>' +
-              '<div class="zd-rows">' + rows.map(function (r) {
-                return '<div class="zd-row"><div class="zd-row-h"><span>' + esc(r.name) + '</span>' +
-                  '<b>' + r.pct + '%</b></div><div class="zd-track"><i class="' + r.s +
-                  '" style="width:' + r.pct + '%"></i></div></div>';
-              }).join('') + '</div>' +
-              '<div class="zd-legend">' +
-              '<span><i class="ok"></i>' + esc(t.ok) + '</span>' +
-              '<span><i class="mid"></i>' + esc(t.mid) + '</span>' +
-              '<span><i class="gap"></i>' + esc(t.gap) + '</span></div>'
-            : '<div class="zd-sec">' + esc(missed.length ? t.missed : t.noMissed) + '</div>' +
-              (missed.length
-                ? '<div class="zd-chips">' + missed.map(function (n) {
-                    return '<span>№' + n + '</span>';
-                  }).join('') + '</div>' +
-                  '<p class="zd-sub" style="margin-top:12px">' + esc(t.missedNote) + '</p>'
-                : ''))) +
-      (pdf ? '<a class="zd-btn zd-ghost" href="' + esc(pdf) + '" target="_blank" rel="noopener">' +
-             esc(t.pdf) + '</a>' : '') +
-      '<p class="zd-sub" style="margin-top:18px">' + esc(t.ctaNote) + '</p>' +
-      '<a class="zd-btn" href="' + wa + '" target="_blank" rel="noopener">' + esc(t.cta) + '</a>' +
-      (hooks.onBack ? '<button class="zd-btn zd-ghost" id="zd-back">' + esc(t.back) + '</button>' : '') +
-      '<div class="zd-hint" id="zd-save">' + esc(t.saving) + '</div></div>');
-
-    if (hooks.onBack) root.querySelector('#zd-back').onclick = function () { hooks.onBack(); };
-    if (hooks.onFinish) hooks.onFinish({ id: d.id, percent: overall, right: right, scored: scored });
-
-    // Через ворота лендинг отправил всё сам — второй записи не нужно.
-    // А вот следующий предмет контакта уже не спрашивает, ворот не будет,
-    // и его результат отправляем отсюда.
-    if (state.gated) {
-      // «сохранено» пишем, только если лендинг подтвердил, что запись ушла:
-      // обещать сохранность, когда отправка не удалась, — обманывать
-      var box = root.querySelector('#zd-save');
-      if (box) box.textContent = state.sent ? t.saved : '';
-      return;
-    }
-    send(Object.assign({
-      date: new Date().toISOString(),
-      name: state.student.name,
-      phone: state.student.phone
-    }, state.res));
-  }
-
-  /* Сначала обычным запросом, с чтением ответа: приёмник отвечает {ok:true},
-     и тогда «сохранено» — правда, а не предположение. Если ответ прочитать
-     не дали, повторяем «слепо»: до сервера запрос доходит всё равно.
-     Итог пишем в консоль — по нему видно, страница виновата или приёмник. */
-  function send(payload) {
-    var box = root.querySelector('#zd-save');
-    function skazat(s) { if (box) box.textContent = s; }
-    if (!CONFIG.endpoint) {
-      skazat('');
-      console.log('Результат (адрес приёмника не задан):', payload);
-      return;
-    }
-    var opts = {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    };
-    function slepo(prichina) {
-      opts.mode = 'no-cors';
-      return fetch(CONFIG.endpoint, opts).then(function () {
-        skazat(t.saved);
-        console.log('Zerdeli: результат отправлен вслепую —', prichina);
-      }).catch(function (e) {
-        skazat('');
-        console.log('Zerdeli: результат НЕ отправлен —', e.message);
-      });
-    }
-    opts.mode = 'cors';
-    fetch(CONFIG.endpoint, opts).then(function (r) {
-      return r.json().catch(function () { return null; });
-    }).then(function (d) {
-      skazat(t.saved);
-      console.log('Zerdeli: результат отправлен, ответ приёмника —', d);
-    }).catch(function (e) { return slepo(e.message); });
-  }
-
-  /* ---------- 8. ВНЕШНИЙ ИНТЕРФЕЙС ----------
-     Лендинг вызывает ZerdeliTest.open(id, {gate: ...}) — тест открывается
-     прямо на странице и сразу с вопросов. Когда вопросы кончились, движок
-     отдаёт посчитанный отчёт в gate и ждёт: контакт собирает лендинг,
-     а reveal() показывает результат. Отдельная страница /test при этом
-     продолжает работать по-старому, спрашивая имя в начале. */
-  window.ZerdeliTest = {
-    open: function (id, opts) {
-      opts = opts || {};
-      hooks = opts;
-      if (opts.lang && T[opts.lang]) { lang = opts.lang; t = T[lang]; }
-      openTest(id);
+    {
+     "n": 2,
+     "topic": null,
+     "text": "17 мен 6-ның қосындысынан 8 бен 3-тің айырмасын азайтқанда нешеге тең болады? / Чему будет равно значение выражения, если из суммы 17 и 6 вычесть разность 8 и 3?",
+     "options": [
+      "18",
+      "12",
+      "23",
+      "20"
+     ],
+     "image": null,
+     "correct": 0
     },
-    // контакт получен — показываем отчёт
-    // second argument — дошла ли отправка: лендинг знает это, а движок нет
-    reveal: function (student, sent) {
-      if (!state.res || !student) return;
-      state.student = student;
-      state.sent = !!sent;
-      showResult();
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Үш дос 10 кг гір тасын көтеруден жарысқа түсті. Гір тасын Арман 30 рет, Ерасыл 5 рет, ал Айболат 45 рет көтерді. Ерасыл Айболатқа қарағанда неше есе кем көтерді? / Три друга соревновались в подъёме гири весом 10 кг. Арман поднял гирю 30 раз, Ерасыл — 5 раз, а Айболат — 45 раз. Во сколько раз Ерасыл поднял гирю меньше, чем Айболат?",
+     "options": [
+      "40",
+      "9",
+      "15",
+      "6"
+     ],
+     "image": null,
+     "correct": 0
     },
-    // отчёт посчитан и ждёт контакта
-    isWaiting: function () { return !!(state.res && !state.student); },
-    setLang: function (code) {
-      if (!T[code] || code === lang) return;
-      lang = code; t = T[lang];
-      if (!state.test) return;
-      if (state.res && state.student) showResult();
-      else if (!state.res) screenQuestion();
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Бес сәбіз бес минутта піссе, бір сәбіз неше минутта піседі? / Если пять морковок варятся за пять минут, то за сколько минут сварится одна морковка?",
+     "options": [
+      "25",
+      "30",
+      "5",
+      "1"
+     ],
+     "image": null,
+     "correct": 2
     },
-    isOpen: function () { return !!state.test; }
-  };
-
-  /* ---------- 9. СТАРТ ПРИЛОЖЕНИЯ ---------- */
-  if (window.ZERDELI_TEST_EMBEDDED) return;   // лендинг откроет тест сам
-  var wantTest = qs.get('test');
-  var wantGrade = parseInt(qs.get('class') || qs.get('grade'), 10) || null;
-
-  el('<div class="zd-card zd-center"><div class="zd-spin"></div></div>');
-  if (wantTest) {
-    openTest(wantTest);
-  } else {
-    getJSON(CONFIG.base + 'manifest.json')
-      .then(function (m) { screenPick(m, wantGrade); })
-      .catch(function () {
-        el('<div class="zd-card"><h1 class="zd-h1">' + esc(t.loadErr) + '</h1>' +
-          '<button class="zd-btn" onclick="location.reload()">' + esc(t.again) + '</button></div>');
-      });
+    {
+     "n": 5,
+     "topic": null,
+     "text": "41 − (52 − 33) = ?",
+     "options": [
+      "23",
+      "22",
+      "Вариант 3",
+      "12"
+     ],
+     "image": null,
+     "correct": 1,
+     "note": "в источнике только три варианта ответа — так в самой форме"
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Заңдылығын анықта: / Определи закономерность.",
+     "options": [
+      "62",
+      "35",
+      "78",
+      "44"
+     ],
+     "image": "images/g2-q06.png",
+     "correct": 0
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "103 − 35 = ?",
+     "options": [
+      "65",
+      "78",
+      "68",
+      "69"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Досжан кассада кезекте тұр. Егер Досжанның алдында 17 адам, Досжаннан кейін 13 адам кезек күтіп тұрған болса, барлығы неше адам кезекте тұр? / Досжан стоит в очереди у кассы. Если перед Досжаном стоят 17 человек, а после него — 13 человек, сколько всего человек в очереди?",
+     "options": [
+      "30",
+      "33",
+      "11",
+      "31"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Тікұшақпен 18 ересек адам тауға ұшты, бұл жас балаларға қарағанда 13-ке кем. Тікұшақпен барлығы неше адам тауға барды? / На вертолёте в гору полетели 18 взрослых, что на 13 меньше, чем детей. Сколько всего человек полетели в гору на вертолёте?",
+     "options": [
+      "49",
+      "31",
+      "23",
+      "39"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Айсұлу таңертең 07:15-те мектепке қарай жолға шығып, 14:05-те үйіне келеді. Ол мектепке барып келу үшін барлығы неше уақыт жұмсайды? / Айсулу вышла утром в 07:15 по направлению к школе, а домой вернулась в 14:05. Сколько всего времени она потратила?",
+     "options": [
+      "5 сағ 60 мин",
+      "7 сағ 45 мин",
+      "6 сағ 50 мин",
+      "7 сағ 55 мин"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "1A + B2 = 37 болса, онда А + В = ? / Если 1A + B2 = 37, то А + В = ?",
+     "options": [
+      "7",
+      "15",
+      "6",
+      "3"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Ақтоты бір сан ойлады, ол санды 5-ке көбейтті, шыққан санға 25-ті қосты, шыққан саннан 37-ні азайтты, сонда 18 саны шықты. Ол қандай сан ойлады? / Ақтоты задумала одно число, умножила его на 5, к полученному числу прибавила 25, затем вычла 37, и получилось 18. Какое число она задумала?",
+     "options": [
+      "5",
+      "8",
+      "6",
+      "2"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Қаршыға мен Оспанның жастарын қоссақ 17-ге тең болады. 4 жылдан кейін олардың жастарының қосындысы нешеге тең болады? / Если сложить возраст Кати и Саши, получится 17. Каков будет их общий возраст через 4 года?",
+     "options": [
+      "19",
+      "21",
+      "34",
+      "25"
+     ],
+     "image": null,
+     "correct": 1,
+     "note": "имена в казахской и русской половинах разные (Қаршыға мен Оспан / Катя и Саша) — так в источнике"
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Суретте неше үшбұрыш бар? / Сколько всего треугольников на рисунке?",
+     "options": [
+      "7",
+      "9",
+      "8",
+      "6"
+     ],
+     "image": "images/g2-q14.png",
+     "correct": 3
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "0, 7, 8, 6 цифрларын пайдаланып, цифрлары қайталанбайтын неше екі таңбалы сан құрауға болады (екі цифрі де әртүрлі болу керек)? / Сколько двузначных чисел можно составить, используя цифры 0, 7, 8, 6, где они должны быть различными?",
+     "options": [
+      "12",
+      "9",
+      "5",
+      "16"
+     ],
+     "image": null,
+     "correct": 1
+    }
+   ]
+  },
+  "3-matematika": {
+   "id": "3-matematika",
+   "grade": 3,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Математика_сынақ_тесті 3-сынып.docx",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Дөңгелектің неше бөлігі боялған?/Какая часть круга закрашена",
+     "options": [
+      "3/4",
+      "2/4",
+      "1/2",
+      "1/3"
+     ],
+     "image": "images/g3-q01.png",
+     "correct": 2
+    },
+    {
+     "n": 2,
+     "topic": "кеңістіктік геометриялық фигуралар",
+     "text": "Сызбада барлығы қанша текше бар? / Сколько всего кубиков на чертеже?",
+     "options": [
+      "10",
+      "11",
+      "12",
+      "13"
+     ],
+     "image": "images/g3-q02.png",
+     "correct": 2
+    },
+    {
+     "n": 3,
+     "topic": "Геометриялық фигуралардың периметрі, ауданы, көлемін табу",
+     "text": "Тіктөртбұрыштың ұзындығы 24 см, ал ені одан 3 есе кем. Осы тіктөртбұрыштың периметрін табыңдар:/ Длина прямоугольника 24 см, а ширина в 3 раза меньше. Найдите периметр этого прямоугольника:",
+     "options": [
+      "128 см",
+      "90 см",
+      "76 см",
+      "64 см"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 4,
+     "topic": "Геометриялық фигуралардың периметрі, ауданы, көлемін табу",
+     "text": "Шеңбердің радиусы 6 см болса, диаметрі неше см?/ Чему равен диаметр окружности, если радиус равен 6 см?",
+     "options": [
+      "12 см",
+      "13 см",
+      "14 см",
+      "16 см"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 5,
+     "topic": "Сандар және оларға амалдар қолдану",
+     "text": "Есепте:/Вычисли",
+     "options": [
+      "21",
+      "16",
+      "18",
+      "15"
+     ],
+     "image": "images/g3-q05.png",
+     "correct": 0
+    },
+    {
+     "n": 6,
+     "topic": "Арифметикалық амалдар қасиеті",
+     "text": "Көбейтудің үлестірімділік қасиеті: / Распределительное свойство умножения: (a + b) ∙ c =?",
+     "options": [
+      "a + b∙c",
+      "a∙b + b∙c",
+      "a∙c + b",
+      "a∙c + b∙c"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 7,
+     "topic": "Математикалық модельдеудің көмегімен мәтінді есептер шығару",
+     "text": "Санжар әрбірі 90 теңгеден 8 қарындаш және әрбіреуі 120 теңгеден 5 блакнот сатып алды. Ол барлығы қанша ақша жұмсайды?? / Санжар купил 8 карандашей по 90 тенге каждый и 5 блокнотов по 120 тенге каждый. Сколько всего денег он потратил?",
+     "options": [
+      "1320 тг",
+      "1580 тг",
+      "2300 тг",
+      "2350 тг"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 8,
+     "topic": "Теңдеулер және теңсіздіктерді шешу",
+     "text": "Теңдеуді шеш: 4x+28=88 /Решите уравнение: 4x+28=88",
+     "options": [
+      "12",
+      "13",
+      "14",
+      "15"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 9,
+     "topic": "Сандар және оларға амалдар қолдану",
+     "text": "Қалдықпен есептеуді орында: 96 : 5 = ? / Выполниите деление с остатком: 96 :5=?",
+     "options": [
+      "20 (1 қалдық)",
+      "15 (1 қалдық)",
+      "17 (1 қалдық)",
+      "19 (1 қалдық)"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 10,
+     "topic": "Бөлшекке берілген есеп",
+     "text": "Тәуліктің 3/8 бөлігі қанша сағат?/ Сколько часов составляет 3/8 суток?",
+     "options": [
+      "6 сағат",
+      "8 сағат",
+      "9 сағат",
+      "12 сағат"
+     ],
+     "image": "images/g3-q10.png",
+     "correct": 2
+    },
+    {
+     "n": 11,
+     "topic": "Логикалық есеп",
+     "text": "Жұлдызшалардың орнындағы цифрларды анықтап, олардың қосындысын табыңыз./ Определите числа на месте звездочек и найдите их сумму:",
+     "options": [
+      "9",
+      "10",
+      "13",
+      "15"
+     ],
+     "image": "images/g3-q11.png",
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": "логикалық есеп",
+     "text": "Асан отырған вагон басынан санағанда жетінші және соңынан санағанда тоғызыншы орында екенін байқады. Сонда пойызда қанша вагон бар?/ Асан заметил, что его вагон седьмой по счету с начала и девятый по счету с конца. Сколько всего вагонов в поезде?",
+     "options": [
+      "14",
+      "15",
+      "16",
+      "17"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 13,
+     "topic": "Сандар және оларға амалдар қолдану",
+     "text": "Есепте: /Вычисли 28+(566-305) :(687-678)",
+     "options": [
+      "57",
+      "34",
+      "23",
+      "18"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 14,
+     "topic": "Математикалық модельдеудің көмегімен мәтінді есептер шығару",
+     "text": "Асқар мен Данада барлығы 160 марка бар. Асқардың маркалары Дананың маркаларының 3 есесіндей. Асқарда неше марка бар?/ У Аскара и Дины всего есть 160 марок. У Аскара марок в 3 раза больше, чем у Дины. Сколько марок у Аскара?",
+     "options": [
+      "160",
+      "150",
+      "130",
+      "120"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 15,
+     "topic": "Математикалық модельдеудің көмегімен мәтінді есептер шығару",
+     "text": "Ербол бір сан таңдап алды, оны 7-ге бөлді, оған 7-ні қосты, одан шыққан санды 7-ге көбейтті. Шыққан сан -77. Ербол қандай сан таңдап алды?/ Ербол задумал число, поделил его на 7, прибавил 7, затем полученный результат умножил на 7. Какое число задумал Ербол?",
+     "options": [
+      "78",
+      "60",
+      "48",
+      "28"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 16,
+     "topic": "кеңістіктік геометриялық фигуралар",
+     "text": "Берілген сызбалардан текшенің жазбасы бола алатыны қайсысы?/ Из приведенных ниже чертежей который может быть разверткой куба?",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "optionImages": [
+      "images/g3-q16-1.png",
+      "images/g3-q16-2.png",
+      "images/g3-q16-3.png",
+      "images/g3-q16-4.png"
+     ]
+    },
+    {
+     "n": 17,
+     "topic": "Математикалық модельдеудің көмегімен мәтінді есептер шығару",
+     "text": "Ажар 35 теңгеден 4 қалам сатып алғаннан кейін, оның 130 теңгесі қалды. Бастапқыда Ажардың неше теңгесі болды?/ После того как Ажар купила 4 ручки по 35 тенге каждая, у нее осталось 130 тенге. Сколько денег было у Ажар изначально?",
+     "options": [
+      "270 тг",
+      "250 тг",
+      "230 тг",
+      "210 тг"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 18,
+     "topic": "Математикалық модельдеудің көмегімен мәтінді есептер шығару",
+     "text": "3-сыныпта 49 оқушы бар. Ұлдардың саны қыздардың санынан 5-еуі артық. 3-сыныпта қанша қыз бар? / В 3 классе 49 учеников. Мальчиков в классе на 5 больше, чем девочек. Сколько девочек в 3 классе?",
+     "options": [
+      "13",
+      "18",
+      "22",
+      "44"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 19,
+     "topic": "Сандар және шамалар туралы түсініктер",
+     "text": "332 мин + ( ) = 8 сағ(часов)",
+     "options": [
+      "148 мин",
+      "68 мин",
+      "238 мин",
+      "168 мин"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 20,
+     "topic": "логикалық есеп",
+     "text": "Үш қорапта алма, алмұрт, банан бар. Екінші және үшінші қорапта алма емес, үшіншіде банан емес. Екінші қорапта не салынған?/ В трех ящиках лежат яблоко, груша и банан. Во втором и в третьем ящиках не яблоко, в третьем не банан. Что лежит во втором ящике?",
+     "options": [
+      "Алма",
+      "Алмұрт",
+      "Банан",
+      "Ештеңе"
+     ],
+     "image": null,
+     "correct": 2
+    }
+   ]
+  },
+  "4-english": {
+   "id": "4-english",
+   "grade": 4,
+   "subject": {
+    "ru": "Английский язык",
+    "kz": "Ағылшын тілі"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "English Test 4class.docx",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "________ is your name?",
+     "options": [
+      "How",
+      "Who",
+      "What",
+      "When"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "________ old are you?",
+     "options": [
+      "How",
+      "Who",
+      "What",
+      "When"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Where ________?",
+     "options": [
+      "you from",
+      "you are from",
+      "are you from",
+      "from you are"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "My brother ________ a bike.",
+     "options": [
+      "have got",
+      "haven't got",
+      "got has",
+      "has got"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Who’s ________ boy?",
+     "options": [
+      "this",
+      "these",
+      "those",
+      "this is"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "________ is my father.",
+     "options": [
+      "She",
+      "He",
+      "You",
+      "We"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "I ________ a teacher.",
+     "options": [
+      "not",
+      "is",
+      "are",
+      "am"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "I have got ________ banana.",
+     "options": [
+      "a",
+      "an",
+      "some",
+      "any"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "________ you like chocolate?",
+     "options": [
+      "Do",
+      "Does",
+      "Are",
+      "Is"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "My sister ________ books.",
+     "options": [
+      "read",
+      "reads",
+      "reading",
+      "reads not"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Timur ________ watch TV.",
+     "options": [
+      "isn’t",
+      "don’t",
+      "doesn’t",
+      "not"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "My birthday is ________ May.",
+     "options": [
+      "in",
+      "on",
+      "at",
+      "over"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Serik and Anna ________ homework now.",
+     "options": [
+      "is doing",
+      "do",
+      "are doing",
+      "does"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "My teacher ________ happy yesterday.",
+     "options": [
+      "is",
+      "be",
+      "were",
+      "was"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "I ________ to the cinema yesterday.",
+     "options": [
+      "go",
+      "went",
+      "going",
+      "was"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "How many children do Mr. and Mrs. Smith have?",
+     "passage": "The House\n\nMr. and Mrs. Smith have one son and one daughter. The son's name is John. The daughter's name is Sarah.\n\nThe Smiths live in a house. They have a living room. They watch TV in the living room. The father cooks food in the kitchen. They eat in the dining room. The house has two bedrooms. They sleep in the bedrooms. They keep their clothes in the closet. There is one bathroom. They brush their teeth in the bathroom.\n\nThe house has a garden. John and Sarah play in the garden. They have a dog. John and Sarah like to play with the dog.",
+     "options": [
+      "No children",
+      "One son and one daughter",
+      "One son",
+      "One daughter"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "Who cooks in the kitchen?",
+     "passage": "The House\n\nMr. and Mrs. Smith have one son and one daughter. The son's name is John. The daughter's name is Sarah.\n\nThe Smiths live in a house. They have a living room. They watch TV in the living room. The father cooks food in the kitchen. They eat in the dining room. The house has two bedrooms. They sleep in the bedrooms. They keep their clothes in the closet. There is one bathroom. They brush their teeth in the bathroom.\n\nThe house has a garden. John and Sarah play in the garden. They have a dog. John and Sarah like to play with the dog.",
+     "options": [
+      "John",
+      "Sarah",
+      "Father",
+      "Mother"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "Where does the family eat?",
+     "passage": "The House\n\nMr. and Mrs. Smith have one son and one daughter. The son's name is John. The daughter's name is Sarah.\n\nThe Smiths live in a house. They have a living room. They watch TV in the living room. The father cooks food in the kitchen. They eat in the dining room. The house has two bedrooms. They sleep in the bedrooms. They keep their clothes in the closet. There is one bathroom. They brush their teeth in the bathroom.\n\nThe house has a garden. John and Sarah play in the garden. They have a dog. John and Sarah like to play with the dog.",
+     "options": [
+      "Living room",
+      "Dining room",
+      "Bedroom",
+      "Kitchen"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "How many bedrooms are in the house?",
+     "passage": "The House\n\nMr. and Mrs. Smith have one son and one daughter. The son's name is John. The daughter's name is Sarah.\n\nThe Smiths live in a house. They have a living room. They watch TV in the living room. The father cooks food in the kitchen. They eat in the dining room. The house has two bedrooms. They sleep in the bedrooms. They keep their clothes in the closet. There is one bathroom. They brush their teeth in the bathroom.\n\nThe house has a garden. John and Sarah play in the garden. They have a dog. John and Sarah like to play with the dog.",
+     "options": [
+      "One",
+      "Three",
+      "Four",
+      "Two"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "What do John and Sarah do in the garden?",
+     "passage": "The House\n\nMr. and Mrs. Smith have one son and one daughter. The son's name is John. The daughter's name is Sarah.\n\nThe Smiths live in a house. They have a living room. They watch TV in the living room. The father cooks food in the kitchen. They eat in the dining room. The house has two bedrooms. They sleep in the bedrooms. They keep their clothes in the closet. There is one bathroom. They brush their teeth in the bathroom.\n\nThe house has a garden. John and Sarah play in the garden. They have a dog. John and Sarah like to play with the dog.",
+     "options": [
+      "Sleep",
+      "Brush their teeth",
+      "Cook",
+      "Play"
+     ],
+     "image": null,
+     "correct": 3
+    }
+   ]
+  },
+  "4-matematika": {
+   "id": "4-matematika",
+   "grade": 4,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Математика_4_сынып_сынақ_тесті.docx",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "Теңдеулер және теңсіздіктерді шешу",
+     "text": "Теңдеуді шеш: / Реши уравнение (45-x)∙4+235=428-125",
+     "options": [
+      "14",
+      "28",
+      "29",
+      "33"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 2,
+     "topic": "Логикалық есеп",
+     "text": "Жанұядағы 4 баланың жастарының қосындысы 81. Олардың 3 жылдан кейінгі жастарының қосындысы қанша болады?/ Сумма возрастов 4 детей в семье равна 81. Чему будет равна сумма их возрастов через 3 года?",
+     "options": [
+      "84",
+      "88",
+      "93",
+      "96"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 3,
+     "topic": "Логикалық есеп",
+     "text": "Мәди тақтаға 1-ден 100-ге дейінгі сандарды жазды. Ол «4» цифр бар неше санды жазды?/ Мади написал на доске числа от 1 до 100. Сколько всего он написал чисел, которые содержат цифру «4»?",
+     "options": [
+      "50 сан",
+      "10 сан",
+      "19 сан",
+      "20 сан"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 4,
+     "topic": "Геометриялық фигуралардың периметрі, ауданы, көлемін табу",
+     "text": "Берілген сызбаның боялған бөлігінің ауданын табыңдар./ Найдите площадь закрашенной части на изображении:",
+     "options": [
+      "25",
+      "38",
+      "26",
+      "198"
+     ],
+     "image": "images/g4m-q04.png",
+     "correct": 2
+    },
+    {
+     "n": 5,
+     "topic": "Қозғалысқа берілген есеп",
+     "text": "Арақашықтығы 24 км болған екі ауылдан бір мезетте екі көлік бір-бірінен қарама-қарсы жолға шықты. Бірінші көліктің жылдамдығы 42 км/сағ, екінші көліктің жылдамдығы 36 км/сағ. 3 сағат өткеннен кейін олардың арақашықтығы қанша болады?/ Из двух поселков, расстояние между которыми 24 км, одновременно навстречу друг другу выехали два автомобиля. Скорость первого – 42 км/ч, второго – 36 км/ч. Какое расстояние будет между ними через 3 часа?",
+     "options": [
+      "210 км",
+      "244 км",
+      "258 км",
+      "264 км"
+     ],
+     "image": "images/g4m-q05.png",
+     "correct": 2
+    },
+    {
+     "n": 6,
+     "topic": "Логикалық есеп",
+     "text": "Қоян мен тауықтардың жалпы саны 90, аяқтарының саны 252. Қанша қоян бар?/ Общее количество кроликов и кур – 90, а количество ног – 252. Сколько всего кроликов?",
+     "options": [
+      "қоян/кролики-36",
+      "қоян/кролики-54",
+      "қоян/кролики-18",
+      "қоян/кролики-16"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 7,
+     "topic": "Логикалық есеп",
+     "text": "4, 5, 6, 9 цифрларынан пайдаланып, цифрлары қайталанбайтын қанша үш таңбалы сан құрауға болады?/ Сколько трехзначных чисел, цифры которых не повторяются, можно составить из цифр 4, 5, 6, 9?",
+     "options": [
+      "12",
+      "18",
+      "24",
+      "48"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 8,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Амалдарды орында, дұрыс жауабын тап: 600945 санынан 8769 бен 5602 - нің қосындысын кеміт./ Выполни действия и найди правильный ответ: Уменьши число 600945 на сумму чисел 8769 и 5602.",
+     "options": [
+      "586 457",
+      "586 754",
+      "586 574",
+      "585 674"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 9,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Арман өзінің сағатының әр сағатта 20 секунд қалатынын байқады. Бір тәуліктен соң Арманның сағаты қанша минутқа қалатын болады?/ Арман заметил, что его часы каждый час отстают на 20 секунд. На сколько минут будут отставать его часы через сутки?",
+     "options": [
+      "8 мин",
+      "4 мин",
+      "6 мин",
+      "2 мин"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": "Логикалық есеп",
+     "text": "Қанша куб (текше) бар?/ Сколько кубиков на изображении?",
+     "options": [
+      "20",
+      "24",
+      "18",
+      "28"
+     ],
+     "image": "images/g4m-q10.png",
+     "correct": 3
+    },
+    {
+     "n": 11,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Екі қорапта бірдей мөлшерде кәмпиттер болды. Егер бірінші қораптан 75 кг, ал екінші қораптан 45 кг кәмпит сатылғаннан кейін, екінші қорапта бірінші қорапқа қарағанда 7 есе артық кәмпит қалған болса, онда екі қорапта бастапқыда қанша кәмпит болған?/ В двух коробках было одинаковое количество конфет. После того как из первого ящика продали 75 кг, а из второго – 45 кг, во втором ящике осталось конфет в 7 раз больше, чем в первом. Сколько конфет было изначально в каждом ящике?",
+     "options": [
+      "65",
+      "70",
+      "80",
+      "50"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": "Қозғалысқа берілген есеп",
+     "text": "А қаласынан бір уақытта бір бағытта жеңіл мен жүк көліктері жолға шықты. Жүк көлігінің жылдамдығы 85 км/сағ, ал жеңіл көліктікі одан жылдамырақ. 3 сағаттан кейін жеңіл көлік жүк көлігін 45 км-ге озып кетті. Жеңіл көліктің жылдамдығы қанша км/сағ?/ Из города А одновременно в одном направлении выехали легковой автомобиль и грузовик. Скорость грузовика - 85 км/ч, а легковая машина едет быстрее. Через 3 часа легковая машина опередила грузовик на 45 км. Какова скорость легковой машины в км/ч?",
+     "options": [
+      "100 км/сағ",
+      "70 км/сағ",
+      "80 км/сағ",
+      "150 км/сағ"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": "Өнімділік. Бірлескен жұмыс",
+     "text": "Бірінші теруші 216 беттік кітапты 6 сағатта, ал екінші теруші сол кітапты 4 сағатта тереді. Екінші теруші біріншісіне қарағанда сағатына неше бет артық тереді?/ Первый наборщик набирает книгу объемом 216 страниц за 6 часов, а второй – за 4 часа. На сколько страниц в час второй наборщик печатает больше, чем первый?",
+     "options": [
+      "36",
+      "24",
+      "18",
+      "54"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 14,
+     "topic": "Сандар және шамалар туралы түсініктер",
+     "text": "26: 3 бөлу өрнегін аралас сан түрінде жазғанда:/ Запиши деление 26:3 в виде смешанного числа.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "optionImages": [
+      "images/g4m-q14-1.png",
+      "images/g4m-q14-2.png",
+      "images/g4m-q14-3.png",
+      "images/g4m-q14-4.png"
+     ]
+    },
+    {
+     "n": 15,
+     "topic": "Қозғалысқа берілген есеп",
+     "text": "Құс инелікті 7 м/с жылдамдықпен қуа жөнелді. 1 минутта өткеннен кейін қуып жетті. Бастапқыда аралары 60 м болса, инеліктің жылдамдығын табыңыз./ Птица погналась за стрекозой со скоростью 7 м/с и догнала ее через 1 минуту. Если изначально расстояние между ними было 60 метров, найдите скорость стрекозы.",
+     "options": [
+      "6 см/с",
+      "6 м/с",
+      "60 м/с",
+      "7 м/с"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 16,
+     "topic": "Эйлер венн диаграммасы және жиын",
+     "text": "Сыныпта жалпы 15 оқушы бар. Олардың ішінде 9 оқушы шахмат үйірмесіне барады. 12 оқушы бокс үйірмесіне барады. Екі үйірмеге де баратын оқушылар саны қанша?/ В классе всего 15 учеников. Из них 9 ходят в шахматный кружок, а 12 – в бокс. Сколько учеников посещают оба кружка?",
+     "options": [
+      "3",
+      "6",
+      "9",
+      "21"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 17,
+     "topic": "Өнімділік. Түсімділік, Бірлескен жұмыс",
+     "text": "10 шебер 11 сағатта 1 210 бұйым жасайды. Егер тағы 21 шебер қосылса, онда барлық шебер 12 сағатта қанша бұйым жасайды?/ 10 мастеров изготавливают 1 210 деталей за 11 часов. Если к ним присоединятся еще 21 мастера, сколько изделий смогут изготовить все мастера за 12 часов?",
+     "options": [
+      "2 770",
+      "4 092",
+      "121",
+      "2 420"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 18,
+     "topic": "Логикалық есеп",
+     "text": "Науырыз мерекесінде 6 оқушы бір-біріне сиылықтар жасады. Онда барлық силықтардың саны қанша болады?/ На праздник Наурыз 6 учеников подарили друг другу подарки. Сколько всего подарков было подарено?",
+     "options": [
+      "12",
+      "15",
+      "24",
+      "30"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 19,
+     "topic": "Көптаңбалы сандар және оларға амалдар қолдану",
+     "text": "Берілген өрнекте қате қолданылған арифметикалық амалды тауып, теңдікті тура теңдікке айналдыр./ В данном выражении найди ошибочно использованное арифметическое действие и исправь его так, чтобы равенство было верным. (32 : 4 - 126) : 2 = 67",
+     "options": [
+      "Бірінші « : » таңбасын « + » -ға алмастырамыз;/ Заменяем первый знак «:» на «+»;",
+      "« - » таңбасын « + » -ға алмастырамыз;/ Заменяем знак « - » на « + »;",
+      "Екінші « : » таңбасын « - » -ға алмастырамыз;; / Заменяем второй знак « : » на « - »;",
+      "Жақшаны алып тастаймыз; / Убираем скобки."
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 20,
+     "topic": "Өнімділік. Түсімділік, Бірлескен жұмыс",
+     "text": "Ауданы 100 м² болған бірінші жылыжайдан түсімділіг 20 кг/м². Ауданы 120 м² екінші жылыдайдың түсімділігі 19 кг/м². Екінші жылыжайдан біріншіге қарағанда қанша килограмм қызанақ артық жиналады?/ Урожайность первой теплицы, площадью 100, равна 20 кг/м²м². Урожайность второй теплицы, площадью 120, равна 19 кг/м²м². На сколько килограммов больше помидоров собирают со второй теплицы, чем с первой?",
+     "options": [
+      "280 кг",
+      "200 кг",
+      "180 кг",
+      "120 кг"
+     ],
+     "image": null,
+     "correct": 0
+    }
+   ]
+  },
+  "5-english": {
+   "id": "5-english",
+   "grade": 5,
+   "subject": {
+    "ru": "Английский язык",
+    "kz": "Ағылшын тілі"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "English_Diagnostic_Test_Word.docx (5-сынып)",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "To be verb",
+     "text": "My brother _______ a vet.",
+     "options": [
+      "are",
+      "is",
+      "am",
+      "were"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 2,
+     "topic": "There is / There are; some / any / no",
+     "text": "_________ ______ bananas on the table.",
+     "options": [
+      "There is / any",
+      "There are / any",
+      "There are / some",
+      "There is / no"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 3,
+     "topic": "Comparative and Superlative adjectives",
+     "text": "Aisha is the _______.",
+     "options": [
+      "tallest",
+      "taller",
+      "taller than",
+      "more taller"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 4,
+     "topic": "Telling the time",
+     "text": "It is quarter ______ six. (18:15)",
+     "options": [
+      "to",
+      "past",
+      "half past",
+      "half to"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 5,
+     "topic": "Prepositions of time",
+     "text": "My sister's birthday is _____ 3rd of November.",
+     "options": [
+      "at",
+      "in",
+      "on",
+      "for"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 6,
+     "topic": "Present Simple tense",
+     "text": "She ______ in Astana.",
+     "options": [
+      "live",
+      "don't lives",
+      "doesn't live",
+      "didn't lives"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 7,
+     "topic": "Present Continuous",
+     "text": "Translate the sentence into English: Олар ұйықтап жатыр / Они спят",
+     "options": [
+      "They are sleeping.",
+      "They are sleep.",
+      "We are sleeping.",
+      "They slept."
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 8,
+     "topic": "Question words",
+     "text": "_____ ______ he going? To the park.",
+     "options": [
+      "Who / is",
+      "Why / are",
+      "Where / is",
+      "What / are"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 9,
+     "topic": "Prepositions of place",
+     "text": "Arman is waiting for his friend ______ his house.",
+     "options": [
+      "in front of",
+      "under",
+      "on",
+      "between"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": "Past Simple tense",
+     "text": "______ they in Almaty yesterday?",
+     "options": [
+      "Was",
+      "Were",
+      "Do",
+      "Did"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 11,
+     "topic": "Past Simple tense",
+     "text": "My mum _______ a letter two days ago.",
+     "options": [
+      "writed",
+      "write",
+      "wrote",
+      "was wrote"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": "Adverbs of manner",
+     "text": "The train was moving _____.",
+     "options": [
+      "slowly",
+      "slow",
+      "tired",
+      "fastly"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": "Possessive pronouns",
+     "text": "This teddy is _____. My sister gave it to me for my birthday.",
+     "options": [
+      "mine",
+      "my",
+      "me",
+      "their"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 14,
+     "topic": "Passive voice",
+     "text": "The book __________ published last year.",
+     "options": [
+      "are",
+      "will be",
+      "was",
+      "were"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 15,
+     "topic": "Present Perfect tense",
+     "text": "Choose the correct sentence in Present Perfect.",
+     "options": [
+      "He have just finished his homework.",
+      "He has just eaten lunch.",
+      "He ate lunch a few hours ago.",
+      "He doesn't eat vegetables very often."
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 16,
+     "topic": "Understanding supporting details and specific information",
+     "text": "Where did Sam and Lily go for the weekend?",
+     "options": [
+      "To the beach",
+      "To their grandpa's farm",
+      "To the mountains",
+      "To a big city"
+     ],
+     "image": null,
+     "correct": 1,
+     "passage": "A Weekend at Grandpa's Farm\nLast weekend, Sam and his sister Lily visited their grandpa's farm. They woke up early on Saturday and packed their bags. Their parents drove them to the farm, which was an hour away from their house.\nWhen they arrived, Grandpa was waiting for them at the gate. He was very happy to see them. The farm was big, with green fields, animals, and a small lake. Sam and Lily ran to see the animals. There were cows, chickens, and three friendly dogs.\nIn the afternoon, Grandpa showed them how to collect eggs from the chickens. Lily was excited, but Sam was a little scared at first. After that, they helped Grandpa water the plants in the garden. The sun was shining, and the weather was warm.\nIn the evening, they had a delicious dinner with fresh vegetables from the farm. Grandpa told them funny stories about his childhood. After dinner, they sat outside and watched the stars. It was very quiet and peaceful.\nThe next morning, Sam and Lily woke up early again. They fed the animals and played near the lake. At noon, their parents came to pick them up. They hugged Grandpa and promised to visit again soon. It was a wonderful weekend!"
+    },
+    {
+     "n": 17,
+     "topic": "Understanding supporting details and specific information",
+     "text": "How did Sam and Lily travel to the farm?",
+     "options": [
+      "By bus",
+      "By train",
+      "Their parents drove them",
+      "By bicycle"
+     ],
+     "image": null,
+     "correct": 2,
+     "passage": "A Weekend at Grandpa's Farm\nLast weekend, Sam and his sister Lily visited their grandpa's farm. They woke up early on Saturday and packed their bags. Their parents drove them to the farm, which was an hour away from their house.\nWhen they arrived, Grandpa was waiting for them at the gate. He was very happy to see them. The farm was big, with green fields, animals, and a small lake. Sam and Lily ran to see the animals. There were cows, chickens, and three friendly dogs.\nIn the afternoon, Grandpa showed them how to collect eggs from the chickens. Lily was excited, but Sam was a little scared at first. After that, they helped Grandpa water the plants in the garden. The sun was shining, and the weather was warm.\nIn the evening, they had a delicious dinner with fresh vegetables from the farm. Grandpa told them funny stories about his childhood. After dinner, they sat outside and watched the stars. It was very quiet and peaceful.\nThe next morning, Sam and Lily woke up early again. They fed the animals and played near the lake. At noon, their parents came to pick them up. They hugged Grandpa and promised to visit again soon. It was a wonderful weekend!"
+    },
+    {
+     "n": 18,
+     "topic": "Understanding supporting details and specific information",
+     "text": "What animals did they see on the farm?",
+     "options": [
+      "Cats, rabbits, and ducks",
+      "Horses, sheep, and goats",
+      "Cows, chickens, and dogs",
+      "Lions, tigers, and bears"
+     ],
+     "image": null,
+     "correct": 2,
+     "passage": "A Weekend at Grandpa's Farm\nLast weekend, Sam and his sister Lily visited their grandpa's farm. They woke up early on Saturday and packed their bags. Their parents drove them to the farm, which was an hour away from their house.\nWhen they arrived, Grandpa was waiting for them at the gate. He was very happy to see them. The farm was big, with green fields, animals, and a small lake. Sam and Lily ran to see the animals. There were cows, chickens, and three friendly dogs.\nIn the afternoon, Grandpa showed them how to collect eggs from the chickens. Lily was excited, but Sam was a little scared at first. After that, they helped Grandpa water the plants in the garden. The sun was shining, and the weather was warm.\nIn the evening, they had a delicious dinner with fresh vegetables from the farm. Grandpa told them funny stories about his childhood. After dinner, they sat outside and watched the stars. It was very quiet and peaceful.\nThe next morning, Sam and Lily woke up early again. They fed the animals and played near the lake. At noon, their parents came to pick them up. They hugged Grandpa and promised to visit again soon. It was a wonderful weekend!"
+    },
+    {
+     "n": 19,
+     "topic": "Understanding supporting details and specific information",
+     "text": "What did Sam and Lily do in the evening?",
+     "options": [
+      "They went swimming",
+      "They ate dinner, listened to Grandpa's stories, and watched the stars",
+      "They played video games",
+      "They went to a party"
+     ],
+     "image": null,
+     "correct": 1,
+     "passage": "A Weekend at Grandpa's Farm\nLast weekend, Sam and his sister Lily visited their grandpa's farm. They woke up early on Saturday and packed their bags. Their parents drove them to the farm, which was an hour away from their house.\nWhen they arrived, Grandpa was waiting for them at the gate. He was very happy to see them. The farm was big, with green fields, animals, and a small lake. Sam and Lily ran to see the animals. There were cows, chickens, and three friendly dogs.\nIn the afternoon, Grandpa showed them how to collect eggs from the chickens. Lily was excited, but Sam was a little scared at first. After that, they helped Grandpa water the plants in the garden. The sun was shining, and the weather was warm.\nIn the evening, they had a delicious dinner with fresh vegetables from the farm. Grandpa told them funny stories about his childhood. After dinner, they sat outside and watched the stars. It was very quiet and peaceful.\nThe next morning, Sam and Lily woke up early again. They fed the animals and played near the lake. At noon, their parents came to pick them up. They hugged Grandpa and promised to visit again soon. It was a wonderful weekend!"
+    },
+    {
+     "n": 20,
+     "topic": "Understanding supporting details and specific information",
+     "text": "What did Sam and Lily promise Grandpa before leaving?",
+     "options": [
+      "To bring him a gift next time",
+      "To visit again soon",
+      "To stay at the farm forever",
+      "To take a dog home with them"
+     ],
+     "image": null,
+     "correct": 1,
+     "passage": "A Weekend at Grandpa's Farm\nLast weekend, Sam and his sister Lily visited their grandpa's farm. They woke up early on Saturday and packed their bags. Their parents drove them to the farm, which was an hour away from their house.\nWhen they arrived, Grandpa was waiting for them at the gate. He was very happy to see them. The farm was big, with green fields, animals, and a small lake. Sam and Lily ran to see the animals. There were cows, chickens, and three friendly dogs.\nIn the afternoon, Grandpa showed them how to collect eggs from the chickens. Lily was excited, but Sam was a little scared at first. After that, they helped Grandpa water the plants in the garden. The sun was shining, and the weather was warm.\nIn the evening, they had a delicious dinner with fresh vegetables from the farm. Grandpa told them funny stories about his childhood. After dinner, they sat outside and watched the stars. It was very quiet and peaceful.\nThe next morning, Sam and Lily woke up early again. They fed the animals and played near the lake. At noon, their parents came to pick them up. They hugged Grandpa and promised to visit again soon. It was a wonderful weekend!"
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "5-kazak": {
+   "id": "5-kazak",
+   "grade": 5,
+   "subject": {
+    "ru": "Казахский язык",
+    "kz": "Қазақ тілі"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Қазақ тілі 5-сынып.docx (5-сынып)",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Қыз күндердің күнінде серуендеп жүріп, қарлығаштың өлі денесін көріп қалады. Қыз күн батқанда қарлығаштың жанына келіп, үстіне көрпе жауып, денесін жылытпақшы болады.Міне ғажап, құс тіріліп кетеді! Қыз оның жүрегі соға бастағанын естиді. Ол құсты қыс бойы бағып, күтеді. Бір-біріне бауыр басып кетеді.",
+     "text": "Құс неліктен тірілді?",
+     "options": [
+      "Қызды аяғаннан",
+      "Қыздың жан жылуынан",
+      "Дыбыстан шошығаннан",
+      "Бір-біріне бауыр басқаннан"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 2,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Қыз күндердің күнінде серуендеп жүріп, қарлығаштың өлі денесін көріп қалады. Қыз күн батқанда қарлығаштың жанына келіп, үстіне көрпе жауып, денесін жылытпақшы болады.Міне ғажап, құс тіріліп кетеді! Қыз оның жүрегі соға бастағанын естиді. Ол құсты қыс бойы бағып, күтеді. Бір-біріне бауыр басып кетеді.",
+     "text": "Қыз құсты қай мезгілде күтіп, бақты?",
+     "options": [
+      "Жаз",
+      "Қыс",
+      "Күз",
+      "Көктем"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 3,
+     "topic": "мəтінді түсіну",
+     "passage": "Қазақтың тұңғыш ұлы ғалымы, шығыстанушы, саяхатшы, тарихшы, этнограф, географ, фольклорист, аудармашы Шоқан Шыңғысұлы Уəлиханов 1835 жылы Қостанаф маңындағы Құсмұрын бекінісінде өмірге келген. Оның балалық шағы əжесі Айғанымның ..., Сырымбеттегі мекенінде өтеді. Шоқанның əкесі-Шыңғыс аға сұлтан да, атасы-Уəлихан. Ал арғы атасы Абылай хан еді.\n12 жасында Шоқан Сібірдегі ең таңдаулы оқу орындарының бірі Омбы қаласындағы кадет корпусына(əскери) оқуға түседі. Бұл жерде Шоқан қай жағынан болсын тез өсіп, 2 жылда өз құрбыларының алды болады.\n\"Менің Отаным-тəуелсіз Қазақстан\" энциклопедиясы, 2009 ж",
+     "text": "Қай абзацта Шоқанның зеректігі көрінеді?",
+     "options": [
+      "біріншісінде",
+      "екеуінде де",
+      "екіншісінде",
+      "ешқайсысында"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 4,
+     "topic": "мəтінді түсіну",
+     "passage": "Қазақтың тұңғыш ұлы ғалымы, шығыстанушы, саяхатшы, тарихшы, этнограф, географ, фольклорист, аудармашы Шоқан Шыңғысұлы Уəлиханов 1835 жылы Қостанаф маңындағы Құсмұрын бекінісінде өмірге келген. Оның балалық шағы əжесі Айғанымның ..., Сырымбеттегі мекенінде өтеді. Шоқанның əкесі-Шыңғыс аға сұлтан да, атасы-Уəлихан. Ал арғы атасы Абылай хан еді.\n12 жасында Шоқан Сібірдегі ең таңдаулы оқу орындарының бірі Омбы қаласындағы кадет корпусына(əскери) оқуға түседі. Бұл жерде Шоқан қай жағынан болсын тез өсіп, 2 жылда өз құрбыларының алды болады.\n\"Менің Отаным-тəуелсіз Қазақстан\" энциклопедиясы, 2009 ж",
+     "text": "Көп нүктенің орнына қай сөз сəйкес?",
+     "options": [
+      "жолында",
+      "қолында",
+      "шетінде",
+      "басында"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 5,
+     "topic": "мəтін тақырыбын анықтау",
+     "passage": "Қазақтың тұңғыш ұлы ғалымы, шығыстанушы, саяхатшы, тарихшы, этнограф, географ, фольклорист, аудармашы Шоқан Шыңғысұлы Уəлиханов 1835 жылы Қостанаф маңындағы Құсмұрын бекінісінде өмірге келген. Оның балалық шағы əжесі Айғанымның ..., Сырымбеттегі мекенінде өтеді. Шоқанның əкесі-Шыңғыс аға сұлтан да, атасы-Уəлихан. Ал арғы атасы Абылай хан еді.\n12 жасында Шоқан Сібірдегі ең таңдаулы оқу орындарының бірі Омбы қаласындағы кадет корпусына(əскери) оқуға түседі. Бұл жерде Шоқан қай жағынан болсын тез өсіп, 2 жылда өз құрбыларының алды болады.\n\"Менің Отаным-тəуелсіз Қазақстан\" энциклопедиясы, 2009 ж",
+     "text": "Мəтінге қай тақырып сəйкес?",
+     "options": [
+      "Ойланған опық жемес",
+      "Ойы түзудің сөзі түзу",
+      "Оқу инемен құдық қазғандай",
+      "Оқығанның ойы озық"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 6,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Қазақтың тұңғыш ұлы ғалымы, шығыстанушы, саяхатшы, тарихшы, этнограф, географ, фольклорист, аудармашы Шоқан Шыңғысұлы Уəлиханов 1835 жылы Қостанаф маңындағы Құсмұрын бекінісінде өмірге келген. Оның балалық шағы əжесі Айғанымның ..., Сырымбеттегі мекенінде өтеді. Шоқанның əкесі-Шыңғыс аға сұлтан да, атасы-Уəлихан. Ал арғы атасы Абылай хан еді.\n12 жасында Шоқан Сібірдегі ең таңдаулы оқу орындарының бірі Омбы қаласындағы кадет корпусына(əскери) оқуға түседі. Бұл жерде Шоқан қай жағынан болсын тез өсіп, 2 жылда өз құрбыларының алды болады.\n\"Менің Отаным-тəуелсіз Қазақстан\" энциклопедиясы, 2009 ж",
+     "text": "Шоқан Уəлиханов кім болған?",
+     "options": [
+      "саяхатшы, тарихшы, этнограф",
+      "ғалым, аудармашы, ақын",
+      "географ, жазушы, аудармашы",
+      "саяхатшы, тілші, тарихшы"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 7,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Желтоқсан-қыстың бірінші айы. Бұл айдың атауы \"жел\" жəне \"тоқсан\" деген сөздердің қосындысынан шыққан дейді этнографтар. Өйткені желтоқсан үш ай желді болады деген мағынаны білдіреді. Бір тоқсанда үш ай болатыны, мəселен, қыстың желтоқсан, қаңтар, ақпан айларынан тұратыны көпке белгілі. Ежелгі түркілер де бұл айды жел айы деп атапты. Желтоқсанда қыс күшіне еніп, боран болады. Халық тілінде қыс түсті деп айтылады. Яғни, бұл қиындық түсті, қар түсті дегендей ұғымдарды сездіреді. Бұл айдың 22-сінде күн барынша қысқарады. Бұл-\"күннің тоқырауы\". \"Қырбастың қызылы\" деп аталатын алғашқы аяз да желтоқсанның басында болады.",
+     "text": "Желтоқсанның басында болатын алғашқы аяз?",
+     "options": [
+      "қар түсті",
+      "күннің тоқырауы",
+      "қыс түсті",
+      "қырбастың қызылы"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 8,
+     "topic": "омоним бойынша",
+     "passage": "Желтоқсан-қыстың бірінші айы. Бұл айдың атауы \"жел\" жəне \"тоқсан\" деген сөздердің қосындысынан шыққан дейді этнографтар. Өйткені желтоқсан үш ай желді болады деген мағынаны білдіреді. Бір тоқсанда үш ай болатыны, мəселен, қыстың желтоқсан, қаңтар, ақпан айларынан тұратыны көпке белгілі. Ежелгі түркілер де бұл айды жел айы деп атапты. Желтоқсанда қыс күшіне еніп, боран болады. Халық тілінде қыс түсті деп айтылады. Яғни, бұл қиындық түсті, қар түсті дегендей ұғымдарды сездіреді. Бұл айдың 22-сінде күн барынша қысқарады. Бұл-\"күннің тоқырауы\". \"Қырбастың қызылы\" деп аталатын алғашқы аяз да желтоқсанның басында болады.",
+     "text": "Мəтін ішінде кездескен омоним бола алатын сөзді табыңыз",
+     "options": [
+      "жел",
+      "аяз",
+      "бас",
+      "қар"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 9,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Желтоқсан-қыстың бірінші айы. Бұл айдың атауы \"жел\" жəне \"тоқсан\" деген сөздердің қосындысынан шыққан дейді этнографтар. Өйткені желтоқсан үш ай желді болады деген мағынаны білдіреді. Бір тоқсанда үш ай болатыны, мəселен, қыстың желтоқсан, қаңтар, ақпан айларынан тұратыны көпке белгілі. Ежелгі түркілер де бұл айды жел айы деп атапты. Желтоқсанда қыс күшіне еніп, боран болады. Халық тілінде қыс түсті деп айтылады. Яғни, бұл қиындық түсті, қар түсті дегендей ұғымдарды сездіреді. Бұл айдың 22-сінде күн барынша қысқарады. Бұл-\"күннің тоқырауы\". \"Қырбастың қызылы\" деп аталатын алғашқы аяз да желтоқсанның басында болады.",
+     "text": "Ежелгі түркілерде бұл айды қалай атаған?",
+     "options": [
+      "жел айы",
+      "қыс айы",
+      "жаз айы",
+      "күз айы"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Желтоқсан-қыстың бірінші айы. Бұл айдың атауы \"жел\" жəне \"тоқсан\" деген сөздердің қосындысынан шыққан дейді этнографтар. Өйткені желтоқсан үш ай желді болады деген мағынаны білдіреді. Бір тоқсанда үш ай болатыны, мəселен, қыстың желтоқсан, қаңтар, ақпан айларынан тұратыны көпке белгілі. Ежелгі түркілер де бұл айды жел айы деп атапты. Желтоқсанда қыс күшіне еніп, боран болады. Халық тілінде қыс түсті деп айтылады. Яғни, бұл қиындық түсті, қар түсті дегендей ұғымдарды сездіреді. Бұл айдың 22-сінде күн барынша қысқарады. Бұл-\"күннің тоқырауы\". \"Қырбастың қызылы\" деп аталатын алғашқы аяз да желтоқсанның басында болады.",
+     "text": "Қай айда күн барынша қысқарады?",
+     "options": [
+      "ақпанның 22-сінде",
+      "желтоқсанның 22-сінде",
+      "наурыздың 22-сінде",
+      "қаңтардың 22-сінде"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 11,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Сегіз жастық\nБірде Дінмұхамед Ахметұлы ел аралайын деп жолға шығады. Орта жолда олардың машинасына бір əйел қол көтереді. Димаш ата машинасын тоқтатқызады. Оның да баратын жері Шелек болған соң, бірге алып кетеді. Машина үйдің алдына тоқтағаны сол еді, əлгі əйел Дінмұхамед Ахметұлына:\nҮйге кіріңіз, шаңырағымнан дəм татыңыз,-деп қоймайды. Сонда Дінмұхамед Ахметұлы:\nЖақсы, онда дəмнен үлкен емеспіз, кіріп өтейік,-дейді\nОсы сөзді естігенде əйелдің қуанғаны сондай, үйіне жүгіре жөнеледі. Үйге кіргенде, əйел сегіз жастықты Қонаевтың жолына қаз-қатар тізіп қойған екен.\nДінмұхамед Ахметұлы осыған таң қалып, жастықтан өте алмай дағдарып тұрғанда:\nМенің сегіз балам бар. Мына жастықтарды солар жастанады. Сіз осы жастықтардан аттап өтіп төрге озсаңыз. Сонда мен бұл сіз аттаған қасиетті жастықтар екенін елге, балаларыма айтып, мақтаныш көріп жүрер едім,-дейді.\nСонда Дінмұхамед Ахметұлы:\nЖо-жоқ! Сіздің сегіз балаңыз жатқан бұл жастықтарды аттамаймын. Қайта əрқайсысын маңдайыма тигізіп, тəу етейін. Балаларыңыз мақтаныш көріп жатсын,- деп жол тауып кетіпті.",
+     "text": "Мəтінде Дінмұхамед Қонаевтың қандай қасиеті ерекшеленеді?",
+     "options": [
+      "батылдығы",
+      "даналығы",
+      "сабырлығы",
+      "сенімділігі"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 12,
+     "topic": "синоним бойынша",
+     "passage": "Сегіз жастық\nБірде Дінмұхамед Ахметұлы ел аралайын деп жолға шығады. Орта жолда олардың машинасына бір əйел қол көтереді. Димаш ата машинасын тоқтатқызады. Оның да баратын жері Шелек болған соң, бірге алып кетеді. Машина үйдің алдына тоқтағаны сол еді, əлгі əйел Дінмұхамед Ахметұлына:\nҮйге кіріңіз, шаңырағымнан дəм татыңыз,-деп қоймайды. Сонда Дінмұхамед Ахметұлы:\nЖақсы, онда дəмнен үлкен емеспіз, кіріп өтейік,-дейді\nОсы сөзді естігенде əйелдің қуанғаны сондай, үйіне жүгіре жөнеледі. Үйге кіргенде, əйел сегіз жастықты Қонаевтың жолына қаз-қатар тізіп қойған екен.\nДінмұхамед Ахметұлы осыған таң қалып, жастықтан өте алмай дағдарып тұрғанда:\nМенің сегіз балам бар. Мына жастықтарды солар жастанады. Сіз осы жастықтардан аттап өтіп төрге озсаңыз. Сонда мен бұл сіз аттаған қасиетті жастықтар екенін елге, балаларыма айтып, мақтаныш көріп жүрер едім,-дейді.\nСонда Дінмұхамед Ахметұлы:\nЖо-жоқ! Сіздің сегіз балаңыз жатқан бұл жастықтарды аттамаймын. Қайта əрқайсысын маңдайыма тигізіп, тəу етейін. Балаларыңыз мақтаныш көріп жатсын,- деп жол тауып кетіпті.",
+     "text": "Асты сызылған сөздің баламасын табыңыз",
+     "options": [
+      "ас",
+      "дəн",
+      "нан",
+      "астық"
+     ],
+     "image": null,
+     "correct": 0,
+     "needsReview": "Мəтінде асты сызылған сөз белгіленбеген (форматтау жоғалған) / В тексте не отмечено подчёркнутое слово"
+    },
+    {
+     "n": 13,
+     "topic": "мəтінді түсіну бойынша мақал-мəтелге сəйкестендіру",
+     "passage": "Сегіз жастық\nБірде Дінмұхамед Ахметұлы ел аралайын деп жолға шығады. Орта жолда олардың машинасына бір əйел қол көтереді. Димаш ата машинасын тоқтатқызады. Оның да баратын жері Шелек болған соң, бірге алып кетеді. Машина үйдің алдына тоқтағаны сол еді, əлгі əйел Дінмұхамед Ахметұлына:\nҮйге кіріңіз, шаңырағымнан дəм татыңыз,-деп қоймайды. Сонда Дінмұхамед Ахметұлы:\nЖақсы, онда дəмнен үлкен емеспіз, кіріп өтейік,-дейді\nОсы сөзді естігенде əйелдің қуанғаны сондай, үйіне жүгіре жөнеледі. Үйге кіргенде, əйел сегіз жастықты Қонаевтың жолына қаз-қатар тізіп қойған екен.\nДінмұхамед Ахметұлы осыған таң қалып, жастықтан өте алмай дағдарып тұрғанда:\nМенің сегіз балам бар. Мына жастықтарды солар жастанады. Сіз осы жастықтардан аттап өтіп төрге озсаңыз. Сонда мен бұл сіз аттаған қасиетті жастықтар екенін елге, балаларыма айтып, мақтаныш көріп жүрер едім,-дейді.\nСонда Дінмұхамед Ахметұлы:\nЖо-жоқ! Сіздің сегіз балаңыз жатқан бұл жастықтарды аттамаймын. Қайта əрқайсысын маңдайыма тигізіп, тəу етейін. Балаларыңыз мақтаныш көріп жатсын,- деп жол тауып кетіпті.",
+     "text": "Басты кейіпкерге қатысы жоқ мақал-мəтел қайсы?",
+     "options": [
+      "Ұлық болсаң-кішік бол.",
+      "Кішіпейіл болғанмен кішірейіп кетпейсің,\nӨркөкірек болғанмен ұлылыққа жетпейсің.",
+      "Көпті сыйлағаның- өзіңді сыйлағаның.",
+      "Дос жылатып айтар, дұшпан күлдіріп айтар"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 14,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Сегіз жастық\nБірде Дінмұхамед Ахметұлы ел аралайын деп жолға шығады. Орта жолда олардың машинасына бір əйел қол көтереді. Димаш ата машинасын тоқтатқызады. Оның да баратын жері Шелек болған соң, бірге алып кетеді. Машина үйдің алдына тоқтағаны сол еді, əлгі əйел Дінмұхамед Ахметұлына:\nҮйге кіріңіз, шаңырағымнан дəм татыңыз,-деп қоймайды. Сонда Дінмұхамед Ахметұлы:\nЖақсы, онда дəмнен үлкен емеспіз, кіріп өтейік,-дейді\nОсы сөзді естігенде əйелдің қуанғаны сондай, үйіне жүгіре жөнеледі. Үйге кіргенде, əйел сегіз жастықты Қонаевтың жолына қаз-қатар тізіп қойған екен.\nДінмұхамед Ахметұлы осыған таң қалып, жастықтан өте алмай дағдарып тұрғанда:\nМенің сегіз балам бар. Мына жастықтарды солар жастанады. Сіз осы жастықтардан аттап өтіп төрге озсаңыз. Сонда мен бұл сіз аттаған қасиетті жастықтар екенін елге, балаларыма айтып, мақтаныш көріп жүрер едім,-дейді.\nСонда Дінмұхамед Ахметұлы:\nЖо-жоқ! Сіздің сегіз балаңыз жатқан бұл жастықтарды аттамаймын. Қайта əрқайсысын маңдайыма тигізіп, тəу етейін. Балаларыңыз мақтаныш көріп жатсын,- деп жол тауып кетіпті.",
+     "text": "Əйел неліктен сегіз жастықты қаз-қатар тізіп қойды?",
+     "options": [
+      "бата алу үшін",
+      "мақтаныш ету үшін",
+      "сыйлау үшін",
+      "жастану үшін"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 15,
+     "topic": "мəтін мазмұнын түсіну",
+     "passage": "Сегіз жастық\nБірде Дінмұхамед Ахметұлы ел аралайын деп жолға шығады. Орта жолда олардың машинасына бір əйел қол көтереді. Димаш ата машинасын тоқтатқызады. Оның да баратын жері Шелек болған соң, бірге алып кетеді. Машина үйдің алдына тоқтағаны сол еді, əлгі əйел Дінмұхамед Ахметұлына:\nҮйге кіріңіз, шаңырағымнан дəм татыңыз,-деп қоймайды. Сонда Дінмұхамед Ахметұлы:\nЖақсы, онда дəмнен үлкен емеспіз, кіріп өтейік,-дейді\nОсы сөзді естігенде əйелдің қуанғаны сондай, үйіне жүгіре жөнеледі. Үйге кіргенде, əйел сегіз жастықты Қонаевтың жолына қаз-қатар тізіп қойған екен.\nДінмұхамед Ахметұлы осыған таң қалып, жастықтан өте алмай дағдарып тұрғанда:\nМенің сегіз балам бар. Мына жастықтарды солар жастанады. Сіз осы жастықтардан аттап өтіп төрге озсаңыз. Сонда мен бұл сіз аттаған қасиетті жастықтар екенін елге, балаларыма айтып, мақтаныш көріп жүрер едім,-дейді.\nСонда Дінмұхамед Ахметұлы:\nЖо-жоқ! Сіздің сегіз балаңыз жатқан бұл жастықтарды аттамаймын. Қайта əрқайсысын маңдайыма тигізіп, тəу етейін. Балаларыңыз мақтаныш көріп жатсын,- деп жол тауып кетіпті.",
+     "text": "Мəтін мазмұнына сай келмейтін қатар қайсы?",
+     "options": [
+      "Димаш ата машинасын тоқтатқызады",
+      "Əйел үйіне жүгіре жөнеледі",
+      "Əйел алты жастықты қаз-қатар тізіп қояды",
+      "Əрқайсысын маңдайыма тигізіп, тəу етейін"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 16,
+     "topic": "мəтін мазмұнын түсіну",
+     "passage": "Қазақстанның кең сахара даласының дəл кіндігінде орналасқан Жезқазған аймағы 312,4 мың шаршы шақырым жерді алып жатыр. «Еліміздің дəл кіндігінде» дегеніміз жай айтылған сөз емес. Қазақстанның геометриялық орталығы Ұлытау маңындағы Кішітауда. Осында республиканың солтүстікоңтүстігін қосатын бойлық, батыс-шығысын қосатын ендік тоғысады.",
+     "text": "Мəтінде түсінік берілген тіркеске сəйкес дұрыс жауап қайсысы?",
+     "options": [
+      "тура мағына",
+      "ауыспалы мағына",
+      "омоним",
+      "антоним"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 17,
+     "topic": "мəтін мазмұнын түсіну",
+     "passage": "Қазақстанның кең сахара даласының дəл кіндігінде орналасқан Жезқазған аймағы 312,4 мың шаршы шақырым жерді алып жатыр. «Еліміздің дəл кіндігінде» дегеніміз жай айтылған сөз емес. Қазақстанның геометриялық орталығы Ұлытау маңындағы Кішітауда. Осында республиканың солтүстікоңтүстігін қосатын бойлық, батыс-шығысын қосатын ендік тоғысады.",
+     "text": "Қай тақырып мəтін мазмұнын толықтай ашады?",
+     "options": [
+      "Қазақстанның табиғаты",
+      "Қазақ даласы",
+      "Ұлытау",
+      "Жезқазған аймағы"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 18,
+     "topic": "синоним бойынша",
+     "passage": "Қазақстанның кең сахара даласының дəл кіндігінде орналасқан Жезқазған аймағы 312,4 мың шаршы шақырым жерді алып жатыр. «Еліміздің дəл кіндігінде» дегеніміз жай айтылған сөз емес. Қазақстанның геометриялық орталығы Ұлытау маңындағы Кішітауда. Осында республиканың солтүстікоңтүстігін қосатын бойлық, батыс-шығысын қосатын ендік тоғысады.",
+     "text": "Асты сызылған сөзді қай сөзбен алмастыруға болады?",
+     "options": [
+      "бөлінеді",
+      "ажырайды",
+      "түйіседі",
+      "ыдырайды"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsReview": "Мəтінде асты сызылған сөз белгіленбеген (форматтау жоғалған) / В тексте не отмечено подчёркнутое слово"
+    },
+    {
+     "n": 19,
+     "topic": "мəтін мазмұны бойынша",
+     "passage": "Қазақстанның кең сахара даласының дəл кіндігінде орналасқан Жезқазған аймағы 312,4 мың шаршы шақырым жерді алып жатыр. «Еліміздің дəл кіндігінде» дегеніміз жай айтылған сөз емес. Қазақстанның геометриялық орталығы Ұлытау маңындағы Кішітауда. Осында республиканың солтүстікоңтүстігін қосатын бойлық, батыс-шығысын қосатын ендік тоғысады.",
+     "text": "Жезқазған аймағының көлемі туралы мəлімет қалай берілген?",
+     "options": [
+      "еселеніп",
+      "қысқарып",
+      "шамамен",
+      "көбейтіліп"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 20,
+     "topic": "омоним бойынша",
+     "passage": "Қазақстанның кең сахара даласының дəл кіндігінде орналасқан Жезқазған аймағы 312,4 мың шаршы шақырым жерді алып жатыр. «Еліміздің дəл кіндігінде» дегеніміз жай айтылған сөз емес. Қазақстанның геометриялық орталығы Ұлытау маңындағы Кішітауда. Осында республиканың солтүстікоңтүстігін қосатын бойлық, батыс-шығысын қосатын ендік тоғысады.",
+     "text": "Мəтіндегі сөздердің қайсысы омоним бола алады?",
+     "options": [
+      "сахара",
+      "жер",
+      "шаршы",
+      "жай"
+     ],
+     "image": null,
+     "correct": 3
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "5-matematika": {
+   "id": "5-matematika",
+   "grade": 5,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 45,
+   "answersFilled": true,
+   "source": "Математика.docx (5-сынып)",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "Экспресс-поезд жылдамдығы 144 км/сағ. Жылдамдықты м/с пен көрсетіңіз / Скорость поезда 144 км/ч. Выразите скорость в м/с",
+     "options": [
+      "35 м/с",
+      "48 м/с",
+      "40 м/с",
+      "Басқа / Другое"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 2,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Ашық қалған шүмектен секундына 1 мл су тамса, бір сағатта аққан судың мөлшері неше литр болады? / С неисправного крана каждую секунду протекает по 1мл воды. Сколько воды вытечет с крана в течении часа?",
+     "options": [
+      "3,6 л",
+      "3,06 л",
+      "0,36 л",
+      "36 л"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 3,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "18-ге еселі ең кіші үш таңбалы саннан 14-ке еселі ең кіші екі таңбалы санды төрт рет азайтсақ неше шығады? / Если от наименьшего трёхзначного числа, кратного 18, четыре раза вычесть наименьшее двузначное число, кратное 14, то сколько получится?",
+     "options": [
+      "108",
+      "52",
+      "67",
+      "55"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 4,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "Есептеңіз: ЕҮОБ (а,54) = 18 / НОД (а,54) = 18, а =?",
+     "options": [
+      "56",
+      "57",
+      "74",
+      "90"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 5,
+     "topic": "Сандарға амалдар қолдану",
+     "text": "Есептеңіз / Выполните действия:",
+     "options": [
+      "4 6/7",
+      "3,4",
+      "2 1/12",
+      "7,375"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true
+    },
+    {
+     "n": 6,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Егер белгісіз санның 0.3 бөліге 10,5-ді қосақ, онда 13,5 шығады. Белгісіз санды табыңыз. / 0.3 часть неизвестного числа увеличили на 10,5 и получили 13,5. Определите неизвестное число?",
+     "options": [
+      "10",
+      "1",
+      "30",
+      "90"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 7,
+     "topic": "Сандарға амалдар қолдану",
+     "text": "Есептеңіз / Вычислите:",
+     "options": [
+      "5 7/20",
+      "5,7",
+      "6 2/3",
+      "6"
+     ],
+     "image": null,
+     "correct": 0,
+     "needsImage": true
+    },
+    {
+     "n": 8,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "6 жемпір тоқуға 2,4 kg тоқыма жіп керек. 8 жемпірге неше тоқыма жібі керек? / Для 6 свитеров требуется 2,4 кг пряжи. Сколько пряжи нужно для 8 свитеров?",
+     "options": [
+      "0,4 кг",
+      "3,2 кг",
+      "1,8 кг",
+      "4,8 кг"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 9,
+     "topic": "Сандарға амалдар қолдану",
+     "text": "Өрнектің мәнін табыңыз / Вычислите:",
+     "options": [
+      "30 333",
+      "30 033",
+      "33 333",
+      "33 330"
+     ],
+     "image": null,
+     "correct": 3,
+     "needsImage": true
+    },
+    {
+     "n": 10,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "1/4, 5/7, 9/14, 11/21 бөлшектерінің ең үлкені мен ең кішісінің айырмасы неге тең екенін табыңыз? / Определите наибольшее и наименьшее из чисел и определите чему равна разность этих дробей: 1/4, 5/7, 9/14, 11/21",
+     "options": [
+      "13/28",
+      "84/54",
+      "39/42",
+      "3/14"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 11,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Оқушы тік төртбұрыштың 5/8 бөлігі көк түске, ал қалған бөлігінің 1/6-ін сары түске бояған. Тік төртбұрыштың боялмаған бөлігі қандай? / Ученик закрасил 5/8 часть прямоугольника в синий цвет. 1/6 часть оставшейся площади в желтый цвет. Какая часть прямоугольника осталась не закрашенной?",
+     "options": [
+      "1/16",
+      "1/8",
+      "5/16",
+      "1"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Әкесі ыдыстағы қымызды 14 күнде ішіп бітіреді, ал әкесі мен анасы бұл қымызды бірігіп 10 күнде ішіп бітіреді. Анасы жалғыз өзі дәл осындай ыдыстағы қымызды қанша күнде ішіп бітіреді? / Отец сможет выпить запас кумыза за 14 дней. Если тот же запас кумыза он будет пить вместе с мамой, они закончат в течении 10 дней. За какое время этот же запас кумыза выпьет мама единолично?",
+     "options": [
+      "35",
+      "30",
+      "45",
+      "55"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Еки қаланың ара қашықтығы 120 км, екі машина бір біріне қарама қарсы жолға шықты. Бірінші машинаның жылдамдығы екінші машинаның жылдамдығынан 3 есе артық. Олар 1,5 сағатта кездесті, бірінші машинаның жылдамдығы қанша? / Расстояние между двумя городами составляет 120 км, два автомобиля выехали навстречу друг другу. Скорость первого автомобиля в 3 раза больше скорости второго автомобиля. Они встретились через 1,5 часа. Какова скорость первого автомобиля?",
+     "options": [
+      "40 км/сағ",
+      "60 км/сағ",
+      "50 км/сағ",
+      "30 км/сағ"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 14,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Саяхатшы 560 км жол жүрген соң, оған әлі жүргенінің 1/8 бөлігідей артық жол жүру керек екенін есептеді. Оған тағы қанша жол жүру керек? / Турист прошел путь в 560 км. Ему осталось пройти еще на 1/8 больше пройденного пути. Сколько пути осталось не пройденным?",
+     "options": [
+      "420 км",
+      "720 км",
+      "630 км",
+      "480 км"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 15,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Аулада 1 ит, 11 үйрек, 2 мысық, 4 күшік, 3 бала және бірнеше қозы, лақ жүр. Олардың барлығының саны 28 болса, аяқтарының саны қанша? / Во дворе была 1 собака, 11 уток, 2 кошки, 4 щенка, 3 мальчика и несколько ягнят и козлят. Сколько всего ног (в том числе лап и копыт) у гулявших во дворе, если количество голов было 28?",
+     "options": [
+      "56",
+      "64",
+      "72",
+      "84"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 16,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Өзен ағысының жылдамдығы 3,2 км/сағ. Катердің ағыс бойымен жылдамдығы 41,5 км/сағ. Егер катер ағысқа қарсы жүзсе, 3 сағатта қанша жол жүреді? / Скорость течения 3,2 км/ч. Катер плывет по течению со скоростью 41,5 км/ч. Какое расстояние проплывет катер против течения за 3 часа?",
+     "options": [
+      "114,9 км",
+      "105,3 км",
+      "124,5 км",
+      "134,1 км"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 17,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Ыдыстағы 0,63 л суды төгіп, 1,8 л суды қайта құйғанда онда 3,5 л су болды. Бастапқыда ыдыста қанша литр су болған? / С емкости вылили 0,63л воды. После того, как в эту емкость обратно залили 1,8л в ней стало 3,5л воды. Сколько литров воды было в емкости изначально?",
+     "options": [
+      "1,23 л",
+      "2,23 л",
+      "2,33 л",
+      "3,33 л"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 18,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Тік төртбұрыштың периметрі 16,8. Ұзындығы енінен 3 есе артық. Ауданы нешеге тең? / Периметр прямоугольника 16,8. Ширина прямоугольника в три раза короче длины. Определите площадь фигуры?",
+     "options": [
+      "13,23",
+      "8,4",
+      "17,64",
+      "8,64"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 19,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "96 беттен тұратын кітаптың барлық беттерін нөмірлеу үшін қанша цифр қолданылады? / В книге 96 страниц. Сколько цифр было использовано для нумерации страниц?",
+     "options": [
+      "183",
+      "177",
+      "243",
+      "172"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "Егер кітапханадағы барлық кітаптардың 2/5- сі 70 кітапқа тең болса, онда 1/5– і нешеге тең? / Определите 1/5 часть количества всех книг в библиотеке, если 2/5 часть всех книг в библиотеке составляет 70 книг?",
+     "options": [
+      "175",
+      "140",
+      "35",
+      "53"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 21,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "Бөлшектерді ондық бөлшек түрінде жазыңыз / Запишите в виде десятичной дроби:",
+     "options": [
+      "14,000105",
+      "14,0105",
+      "14,105",
+      "14,00105"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true
+    },
+    {
+     "n": 22,
+     "topic": "Алгебралық өрнектер және оларды түрлендіру",
+     "text": "Өрнектің мәнін табыңыз / Найдите значение выражения:\n14,25a + 0,025b + 0,795c, мұндағы/здесь a = 10, b = 100, c = 1000",
+     "options": [
+      "9,4",
+      "9400",
+      "94",
+      "940"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 23,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "Ондық бөлшекті пайдаланып 3 км 56 м-ді километрмен өрнектеңіз / Запишите расстояние в 3км 56м в виде десятичной дроби:",
+     "options": [
+      "3,056 км",
+      "3,0056 км",
+      "3,56 км",
+      "3,00056 км"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 24,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "5, 8, 4 цифрлары және үтір арқылы 10-нан аспайтын ең үлкен және ең кіші ондық бөлшектер құрылған. Олардың айырмасы неше тең болатынын анықтаңыз. / С помощью цифр 5, 8, 4 и запятую образованы наибольшие и наименьшие десятичные дроби, не превышающие 10. Определите, чему равна их разность.",
+     "options": [
+      "3,96",
+      "80,82",
+      "3,6",
+      "1,26"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 25,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Арман бірінші күні барлық ақшасының 1/4 ін, екінші күні қалған ақшасының 1/2 – ін жұмсағанда 120 тг ақшасы қалды. Ода барлығы қанша ақша болған? / Арман в первый день потратил 1/4 всех своих денег, во второй день 1/2 оставшихся денег, и у него осталось 120 тг. Сколько всего денег было у Армана?",
+     "options": [
+      "240",
+      "480",
+      "360",
+      "320"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 26,
+     "topic": "Сандарға амалдар қолдану",
+     "text": "Есептеңдер / Вычислите:",
+     "options": [
+      "80",
+      "90",
+      "100",
+      "110"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true
+    },
+    {
+     "n": 27,
+     "topic": null,
+     "text": "Үшбұрыштың бір қабырғасы 7,4 дм-ге тең, екіншісі біріншісінен 32 см ұзын, ал үшіншісі алғашқы екеуінің қосындысының 4/5 −ін құрайды. Осы үшбұрыштың периметрін табыңыз. / Одна сторона треугольника равна 7,4 дм. Вторая сторона на 32 см длиннее первой. Третья сторона составляет 4/5 часть от суммы длин первой и второй стороны. Определите периметр треугольника.",
+     "options": [
+      "32,4 м",
+      "32,4 дм",
+      "32,4 см",
+      "32,4 мм"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 28,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "Егер болса, - ? / Если , найдите - ?",
+     "options": [
+      "0,1",
+      "0,3",
+      "0,8",
+      "0,6"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Шарттағы формула құжатта жоқ (сурет/формула түсіп қалған) / В условии отсутствует формула"
+    },
+    {
+     "n": 29,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Жаяу жүргінші ұзындығы 0,256 км көпірді 4 минутта жүріп өтті. Ол осы жылдамдықпен 40 минутта қандай арақашықтықты жүріп өтеді? / Длина моста 0,256 км. Пеший перейдет через мост за 4 минуты. Какое расстояние пройдет пеший за 40 минут, передвигаясь с той же скоростью?",
+     "options": [
+      "2,56 км",
+      "25,6 км",
+      "256 км",
+      "256 м"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 30,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "12; 15; 21; 24; 30; 33; 39;... сан тізбегі берілген. Келесі санды анықтаңыз. / Дана последовательность чисел. Определите следующее число.\n12; 15; 21; 24; 30; 33; 39;...",
+     "options": [
+      "39",
+      "42",
+      "45",
+      "46"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 31,
+     "topic": "Геометриялық фигуралар туралы түсінік",
+     "text": "Фигураның боялған ауданын табыңыз / Вычислите площадь фигуры.",
+     "options": [
+      "117,3 мм^2",
+      "117,3 см^2",
+      "117,3 дм^2",
+      "117,3 м^2"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true
+    },
+    {
+     "n": 32,
+     "topic": "Геометриялық фигуралар туралы түсінік",
+     "text": "Кіші шаршының қабырғасы 4см, боялған бөліктің ауданын тап? / Если сторона маленького квадрата составляет 4 см, найдите площадь закрашенной части?",
+     "options": [
+      "24",
+      "23",
+      "22",
+      "21"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true
+    },
+    {
+     "n": 33,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Қайық ағыспен 2 сағатта 16,8 км жүзді, ал кері қайтқанда осы жолға 3 сағат уақыт жұмсады. Қайықтың ағыспен жүзгендегі жылдамдығы оның ағысқа қарсы жүзген жылдамдығынан қаншаға артық? / Лодка по течению преодолела 16,8 км за 2 часа. На обратный путь она затратила 3 часа. На сколько скорость лодки по течению больше её скорости против течения?",
+     "options": [
+      "2,8",
+      "1,4",
+      "28",
+      "14"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 34,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Дәуіт 960 тг-ге 4 бірдей тоқаш, ал Талант 1320 тг-ге дәл сондай 6 тоқаш сатып алды. Кім тоқашты арзанырақ бағамен сатып алды? / Давид купил 4 пряника за 960 тг, а Талант купил 6 пряников за 1320тг. Кто из них купил пряники подешевле?",
+     "options": [
+      "Дәуіт / Давид",
+      "салыстыру қиын / сложно определить",
+      "Талант",
+      "екеуі де тең бағада / у обоих пряники по одинаковой цене"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 35,
+     "topic": "Сандарға амалдар қолдану",
+     "text": "Өрнектің мәнін табыңыз / Вычислите:",
+     "options": [
+      "1,65",
+      "1650",
+      "16,5",
+      "165"
+     ],
+     "image": null,
+     "correct": 3,
+     "needsImage": true
+    },
+    {
+     "n": 36,
+     "topic": "Теңдеулер және теңсіздіктер, олардың жүйелері және жиынтықтары",
+     "text": "Теңдеуді шешіңіз / Решите уравнение:",
+     "options": [
+      "8",
+      "4/11",
+      "2 10/12",
+      "5"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true
+    },
+    {
+     "n": 37,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Сыныпта 25 оқушы бар. Оның 0,4-ы қыздар. Сыныпта неше ұл бар? / В классе 25 учеников. 0,4 часть учеников в классе составляют девочки. Сколько мальчиков?",
+     "options": [
+      "15",
+      "12",
+      "16",
+      "18"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 38,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Мектеп көрмесіндегі 220 сурет бояумен орындалған, ал қалғандары қарындашпен. Егер қарындашпен орындалған сурет барлық суреттердің 3/7 бөлігін құрайтын болса, көрмеде неше сурет болады? / На выставке было 220 рисунков, нарисованных фломастерами. Остальные рисунки были нарисованы карандашом. Сколько всего рисунков на выставке, если количество рисунков, выполненных карандашом составляют 3/7 часть количества всех рисунков?",
+     "options": [
+      "385",
+      "380",
+      "395",
+      "400"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 39,
+     "topic": "Математикалық модельдеудің көмегімен есептер шығару",
+     "text": "Кептірілмеген кірпіштің салмағы 4.5. Кептіргеннен кейін оның салмағы 4/5 кг-ға кеміді, ал күйдіргеннен кейін салмағы тағы да 3/5 кг-ға кеміді. Күйдіргеннен кейінгі кірпіштің салмағы қанша? / Невысохший кирпич весит 4.5. Во время сушки кирпич теряет 4/5 кг. После сушки кирпич обжигают, из-за чего он теряет еще 3/5 кг. Сколько весит кирпич после процесса обжигания?",
+     "options": [
+      "3.7 кг",
+      "4.3 кг",
+      "3.1 кг",
+      "3.8 кг"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 40,
+     "topic": "Математикалық тіл және математикалық модель",
+     "text": "80; 8; 0,8; 0,08; 0,16 сандарының қайсысы 1,25 санына кері сан болады? / 80; 8; 0,8; 0,08; 0,16 какое из чисел является обратным числом для 1,25?",
+     "options": [
+      "8",
+      "0,8",
+      "0,08",
+      "0,16"
+     ],
+     "image": null,
+     "correct": 1
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "5-russkiy": {
+   "id": "5-russkiy",
+   "grade": 5,
+   "subject": {
+    "ru": "Русский язык",
+    "kz": "Орыс тілі"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Русский язык.docx (5-сынып)",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "про содержание текста",
+     "passage": "Сегодня, в каждой квартире имеется телевизор, но не все знают и понимают, как правильно за ним ухаживать, чтобы он как можно дольше служил. Что же для этого нужно? Правильно использовать телевизор не так уж сложно, главное, начать заботиться о нем сразу, после того, как только принесли покупку домой.\nПервое, что необходимо сделать – выбрать для LCD телевизора самое подходящее место. Как правило, телевизор устанавливается на одно определенное место, причем он должен стоять так, чтобы на его экран не попадали прямые солнечные лучи. Кроме того, телевизор должен стоять как можно дальше от нагревательных приборов, находящихся в комнате. Очень важным фактором при установке телевизора является достаточное расстояние от вентиляционных отверстий, необходимо, чтобы данные отверстия не были ничем закрыты. В случае невыполнения данного требования неизбежным станет перегрев. Если неприятность с телевизором все-таки произошла, самостоятельно произвести ремонт лучше не пытаться, так как это может привести к самым тяжелым последствиям, ведь для ремонта телевизора потребуется не только опыт мастера, но и соответствующее оборудование. При уходе за LCD телевизором необходимо следовать рекомендациям документации, которые являются вполне осуществимыми. Телевизор следует в обязательном порядке выключать после шести часов непрерывной работы. Часто включать и выключать устройство не рекомендуется, интервал должен составлять хотя бы 15 секунд. Кроме того, экран телевизора необходимо оберегать от ударов. Чтобы телевизор всегда выглядел, как новый не стоит прикасаться к экрану пальцами, лучше вообще взять за правило лишний раз его не трогать, так как на нем тут же становятся видны отпечатки пальцев, он быстро становится грязным, и приходится думать о том, как его правильно почистить.",
+     "text": "В какой последовательности представлена информация в тексте?",
+     "options": [
+      "Уход за телевизором → Выбор места → Возможные проблемы → Советы по ремонту",
+      "Выбор места → Возможные проблемы → Советы по ремонту → Уход за телевизором",
+      "Возможные проблемы → Выбор места → Уход за телевизором → Советы по ремонту",
+      "Советы по ремонту → Уход за телевизором → Возможные проблемы → Выбор места"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "passage": "Сегодня, в каждой квартире имеется телевизор, но не все знают и понимают, как правильно за ним ухаживать, чтобы он как можно дольше служил. Что же для этого нужно? Правильно использовать телевизор не так уж сложно, главное, начать заботиться о нем сразу, после того, как только принесли покупку домой.\nПервое, что необходимо сделать – выбрать для LCD телевизора самое подходящее место. Как правило, телевизор устанавливается на одно определенное место, причем он должен стоять так, чтобы на его экран не попадали прямые солнечные лучи. Кроме того, телевизор должен стоять как можно дальше от нагревательных приборов, находящихся в комнате. Очень важным фактором при установке телевизора является достаточное расстояние от вентиляционных отверстий, необходимо, чтобы данные отверстия не были ничем закрыты. В случае невыполнения данного требования неизбежным станет перегрев. Если неприятность с телевизором все-таки произошла, самостоятельно произвести ремонт лучше не пытаться, так как это может привести к самым тяжелым последствиям, ведь для ремонта телевизора потребуется не только опыт мастера, но и соответствующее оборудование. При уходе за LCD телевизором необходимо следовать рекомендациям документации, которые являются вполне осуществимыми. Телевизор следует в обязательном порядке выключать после шести часов непрерывной работы. Часто включать и выключать устройство не рекомендуется, интервал должен составлять хотя бы 15 секунд. Кроме того, экран телевизора необходимо оберегать от ударов. Чтобы телевизор всегда выглядел, как новый не стоит прикасаться к экрану пальцами, лучше вообще взять за правило лишний раз его не трогать, так как на нем тут же становятся видны отпечатки пальцев, он быстро становится грязным, и приходится думать о том, как его правильно почистить.",
+     "text": "Укажите пропущенное слово: \"При уходе за LCD телевизором необходимо следовать рекомендациям документации.\"",
+     "options": [
+      "бытовой",
+      "цифровой",
+      "технической",
+      "эксплуатационной"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsReview": "В приведённом предложении пропуск не обозначен — слово не изъято / Сөйлемде бос орын белгіленбеген"
+    },
+    {
+     "n": 3,
+     "topic": "понимание текста",
+     "passage": "Сегодня, в каждой квартире имеется телевизор, но не все знают и понимают, как правильно за ним ухаживать, чтобы он как можно дольше служил. Что же для этого нужно? Правильно использовать телевизор не так уж сложно, главное, начать заботиться о нем сразу, после того, как только принесли покупку домой.\nПервое, что необходимо сделать – выбрать для LCD телевизора самое подходящее место. Как правило, телевизор устанавливается на одно определенное место, причем он должен стоять так, чтобы на его экран не попадали прямые солнечные лучи. Кроме того, телевизор должен стоять как можно дальше от нагревательных приборов, находящихся в комнате. Очень важным фактором при установке телевизора является достаточное расстояние от вентиляционных отверстий, необходимо, чтобы данные отверстия не были ничем закрыты. В случае невыполнения данного требования неизбежным станет перегрев. Если неприятность с телевизором все-таки произошла, самостоятельно произвести ремонт лучше не пытаться, так как это может привести к самым тяжелым последствиям, ведь для ремонта телевизора потребуется не только опыт мастера, но и соответствующее оборудование. При уходе за LCD телевизором необходимо следовать рекомендациям документации, которые являются вполне осуществимыми. Телевизор следует в обязательном порядке выключать после шести часов непрерывной работы. Часто включать и выключать устройство не рекомендуется, интервал должен составлять хотя бы 15 секунд. Кроме того, экран телевизора необходимо оберегать от ударов. Чтобы телевизор всегда выглядел, как новый не стоит прикасаться к экрану пальцами, лучше вообще взять за правило лишний раз его не трогать, так как на нем тут же становятся видны отпечатки пальцев, он быстро становится грязным, и приходится думать о том, как его правильно почистить.",
+     "text": "Назовите основную идею текста.",
+     "options": [
+      "Способы ремонта телевизора в домашних условиях",
+      "Советы по правильному использованию и уходу за телевизором",
+      "История развития телевизионных технологий",
+      "Преимущества и недостатки различных типов телевизоров"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 4,
+     "topic": "про содержание текста",
+     "passage": "Перед вами несколько советов, выполнение которых избавит от досадных поломок ноутбука.\nНе стоит кушать или пить, работая за ноутбуком. Попадание жидкости или частичек пищи в ноутбук может привести к эрозии токовых дорожек на материнской плате, а также к их замыканию. Пользоваться устройством, когда на него попадают прямые солнечные лучи, например на пляже, крайне опасно, так как они максимально негативно влияют на кристаллы матрицы дисплея.\nНоутбук – это тонкое, высокотехнологичное устройство, ему противопоказаны сильные встряски, поэтому при транспортировке, он должен находиться в специальной сумке для ноутбука, у которой плотные противоударные стенки. Неосмотрительная сильная вибрация или удар могут дорого обойтись портативному компьютеру. Типичной поломкой в таком случае зачастую бывает повреждение матрицы и винчестера, ремонт которых обойдется не дешево. Не рекомендуется работать с ноутбуком на ворсистых поверхностях, так как пыль, ворсинки или того хуже, шерсть вашего домашнего питомца со временем приведут к засорению системы охлаждения, что чревато перегревом, нестабильной работой, а в худшем случае - к замыканию.\nЕсли ноутбук выключен, необходимо также отключать от электросети сетевой адаптер. Не стоит оставлять без нагрузки включенным в сеть блок питания. Если сетевой адаптер к мобильному компьютеру не подключен, а подключен к сети электропитания, он все равно работает, при этом ресурс работы блока питания ограничен. Во время грозы электропитание лучше не использовать, а работать на ноутбуке от аккумуляторной батареи, так как перенапряжение в электросети наверняка приведет к кратковременным, но очень болезненным броскам тока. Это в свою очередь выведет из строя сетевой адаптер.\nХранить ноутбук желательно подальше от маленьких детей, которым свойственно дергать за все, что попадается под руку, в том числе и кабель, что повлечет падение дорогостоящего устройства. Не стоит доверять разборку или ремонт ноутбуков дилетантам. Кроме того, пытаться отремонтировать ноутбук самому также не стоит, ведь без специального оборудования, инструмента и опыта – ничего не получится. При обнаружении проблем в работе аппаратной части ноутбука, не сомневаясь, немедленно обращайтесь за помощью к мастерам сервисного центра.",
+     "text": "Почему нельзя есть и пить рядом с ноутбуком?",
+     "options": [
+      "Это может испачкать клавиатуру",
+      "Это мешает работе операционной системы",
+      "Это запрещено производителем",
+      "Это приводит к замыканию и эрозии материнской платы"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 5,
+     "topic": "про содержание текста",
+     "passage": "Перед вами несколько советов, выполнение которых избавит от досадных поломок ноутбука.\nНе стоит кушать или пить, работая за ноутбуком. Попадание жидкости или частичек пищи в ноутбук может привести к эрозии токовых дорожек на материнской плате, а также к их замыканию. Пользоваться устройством, когда на него попадают прямые солнечные лучи, например на пляже, крайне опасно, так как они максимально негативно влияют на кристаллы матрицы дисплея.\nНоутбук – это тонкое, высокотехнологичное устройство, ему противопоказаны сильные встряски, поэтому при транспортировке, он должен находиться в специальной сумке для ноутбука, у которой плотные противоударные стенки. Неосмотрительная сильная вибрация или удар могут дорого обойтись портативному компьютеру. Типичной поломкой в таком случае зачастую бывает повреждение матрицы и винчестера, ремонт которых обойдется не дешево. Не рекомендуется работать с ноутбуком на ворсистых поверхностях, так как пыль, ворсинки или того хуже, шерсть вашего домашнего питомца со временем приведут к засорению системы охлаждения, что чревато перегревом, нестабильной работой, а в худшем случае - к замыканию.\nЕсли ноутбук выключен, необходимо также отключать от электросети сетевой адаптер. Не стоит оставлять без нагрузки включенным в сеть блок питания. Если сетевой адаптер к мобильному компьютеру не подключен, а подключен к сети электропитания, он все равно работает, при этом ресурс работы блока питания ограничен. Во время грозы электропитание лучше не использовать, а работать на ноутбуке от аккумуляторной батареи, так как перенапряжение в электросети наверняка приведет к кратковременным, но очень болезненным броскам тока. Это в свою очередь выведет из строя сетевой адаптер.\nХранить ноутбук желательно подальше от маленьких детей, которым свойственно дергать за все, что попадается под руку, в том числе и кабель, что повлечет падение дорогостоящего устройства. Не стоит доверять разборку или ремонт ноутбуков дилетантам. Кроме того, пытаться отремонтировать ноутбук самому также не стоит, ведь без специального оборудования, инструмента и опыта – ничего не получится. При обнаружении проблем в работе аппаратной части ноутбука, не сомневаясь, немедленно обращайтесь за помощью к мастерам сервисного центра.",
+     "text": "Почему ноутбук нельзя оставлять под прямыми солнечными лучами?",
+     "options": [
+      "Он перегреется и выключится",
+      "Экран может потускнеть",
+      "Кристаллы матрицы дисплея могут повредиться",
+      "Корпус устройства может изменить цвет"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 6,
+     "topic": "про содержание текста",
+     "passage": "Перед вами несколько советов, выполнение которых избавит от досадных поломок ноутбука.\nНе стоит кушать или пить, работая за ноутбуком. Попадание жидкости или частичек пищи в ноутбук может привести к эрозии токовых дорожек на материнской плате, а также к их замыканию. Пользоваться устройством, когда на него попадают прямые солнечные лучи, например на пляже, крайне опасно, так как они максимально негативно влияют на кристаллы матрицы дисплея.\nНоутбук – это тонкое, высокотехнологичное устройство, ему противопоказаны сильные встряски, поэтому при транспортировке, он должен находиться в специальной сумке для ноутбука, у которой плотные противоударные стенки. Неосмотрительная сильная вибрация или удар могут дорого обойтись портативному компьютеру. Типичной поломкой в таком случае зачастую бывает повреждение матрицы и винчестера, ремонт которых обойдется не дешево. Не рекомендуется работать с ноутбуком на ворсистых поверхностях, так как пыль, ворсинки или того хуже, шерсть вашего домашнего питомца со временем приведут к засорению системы охлаждения, что чревато перегревом, нестабильной работой, а в худшем случае - к замыканию.\nЕсли ноутбук выключен, необходимо также отключать от электросети сетевой адаптер. Не стоит оставлять без нагрузки включенным в сеть блок питания. Если сетевой адаптер к мобильному компьютеру не подключен, а подключен к сети электропитания, он все равно работает, при этом ресурс работы блока питания ограничен. Во время грозы электропитание лучше не использовать, а работать на ноутбуке от аккумуляторной батареи, так как перенапряжение в электросети наверняка приведет к кратковременным, но очень болезненным броскам тока. Это в свою очередь выведет из строя сетевой адаптер.\nХранить ноутбук желательно подальше от маленьких детей, которым свойственно дергать за все, что попадается под руку, в том числе и кабель, что повлечет падение дорогостоящего устройства. Не стоит доверять разборку или ремонт ноутбуков дилетантам. Кроме того, пытаться отремонтировать ноутбук самому также не стоит, ведь без специального оборудования, инструмента и опыта – ничего не получится. При обнаружении проблем в работе аппаратной части ноутбука, не сомневаясь, немедленно обращайтесь за помощью к мастерам сервисного центра.",
+     "text": "Почему нельзя работать с ноутбуком на ворсистых поверхностях?",
+     "options": [
+      "Это неудобно",
+      "Вентиляционные отверстия могут засориться пылью, что приведет к перегреву",
+      "Клавиатура может сломаться",
+      "Ворс может повредить экран"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 7,
+     "topic": "про содержание текста",
+     "passage": "Перед вами несколько советов, выполнение которых избавит от досадных поломок ноутбука.\nНе стоит кушать или пить, работая за ноутбуком. Попадание жидкости или частичек пищи в ноутбук может привести к эрозии токовых дорожек на материнской плате, а также к их замыканию. Пользоваться устройством, когда на него попадают прямые солнечные лучи, например на пляже, крайне опасно, так как они максимально негативно влияют на кристаллы матрицы дисплея.\nНоутбук – это тонкое, высокотехнологичное устройство, ему противопоказаны сильные встряски, поэтому при транспортировке, он должен находиться в специальной сумке для ноутбука, у которой плотные противоударные стенки. Неосмотрительная сильная вибрация или удар могут дорого обойтись портативному компьютеру. Типичной поломкой в таком случае зачастую бывает повреждение матрицы и винчестера, ремонт которых обойдется не дешево. Не рекомендуется работать с ноутбуком на ворсистых поверхностях, так как пыль, ворсинки или того хуже, шерсть вашего домашнего питомца со временем приведут к засорению системы охлаждения, что чревато перегревом, нестабильной работой, а в худшем случае - к замыканию.\nЕсли ноутбук выключен, необходимо также отключать от электросети сетевой адаптер. Не стоит оставлять без нагрузки включенным в сеть блок питания. Если сетевой адаптер к мобильному компьютеру не подключен, а подключен к сети электропитания, он все равно работает, при этом ресурс работы блока питания ограничен. Во время грозы электропитание лучше не использовать, а работать на ноутбуке от аккумуляторной батареи, так как перенапряжение в электросети наверняка приведет к кратковременным, но очень болезненным броскам тока. Это в свою очередь выведет из строя сетевой адаптер.\nХранить ноутбук желательно подальше от маленьких детей, которым свойственно дергать за все, что попадается под руку, в том числе и кабель, что повлечет падение дорогостоящего устройства. Не стоит доверять разборку или ремонт ноутбуков дилетантам. Кроме того, пытаться отремонтировать ноутбук самому также не стоит, ведь без специального оборудования, инструмента и опыта – ничего не получится. При обнаружении проблем в работе аппаратной части ноутбука, не сомневаясь, немедленно обращайтесь за помощью к мастерам сервисного центра.",
+     "text": "Почему не рекомендуется оставлять адаптер ноутбука включенным в сеть без нагрузки?",
+     "options": [
+      "Он может перегреться и выйти из строя",
+      "Это приведет к поломке ноутбука",
+      "Это запрещено правилами эксплуатации",
+      "Это может вызвать короткое замыкание"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 8,
+     "topic": "про содержание текста",
+     "passage": "Перед вами несколько советов, выполнение которых избавит от досадных поломок ноутбука.\nНе стоит кушать или пить, работая за ноутбуком. Попадание жидкости или частичек пищи в ноутбук может привести к эрозии токовых дорожек на материнской плате, а также к их замыканию. Пользоваться устройством, когда на него попадают прямые солнечные лучи, например на пляже, крайне опасно, так как они максимально негативно влияют на кристаллы матрицы дисплея.\nНоутбук – это тонкое, высокотехнологичное устройство, ему противопоказаны сильные встряски, поэтому при транспортировке, он должен находиться в специальной сумке для ноутбука, у которой плотные противоударные стенки. Неосмотрительная сильная вибрация или удар могут дорого обойтись портативному компьютеру. Типичной поломкой в таком случае зачастую бывает повреждение матрицы и винчестера, ремонт которых обойдется не дешево. Не рекомендуется работать с ноутбуком на ворсистых поверхностях, так как пыль, ворсинки или того хуже, шерсть вашего домашнего питомца со временем приведут к засорению системы охлаждения, что чревато перегревом, нестабильной работой, а в худшем случае - к замыканию.\nЕсли ноутбук выключен, необходимо также отключать от электросети сетевой адаптер. Не стоит оставлять без нагрузки включенным в сеть блок питания. Если сетевой адаптер к мобильному компьютеру не подключен, а подключен к сети электропитания, он все равно работает, при этом ресурс работы блока питания ограничен. Во время грозы электропитание лучше не использовать, а работать на ноутбуке от аккумуляторной батареи, так как перенапряжение в электросети наверняка приведет к кратковременным, но очень болезненным броскам тока. Это в свою очередь выведет из строя сетевой адаптер.\nХранить ноутбук желательно подальше от маленьких детей, которым свойственно дергать за все, что попадается под руку, в том числе и кабель, что повлечет падение дорогостоящего устройства. Не стоит доверять разборку или ремонт ноутбуков дилетантам. Кроме того, пытаться отремонтировать ноутбук самому также не стоит, ведь без специального оборудования, инструмента и опыта – ничего не получится. При обнаружении проблем в работе аппаратной части ноутбука, не сомневаясь, немедленно обращайтесь за помощью к мастерам сервисного центра.",
+     "text": "Как лучше всего поступить, если в ноутбуке обнаружена поломка?",
+     "options": [
+      "Попробовать починить его самостоятельно",
+      "Обратиться в сервисный центр",
+      "Разобрать и почистить детали",
+      "Оставить ноутбук выключенным на некоторое время"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 9,
+     "topic": "понимание текста",
+     "passage": "А. Пушкин, \"Сказка о царе Салтане\" (отрывок)\nВ синем небе звезды блещут,\nВ синем море волны хлещут;\nТуча по небу идет,\nБочка по морю плывет.\nСловно горькая вдовица,\nПлачет, бьется в ней царица;\nИ растет ребенок там\nНе по дням, а по часам.\nДень прошел, царица вопит…\nА дитя волну торопит:\n«Ты, волна моя, волна!\nТы гульлива и вольна;\nПлещешь ты, куда захочешь,\nТы морские камни точишь,\nТопишь берег ты земли,\nПодымаешь корабли —\nНе губи ты нашу душу:\nВыплесни ты нас на сушу!»\nИ послушалась волна:\nТут же на берег она\nБочку вынесла легонько\nИ отхлынула тихонько.\nМать с младенцем спасена;\nЗемлю чувствует она.\nНо из бочки кто их вынет?\nБог неужто их покинет?\nСын на ножки поднялся,\nВ дно головкой уперся,\nПонатужился немножко:\n«Как бы здесь на двор окошко\nНам проделать?» — молвил он,\nВышиб дно и вышел вон.",
+     "text": "Где происходит действие в начале отрывка?",
+     "options": [
+      "В море",
+      "В горах",
+      "В замке",
+      "В лесу"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": "про содержание текста",
+     "passage": "А. Пушкин, \"Сказка о царе Салтане\" (отрывок)\nВ синем небе звезды блещут,\nВ синем море волны хлещут;\nТуча по небу идет,\nБочка по морю плывет.\nСловно горькая вдовица,\nПлачет, бьется в ней царица;\nИ растет ребенок там\nНе по дням, а по часам.\nДень прошел, царица вопит…\nА дитя волну торопит:\n«Ты, волна моя, волна!\nТы гульлива и вольна;\nПлещешь ты, куда захочешь,\nТы морские камни точишь,\nТопишь берег ты земли,\nПодымаешь корабли —\nНе губи ты нашу душу:\nВыплесни ты нас на сушу!»\nИ послушалась волна:\nТут же на берег она\nБочку вынесла легонько\nИ отхлынула тихонько.\nМать с младенцем спасена;\nЗемлю чувствует она.\nНо из бочки кто их вынет?\nБог неужто их покинет?\nСын на ножки поднялся,\nВ дно головкой уперся,\nПонатужился немножко:\n«Как бы здесь на двор окошко\nНам проделать?» — молвил он,\nВышиб дно и вышел вон.",
+     "text": "Почему царица плакала в бочке?",
+     "options": [
+      "Ей было холодно",
+      "Она не знала, как выбраться",
+      "Её преследовали враги",
+      "Она боялась за своего ребенка"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 11,
+     "topic": "понимание текста",
+     "passage": "А. Пушкин, \"Сказка о царе Салтане\" (отрывок)\nВ синем небе звезды блещут,\nВ синем море волны хлещут;\nТуча по небу идет,\nБочка по морю плывет.\nСловно горькая вдовица,\nПлачет, бьется в ней царица;\nИ растет ребенок там\nНе по дням, а по часам.\nДень прошел, царица вопит…\nА дитя волну торопит:\n«Ты, волна моя, волна!\nТы гульлива и вольна;\nПлещешь ты, куда захочешь,\nТы морские камни точишь,\nТопишь берег ты земли,\nПодымаешь корабли —\nНе губи ты нашу душу:\nВыплесни ты нас на сушу!»\nИ послушалась волна:\nТут же на берег она\nБочку вынесла легонько\nИ отхлынула тихонько.\nМать с младенцем спасена;\nЗемлю чувствует она.\nНо из бочки кто их вынет?\nБог неужто их покинет?\nСын на ножки поднялся,\nВ дно головкой уперся,\nПонатужился немножко:\n«Как бы здесь на двор окошко\nНам проделать?» — молвил он,\nВышиб дно и вышел вон.",
+     "text": "Как ребенок повлиял на ситуацию?",
+     "options": [
+      "Он попросил волну вынести их на сушу",
+      "Он успокоил царицу",
+      "Он позвал на помощь",
+      "Он выбил крышку бочки и уплыл"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 12,
+     "topic": "про содержание текста",
+     "passage": "А. Пушкин, \"Сказка о царе Салтане\" (отрывок)\nВ синем небе звезды блещут,\nВ синем море волны хлещут;\nТуча по небу идет,\nБочка по морю плывет.\nСловно горькая вдовица,\nПлачет, бьется в ней царица;\nИ растет ребенок там\nНе по дням, а по часам.\nДень прошел, царица вопит…\nА дитя волну торопит:\n«Ты, волна моя, волна!\nТы гульлива и вольна;\nПлещешь ты, куда захочешь,\nТы морские камни точишь,\nТопишь берег ты земли,\nПодымаешь корабли —\nНе губи ты нашу душу:\nВыплесни ты нас на сушу!»\nИ послушалась волна:\nТут же на берег она\nБочку вынесла легонько\nИ отхлынула тихонько.\nМать с младенцем спасена;\nЗемлю чувствует она.\nНо из бочки кто их вынет?\nБог неужто их покинет?\nСын на ножки поднялся,\nВ дно головкой уперся,\nПонатужился немножко:\n«Как бы здесь на двор окошко\nНам проделать?» — молвил он,\nВышиб дно и вышел вон.",
+     "text": "Что сделал ребенок, чтобы выбраться из бочки?",
+     "options": [
+      "Разломал бочку руками",
+      "Открыл крышку",
+      "Вышиб дно головкой",
+      "Попросил волну разбить бочку"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 13,
+     "topic": "про синонимы",
+     "passage": "А. Пушкин, \"Сказка о царе Салтане\" (отрывок)\nВ синем небе звезды блещут,\nВ синем море волны хлещут;\nТуча по небу идет,\nБочка по морю плывет.\nСловно горькая вдовица,\nПлачет, бьется в ней царица;\nИ растет ребенок там\nНе по дням, а по часам.\nДень прошел, царица вопит…\nА дитя волну торопит:\n«Ты, волна моя, волна!\nТы гульлива и вольна;\nПлещешь ты, куда захочешь,\nТы морские камни точишь,\nТопишь берег ты земли,\nПодымаешь корабли —\nНе губи ты нашу душу:\nВыплесни ты нас на сушу!»\nИ послушалась волна:\nТут же на берег она\nБочку вынесла легонько\nИ отхлынула тихонько.\nМать с младенцем спасена;\nЗемлю чувствует она.\nНо из бочки кто их вынет?\nБог неужто их покинет?\nСын на ножки поднялся,\nВ дно головкой уперся,\nПонатужился немножко:\n«Как бы здесь на двор окошко\nНам проделать?» — молвил он,\nВышиб дно и вышел вон.",
+     "text": "Укажите синоним к слову «молвить»",
+     "options": [
+      "спасать",
+      "говорить",
+      "помогать",
+      "ломать"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 14,
+     "topic": "про стиль текста",
+     "passage": "Сегодня нас ждет переменчивая погода: утром солнце будет радовать теплом, но к обеду возможны кратковременные дожди. Температура воздуха поднимется до +15°C, однако порывистый ветер сделает ее менее комфортной. Ближе к вечеру тучи рассеются, и небо станет ясным. Ночью температура опустится до +7°C, поэтому лучше надеть что-нибудь теплое.\nЗавтра ожидается еще более приятная погода, идеальная для прогулок и отдыха на свежем воздухе.",
+     "text": "Укажите стиль и тип текста",
+     "options": [
+      "Художественный, описание",
+      "Публицистический, рассуждение",
+      "Публицистический, описание с элементами повествования",
+      "Научный, повествование"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 15,
+     "topic": "про содержание текста",
+     "passage": "Сегодня нас ждет переменчивая погода: утром солнце будет радовать теплом, но к обеду возможны кратковременные дожди. Температура воздуха поднимется до +15°C, однако порывистый ветер сделает ее менее комфортной. Ближе к вечеру тучи рассеются, и небо станет ясным. Ночью температура опустится до +7°C, поэтому лучше надеть что-нибудь теплое.\nЗавтра ожидается еще более приятная погода, идеальная для прогулок и отдыха на свежем воздухе.",
+     "text": "Какой характер погоды ожидается сегодня?",
+     "options": [
+      "Постоянно солнечная",
+      "Переменчивая",
+      "Целый день дождливая",
+      "Сильный снегопад"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 16,
+     "topic": "про содержание текста",
+     "passage": "Сегодня нас ждет переменчивая погода: утром солнце будет радовать теплом, но к обеду возможны кратковременные дожди. Температура воздуха поднимется до +15°C, однако порывистый ветер сделает ее менее комфортной. Ближе к вечеру тучи рассеются, и небо станет ясным. Ночью температура опустится до +7°C, поэтому лучше надеть что-нибудь теплое.\nЗавтра ожидается еще более приятная погода, идеальная для прогулок и отдыха на свежем воздухе.",
+     "text": "Что повлияет на ощущение прохлады?",
+     "options": [
+      "Порывистый ветер",
+      "Высокая влажность",
+      "Низкое атмосферное давление",
+      "Длинные тени от облаков"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 17,
+     "topic": "про антонимы",
+     "passage": "Сегодня нас ждет переменчивая погода: утром солнце будет радовать теплом, но к обеду возможны кратковременные дожди. Температура воздуха поднимется до +15°C, однако порывистый ветер сделает ее менее комфортной. Ближе к вечеру тучи рассеются, и небо станет ясным. Ночью температура опустится до +7°C, поэтому лучше надеть что-нибудь теплое.\nЗавтра ожидается еще более приятная погода, идеальная для прогулок и отдыха на свежем воздухе.",
+     "text": "Укажите антоним к слову «пасмурной»",
+     "options": [
+      "неясной",
+      "Дождливой",
+      "Ясной",
+      "Ветреной с грозой"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 18,
+     "topic": "про содержание текста",
+     "passage": "Сегодня нас ждет переменчивая погода: утром солнце будет радовать теплом, но к обеду возможны кратковременные дожди. Температура воздуха поднимется до +15°C, однако порывистый ветер сделает ее менее комфортной. Ближе к вечеру тучи рассеются, и небо станет ясным. Ночью температура опустится до +7°C, поэтому лучше надеть что-нибудь теплое.\nЗавтра ожидается еще более приятная погода, идеальная для прогулок и отдыха на свежем воздухе.",
+     "text": "Что рекомендуется взять с собой на ночь?",
+     "options": [
+      "Зонтик",
+      "Легкую куртку",
+      "Теплую одежду",
+      "Солнцезащитные очки"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 19,
+     "topic": "про стиль и тип",
+     "passage": "В соответствии с приказом директора от 10.02.2025 № 15, все сотрудники обязаны предоставить квартальные отчеты до 20.02.2025. Документы необходимо направить в отдел кадров в установленный срок. В случае задержки подачи отчета ответственное лицо должно предоставить объяснительную записку. Настоящее уведомление подлежит обязательному исполнению. Контроль за выполнением возлагается на руководителей структурных подразделений.",
+     "text": "Укажите стиль и тип текста",
+     "options": [
+      "Публицистический, описание",
+      "Научный, повествование",
+      "Официально- деловой, повествование",
+      "Официально-деловой, рассуждение"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 20,
+     "topic": "про содержание текста",
+     "passage": "В соответствии с приказом директора от 10.02.2025 № 15, все сотрудники обязаны предоставить квартальные отчеты до 20.02.2025. Документы необходимо направить в отдел кадров в установленный срок. В случае задержки подачи отчета ответственное лицо должно предоставить объяснительную записку. Настоящее уведомление подлежит обязательному исполнению. Контроль за выполнением возлагается на руководителей структурных подразделений.",
+     "text": "От какого числа приказ?",
+     "options": [
+      "двадцатого марта две тысячи двадцать пятого года",
+      "двадцатого февраля две тысячи двадцать пятого года",
+      "десятого февраля две тысячи двадцать четвертого года",
+      "десятого февраля две тысячи двадцать пятого года"
+     ],
+     "image": null,
+     "correct": 3
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "5-sandyq": {
+   "id": "5-sandyq",
+   "grade": 5,
+   "subject": {
+    "ru": "Количественные характеристики",
+    "kz": "Сандық сипаттама"
+   },
+   "minutes": 45,
+   "answersFilled": true,
+   "source": "САНДЫҚ СИПАТТАМА.docx (5-сынып)",
+   "instructions": "Егер А бағандағы мән үлкен болса, онда А жауабын / Если значение колонки А то больше, выбираем ответ А; Егер В бағандағы мән үлкен болса, онда В жауабын / Если значение колонки В больше, то выбираем ответ В; Егер екі бағандағы мән өзара тең болса, онда С жауабын / Если значение в двух колонках равны, тогда выбираем ответ С; Егер тапсырмаға жауап беру үшін ақпарат жеткіліксіз болса, онда D жауабын таңдаңыз./ Если для ответа недостаточно информации, тогда выбираем ответ D.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 159кг\nВ бағаны/ Столбец В: 1ц 6кг",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 2,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 80 минут\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Кестеде бір бағанның мазмұны жоқ (сурет/формула) / В таблице отсутствует содержимое одной колонки"
+    },
+    {
+     "n": 3,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: Жазыңқы бұрыштың – бөлігі/ – части развернутого угла\nВ бағаны/ Столбец В: Тікбұрыштың – бөлігі/ – части прямого угла",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Бөлшектердің мәні құжатта көрінбейді / Значения дробей отсутствуют в тексте"
+    },
+    {
+     "n": 4,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: Тізбектес екі оң санның айырмасы/ Разность двух последовательных положительных чисел\nВ бағаны/ Столбец В: Ең кіші жай сан мен 2-нің айырмасы/ Разность наименьшого простого числа и 2",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 5,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 0,12345 жүздік үлесте тұрған сан/ 0,12345 цифра сотой доли в дробной части числа\nВ бағаны/ Столбец В: 0,54321 мыңдық үлесте тұрған сан/ 0,54321 цифра тысячной доли в дробной части числа",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 6,
+     "topic": "Геометриялық фигуралар туралы түсінік/ Понятие о геометрических фигур",
+     "text": "А бағаны/ Столбец А: Фигураның ауданы/ Площадь фигура\nВ бағаны/ Столбец В: Үшбұрыштың ауданы/ Площадь треугольника",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0,
+     "needsImage": true
+    },
+    {
+     "n": 7,
+     "topic": "Математикалық тіл және модель/ Математическая модель",
+     "text": "5000, 1000, 200, х, у мәндерін тауып салыстырыңдар / х, у значения последовательности 5000, 1000, 200, х, у\nА бағаны/ Столбец А: 2х+4у\nВ бағаны/ Столбец В: 3х+1",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 8,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 9,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 1 ай/ 1 месяц\nВ бағаны/ Столбец В: 2592000 с",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 10,
+     "topic": "Математикалық тіл және модель/ Математическая модель",
+     "text": "Айдар Қайдардан биік және Қайдар Жайдардан аласа/ Айдар выше Кайдара и Кайдар ниже Жайдара\nА бағаны/ Столбец А: Айдардың бойы/ Рост Айдара\nВ бағаны/ Столбец В: Жайдардың бойы/ Рост Жайдара",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 11,
+     "topic": "Математикалық тіл және модель/ Математическая модель",
+     "text": "Егер а тақ сан болса/ Если а нечетное число\nА бағаны/ Столбец А: а+2\nВ бағаны/ Столбец В: а+а",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 12,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 2\nВ бағаны/ Столбец В: Жай сандардың ішінде неше жұп сан бар?/ Количество четный чисел простых чисел",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 14,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 15,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 88А саны 9-ға бөлінсе, А цифрі нешеге тең?/ Чему ровно число А, если 88А делится без остатка на 9?\nВ бағаны/ Столбец В: 13*11 көбейтіндінің соңғы цифры/ 13*11 последняя цифра произведения",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 16,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 36 санының жай бөлгіштерінің саны/ Число простых делителей числа 36\nВ бағаны/ Столбец В: 17 санының 4-дәрежесінің соңғы цифры / Последняя цифра четвертой степени числа 17",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 17,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: 1\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Кестеде бір бағанның мазмұны жоқ (сурет/формула) / В таблице отсутствует содержимое одной колонки"
+    },
+    {
+     "n": 18,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 5 сағ 20 мин – 1 сағ 38 мин/ 5 ч 20мин – 1 ч 38 мин\nВ бағаны/ Столбец В: 13 сағ 13 мин – 9 сағ 9 мин/13 ч 13 мин – 9 ч 9 мин",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 19,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: Ондығы бірлігінен 3-ке көп екі таңбалы сандар/ Количество двухзначных чисел, в которых число десятков на 3 больше числа единиц\nВ бағаны/ Столбец В: Ондығы бірлігінен 3-ке аз екі таңбалы сандар/ Количество двухзначных чисел, в которых число десятков на 3 меньше числа единиц",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 20,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: a+b=3, a-?\nВ бағаны/ Столбец В: c-d=7, d-?",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 21,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: 0,820 + 0,003\nВ бағаны/ Столбец В: 0,082 + 0,300",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 22,
+     "topic": "Теңдеулер және теңсіздіктер/ Уравнения и неравенства",
+     "text": "А бағаны/ Столбец А: 3x - 2 = 13 болса, x-тің мәні /Если 3x - 2 = 13, то x\nВ бағаны/ Столбец В: 2y + 3 = 13 болса, y-тің мәні /Если 2y + 3 = 13, то y",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 23,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: x + y - 6\nВ бағаны/ Столбец В: A + B - 6",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 24,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 1/4\nВ бағаны/ Столбец В: 37,5%",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 25,
+     "topic": "Метрикалық қатыстар / Метрические соотношения",
+     "text": "А бағаны/ Столбец А: ZERDELI мектеп оқушыларының 50% /50% учащихся школы ZERDELI\nВ бағаны/ Столбец В: ZERDELI мектеп оқушыларының жартысы /Половина учащихся школы ZERDELI",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 26,
+     "topic": "Сандар және шамалар туралы түсініктер / Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 60 кг-ның бөлігі / от 60 кг\nВ бағаны/ Столбец В: 70 кг-ның бөлігі / от 70 кг",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Бөлшектің мәні құжатта көрінбейді / Значения долей отсутствуют в тексте"
+    },
+    {
+     "n": 27,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: Ұзындықтың 3/4 бөлігі 15 метрге тең /Длина, 3/4 которой равна 15 метрам\nВ бағаны/ Столбец В: Ұзындықтың 2/5 бөлігі 14 сантиметрге тең /Длина, 2/5 которой равна 14 сантиметрам",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 28,
+     "topic": "Сандар және шамалар туралы түсініктер / Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 8,5 тонна\nВ бағаны/ Столбец В: 85 центнер",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 29,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 30,
+     "topic": "Математикалық тіл және модель/ Математическая модель",
+     "text": "Санның қанша бөлгіштері бар/ Количество делителей числа\nА бағаны/ Столбец А: 12\nВ бағаны/ Столбец В: 15",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 31,
+     "topic": "Математикалық тіл және модель/ Математическая модель",
+     "text": "Қаладағы көліктің 3/5 бөлігі жеңіл машина. Олардың 1/2 бөлігі ақ түсті./ В городе 3/5 всех машин - легковые, из них 1/2 - белого цвета.\nА бағаны/ Столбец А: Қаладағы көліктің қандай бөлігі ақ түсті жеңіл машина? / Какая часть машин белого цвета?\nВ бағаны/ Столбец В: 1/4",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 32,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: 40 бет барлық кітаптың 25% құрайды. /Количество страниц в книге, если 40 страниц составляют 25%\nВ бағаны/ Столбец В: Кітаптың 40 бетінің 25% /25% от книги в которой 40 страниц",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 33,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: ЕКОЕ (12; 18) / НОК (12; 18)\nВ бағаны/ Столбец В: ЕҮОБ (72; 108) / НОД (72; 108)",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 34,
+     "topic": "Метрикалық қатыстар / Метрические соотношения",
+     "text": "А бағаны/ Столбец А: Қабырғасы 5-ке тең шаршының периметрі /Периметр квадрата со стороной 5\nВ бағаны/ Столбец В: Қабырғалары 4, 7, 10-ға тең үшбұрыш периметрі /Периметр треугольника со сторонами 4, 7, 10",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 35,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "x = 4 және y = 2 болса:\nА бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 36,
+     "topic": "Геометриялық фигуралар туралы түсінік / Понятия о геометрических фигурах",
+     "text": "Боялған фигураның периметрі/ Периметр закрашенной части\nА бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Салыстырылатын екі сурет құжатта жоқ / Отсутствуют оба изображения"
+    },
+    {
+     "n": 37,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: 11 қозы-лақтың аяқтарының саны /Количество ног у 11 ягнят\nВ бағаны/ Столбец В: 22 тауықтың аяқтарының саны /Количество ног у 22 кур",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 38,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 167-ні 5-ке бөлгендегі қалдық /Остаток при делении 167 на 5\nВ бағаны/ Столбец В: 219-ды 2-ге бөлгендегі қалдық /Остаток при делении 219 на 2",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 39,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 40,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: 20 метр 250 км-дің қандай бөлігін құрайды? /Какую часть от 250 км составляют 20 метров?\nВ бағаны/ Столбец В: 25 сантиметр 200 км-дің қандай бөлігін құрайды? /Какую часть от 200 км составляют 25 сантиметров?",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 41,
+     "topic": "Геометриялық фигуралар туралы түсінік / Понятия о геометрических фигурах",
+     "text": "PQ мен RS кесінділерінің ұзындықтары тең. PQ=RS\nА бағаны/ Столбец А: PR ұзындығы/ длина PR\nВ бағаны/ Столбец В: QS ұзындығы/ Длина QS",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true
+    },
+    {
+     "n": 42,
+     "topic": "Теңдеулер және теңсіздіктер, олардың жүйелері және жиынтықтары / Уравнения и неравенства, их системы и множества решений",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 43,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "Соңғы цифры нешемен аяқталады?/ Найдите последнюю цифру значения\nА бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Салыстырылатын өрнектер құжатта жоқ / Отсутствуют сравниваемые выражения"
+    },
+    {
+     "n": 44,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 45,
+     "topic": "Сандарға амалдар қолдану/ Применение действий к числам",
+     "text": "Әрбір квадраттың периметрі 20см/ Периметр каждого квадрата 20см\nА бағаны/ Столбец А: Боялған фигураның ауданы/ Площадь закрашенной фигуры\nВ бағаны/ Столбец В: 77 см",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3,
+     "needsImage": true
+    },
+    {
+     "n": 46,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 10 ар\nВ бағаны/ Столбец В: 1 га",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 47,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 10 л\nВ бағаны/ Столбец В: 10 см3",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 48,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: 15 км/сағ жылдамдықпен 3,2 сағат жүрілген жол /Путь, пройденный верхом со скоростью 15 км/ч за 3,2 часа\nВ бағаны/ Столбец В: 25 км/сағ жылдамдықпен 1,8 сағат жүрілген жол /Путь, пройденный со скоростью 25 км/ч за 1,8 часов на велосипеде",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 49,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: Мараттың үйінен мектепке дейін арасы 15 метрден 24 ағаш егілген. Үй мен мектеп арақашықтығы /От дома Марата до школы посажено 24 дерева на расстоянии 15 м друг от друга. Найти это расстояние.\nВ бағаны/ Столбец В: Мақсаттың үйінен мектепке дейін 345метр/ 345 метров",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 50,
+     "topic": "Сандар және шамалар туралы түсініктер/Понятия о числах и величинах",
+     "text": "А бағаны/ Столбец А: 1000 м * 1000м\nВ бағаны/ Столбец В: 100 м * 100м * 100м",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 51,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 2\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3,
+     "needsImage": true,
+     "needsReview": "Кестеде бір бағанның мазмұны жоқ (сурет/формула) / В таблице отсутствует содержимое одной колонки"
+    },
+    {
+     "n": 52,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 41 м/с\nВ бағаны/ Столбец В: 7,2 км/сағ / 7,2 км/час",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 53,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 9 бен 20 сандарының арасындағы жай сандардың қосындысы /Сумма простых чисел от 9 до 20\nВ бағаны/ Столбец В: 11-ге дейінгі (11-ді қоса алғанда) натурал сандардың қосындысы /Сумма натуральных чисел до 11",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 54,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: 3,6 санын 0,5-ке арттыр/ Увелечение числа 3,6 на 0,5\nВ бағаны/ Столбец В: ЕҮОБ/НОД (72,30)",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 55,
+     "topic": "Сандарға амалдар қолдану / Решение задач",
+     "text": "А бағаны/ Столбец А: А цифрының мәні, / Значение цифры А\nВ бағаны/ Столбец В: В цифрының мәні, / Значение цифры В",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "А мен В цифрлары анықталатын шарт (мысал) құжатта жоқ / Отсутствует условие, задающее цифры А и В"
+    },
+    {
+     "n": 56,
+     "topic": "Сандарға амалдар қолдану / Решение задач",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 2,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    },
+    {
+     "n": 57,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: 1000 құмырсқаның салмағы / Вес 1000 муравьев\nВ бағаны/ Столбец В: 1 қозының салмағы / Вес 1 ягненка",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 58,
+     "topic": "Математикалық тіл және математикалық модель/ Математическая модель",
+     "text": "А бағаны/ Столбец А: Цифрлары әртүрлі ең кіші бес таңбалы сан /Наименьшее пятизначное число с разными цифрами\nВ бағаны/ Столбец В: 10234",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 59,
+     "topic": "Математикалық модельдеу көмегімен есептер шығару / Моделирование",
+     "text": "А бағаны/ Столбец А: – дің – бөлігінің – бөлігі / от части\nВ бағаны/ Столбец В: 2,5 – тің 0,5 – бөлігі / 0,5 от 2,5",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 1,
+     "needsImage": true,
+     "needsReview": "А бағанындағы бөлшектердің мәні құжатта жоқ / Значения дробей в колонке А отсутствуют"
+    },
+    {
+     "n": 60,
+     "topic": "Сандарға амалдар қолдану / Решение задач",
+     "text": "А бағаны/ Столбец А: [мазмұны жоқ / содержимое отсутствует]\nВ бағаны/ Столбец В: [мазмұны жоқ / содержимое отсутствует]",
+     "options": [
+      "А бағандағы мән үлкен / Значение колонки А больше",
+      "В бағандағы мән үлкен / Значение колонки В больше",
+      "Екі бағандағы мән өзара тең / Значения в двух колонках равны",
+      "Тапсырмаға жауап беру үшін ақпарат жеткіліксіз / Для ответа недостаточно информации"
+     ],
+     "image": null,
+     "correct": 0,
+     "needsImage": true,
+     "needsReview": "Екі бағанның да мазмұны жоқ (өрнектер сурет түрінде) / Содержимое обеих колонок отсутствует"
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "5-zharatylystanu": {
+   "id": "5-zharatylystanu",
+   "grade": 5,
+   "subject": {
+    "ru": "Естествознание",
+    "kz": "Жаратылыстану"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "Жаратылыстану.docx (5-сынып)",
+   "questions": [
+    {
+     "n": 1,
+     "topic": "Күн жүйесі, Солнечная система",
+     "text": "Табиғаттағы ерекше жаратылған сансыз көп жұлдыздардың бірі:\nОдин из бесчисленных уникально созданных небесных тел в природе:",
+     "options": [
+      "Марс",
+      "астероид",
+      "галактика",
+      "Күн / Солнце",
+      "комета"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 2,
+     "topic": "Күн жүйесі, Солнечная система",
+     "text": "Күн жүйесінде қанша ғаламшар бар?\nСколько планет в Солнечной системе?",
+     "options": [
+      "7",
+      "8",
+      "9",
+      "5",
+      "10"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 3,
+     "topic": "Адам. ер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Жердің біртұтас, үзіліссіз қабаты, адам іс-әрекет жасайтын ортасы не деп аталады?\nКак называется единая, непрерывная оболочка Земли, среда деятельности человека?",
+     "options": [
+      "мантия / мантия",
+      "атмосфера / атмосфера",
+      "географиялық қабық / географическая оболочка",
+      "ядро қабаттары / слои ядра",
+      "литосфера / литосфера"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 4,
+     "topic": "Адам. Жер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Материктердің ішіндегі аумағы бойынша ең үлкені:\nКакой из материков является самым большим по площади?",
+     "options": [
+      "Антарктида / Антарктида",
+      "Солтүстік Америка / Северная Америка",
+      "Австралия / Австралия",
+      "Еуропа / Европа",
+      "Еуразия / Евразия"
+     ],
+     "image": null,
+     "correct": 4
+    },
+    {
+     "n": 5,
+     "topic": "Гидросфера",
+     "text": "Дүниежүзілік мұхиттың құрамдас бөлігі болатын ірі су айдыны:\nКрупный водоем, являющийся частью мирового океана:",
+     "options": [
+      "теңіз / море",
+      "көл / озеро",
+      "өзен / река",
+      "сарқырама / водопад",
+      "мұхит / океан"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 6,
+     "topic": "Адам. ер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Қазіргі таңда ер шарындағы адамдар саны:\nКакое количество людей проживает на Земле в настоящее время?",
+     "options": [
+      "3 млрд / 3 миллиарда",
+      "8 млрд / 8 миллиардов",
+      "12 млрд / 12 миллиардов",
+      "2 млрд / 2 миллиарда",
+      "7 млрд / 7 миллиардов"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 7,
+     "topic": "Адам. ер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Демография деген не?\nЧто такое демография?",
+     "options": [
+      "халық тарихын зерттеу / изучение истории народов",
+      "экономиканың өсуін зерттеу / изучение экономического роста",
+      "халықтың қоныстану заңдылықтары туралы ғылым / наука о закономерностях расселения населения",
+      "саяси жүйелерді зерттеу / изучение политических систем",
+      "табиғи ресурстардың географиялық таралуы / географическое распределение природных ресурсов"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 8,
+     "topic": "Адам. ер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Пайдалы қазбаларды табу және өндіру жұмыстарымен кім айналысады?\nКто занимается поиском и добычей полезных ископаемых?",
+     "options": [
+      "Экологтар / Экологи",
+      "геологтар / Геологи",
+      "палеонтологтар / Палеонтологи",
+      "металлургтер / Металлурги",
+      "географтар / Географы"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 9,
+     "topic": "Заттар әлемі, Мир веществ",
+     "text": "Молекула неден тұрады?\nИз чего состоит молекула?",
+     "options": [
+      "денеден / из тела",
+      "заттан / из вещества",
+      "минералдан / из минерала",
+      "газдан / из газа",
+      "атомнан / из атома"
+     ],
+     "image": null,
+     "correct": 4
+    },
+    {
+     "n": 10,
+     "topic": "Экожүйе, Экосистема",
+     "text": "Басқа тірі организмдердің есебінен тіршілік етіп, қоректенетін және көбіне оларға зиян келтіретін организмдер:\nОрганизмы, которые живут за счет других живых существ, питаясь ими и часто причиняя им вред:",
+     "options": [
+      "гететрофтар / гетеротрофы",
+      "паразиттер / паразиты",
+      "жыртқыштар / хищники",
+      "автотрофтар / автотрофы",
+      "сапрофиттер / сапрофиты"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 11,
+     "topic": "Адам. Жер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "5–7-сынып оқушысының ағзасы қалыпты қызмет атқаруы үшін күніне қажетті энергия:\nКакое количество энергии необходимо организму ученика 5–7 классов в день для нормального функционирования?",
+     "options": [
+      "100-200 ккал",
+      "2500-2800 ккал",
+      "500-1000 ккал",
+      "1500-1800 ккал",
+      "200-800 ккал"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 12,
+     "topic": "Адам. ер Шары. Ғалам, Человек. Планета Земля. Вселенная",
+     "text": "Ересек адамның денесінде нешеден астам сүйек бар?\nСколько костей в организме взрослого человека?",
+     "options": [
+      "200",
+      "50",
+      "100",
+      "340",
+      "170"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 13,
+     "topic": "Жануарлар мен өсімдіктер классификациясы, Классификация животных и растений",
+     "text": "Қандай құс ұша алмайды?\nКакая птица не умеет летать?",
+     "options": [
+      "Қарға / Ворона",
+      "Тырна / уравль",
+      "Құр / Тетерев",
+      "Пингвин / Пингвин",
+      "Қараторғай / Скворец"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 14,
+     "topic": "Ғылым әлемі, Мир науки",
+     "text": "Қазақстанның ең биік нүктесі?\nКакая самая высокая точка Казахстана?",
+     "options": [
+      "Баянауыл / Баянауыл",
+      "Қарақия ойысы / Депрессия Каракия",
+      "Ақсу / Аксу",
+      "Хан Тәңірі / Хан Тенгри",
+      "Көкшетау / Кокшетау"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 15,
+     "topic": "Күн жүйесі/Солнечная система",
+     "text": "Қай ғаламшар Күнге ең жақын?\nКакая планета находится ближе всего к Солнцу?",
+     "options": [
+      "Жер / Земля",
+      "Марс / Марс",
+      "Шолпан / Венера",
+      "Меркурий / Меркурий",
+      "Юпитер / Юпитер"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 16,
+     "topic": "Жануарлар мен өсімдіктер классификациясы/ Классификация животных и растений",
+     "text": "Қандай жануар сүтқоректілерге жатады?\nКакое животное относится к млекопитающим?",
+     "options": [
+      "Қарға / Ворона",
+      "Балық / Рыба",
+      "Түйе / Верблюд",
+      "Жылан / Змея",
+      "Құрбақа / Лягушка"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 17,
+     "topic": "Ғылым әлемі/Мир науки",
+     "text": "Жер бетінің көп бөлігін не алып жатыр?\nЧто занимает большую часть поверхности Земли?",
+     "options": [
+      "Топырақ / Почва",
+      "Өсімдіктер / Растения",
+      "Мұхиттар мен теңіздер / Океаны и моря",
+      "Шөлдер / Пустыни",
+      "Мұздықтар / Ледники"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 18,
+     "topic": "Күн жүйесі/Солнечная система",
+     "text": "Күн мен Жердің арақашықтығы шамамен қанша?\nКакое приблизительное расстояние между Солнцем и Землей?",
+     "options": [
+      "100 мың км / 100 тысяч км",
+      "150 млн км / 150 миллионов км",
+      "500 млн км / 500 миллионов км",
+      "1 млрд км / 1 миллиард км",
+      "10 мың км / 10 тысяч км"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 19,
+     "topic": "Жанды және жансыз табиғаттағы үдерістер, Процессы в живой и неживой природе",
+     "text": "Өсімдіктер қалай қоректенеді?\nКак питаются растения?",
+     "options": [
+      "Жануарлар сияқты тамақ жейді / Едят пищу, как животные",
+      "Басқа өсімдіктерді жейді / Питаются другими растениями",
+      "Күн сәулесі, су, ауа арқылы / Через солнечный свет, воду и воздух",
+      "Қант арқылы / Через сахар",
+      "Судан алады алады / Получают питание из воды"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 20,
+     "topic": "Адам. ер шары. Ғалам, Человек. Планета. Земля. Вселенная",
+     "text": "Әлемдегі ең биік тау қайсы?\nКакая гора является самой высокой в мире?",
+     "options": [
+      "Килиманджаро / Килиманджаро",
+      "Эльбрус / Эльбрус",
+      "Эверест / Эверест",
+      "Монблан / Монблан",
+      "Аконкагуа / Аконкагуа"
+     ],
+     "image": null,
+     "correct": 2
+    }
+   ],
+   "keySource": "sheet"
+  },
+  "6-matematika": {
+   "id": "6-matematika",
+   "grade": 6,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 45,
+   "answersFilled": true,
+   "source": "6 сынып Математика сынақ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В тесте по 5 вариантов ответа на вопрос (не 4). Часть формул, дробей и рисунков в исходном .docx вставлены изображениями и в текст не извлеклись.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Теңдеуді шешіңіз: / Решите уравнение z+(-76,3)=-45,8",
+     "options": [
+      "122,1",
+      "30,5",
+      "30,9",
+      "-122,1",
+      "-30,5"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "z = -45,8 + 76,3 = 30,5"
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Есептеңіз: / Вычислите:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "-2,5 * (-12/7) * 0,84 = 3,6",
+     "blockImage": "images/g6m-q02.png"
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "480 л-дің 120 см3 –қа қатынасын табыңыз: / Найдите отношение 480 л на 120 см3:",
+     "options": [
+      "40000",
+      "4",
+      "480",
+      "400",
+      "4000"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "480 л = 480 000 см³; 480 000 : 120 = 4000"
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Пропорцияның белгісіз мүшесін табыңыз: / Найдите неизвестный член пропорции:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "(2x+9)/15 = 17/5 -> 2x+9 = 51 -> x = 21",
+     "blockImage": "images/g6m-q04.png"
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Жердің диаметрі 12 742 км. Жердің экваторының ұзындығы қанша километр? (π=3 деп есептеңіз) / Диаметр Земли составляет 12 742 км. Чему равна длина экватора Земли? (π = 3)",
+     "options": [
+      "12 742",
+      "76 452",
+      "38 226",
+      "40 009,88",
+      "19 113"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "12 742 * 3 = 38 226"
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Өрнектің мәнін табыңыз: / Найдите значение выражения:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "цепная дробь снизу: 2+1/3=7/3; 2+3/7=17/7; 2+7/17=41/17; 3+17/41 = 140/41",
+     "blockImage": "images/g6m-q06.png"
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Қияр құрамында 98% су. Бір қиярдағы судың массасы 117,6 грамм болса, үш бірдей қиярдың массасы нешеге тең? / Огурец на 98% состоит из воды. Чему равна масса трех одинаковых огурцов, если масса воды в одном огурце равна 117,6 граммов?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "масса огурца 117,6 : 0,98 = 120 г; три огурца 360 г. ВНИМАНИЕ: варианты A и C одинаковы (115,248) — дефект источника, на верный ответ не влияет",
+     "blockImage": "images/g6m-q07.png"
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Есептеңіз: / Вычислите:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "5,5*8*1,2*0,5*1,9 = 50,16; два минуса дают плюс",
+     "blockImage": [
+      "images/g6m-q08-1.png",
+      "images/g6m-q08-2.png"
+     ]
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Фабрикада әр қант қызылшасының бөлігі қант айналадыруға жұмсалады. 12 т қант алу үшін неше тонна қант қызылшасы керек? / На фабрике каждой сахарной свеклы расходуется на переработку сахара. Сколько тонн сахарной свеклы потребуется, чтобы получить 12 т сахара?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "12 : (8/20) = 12 * 20/8 = 30 т",
+     "blockImage": "images/g6m-q09.png"
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Теңдеуді шешіп, түбірлерінің қосындысын табыңыз: / Решите уравнение и найдите сумму корней:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "10*|3x-15| = 15 -> |3x-15| = 1,5 -> x = 4,5 и 5,5; сумма 10",
+     "blockImage": "images/g6m-q10.png"
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Ықшамдаңыз: / Упростите:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "2+7x-8-3x+6-4x-2+8x = 8x - 2",
+     "blockImage": "images/g6m-q11.png"
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "екені белгілі болса, онда өрнегінің мәнін табыңыз. / Найдите значение выражения , если известно, что .",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "4b+4a = 4*(8/9) = 32/9; 48 : (32/9) = 13,5",
+     "blockImage": "images/g6m-q12.png"
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Бөлшекті қысқартыңыз: / Сократите дробь:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "(75*9*16)/(27*25*32) = 10800/21600 = 0,5",
+     "blockImage": "images/g6m-q13.png"
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "A мен В қалаларының бірінші картадағы арақашықтығы 3,1 см, ал екінші картадағы арақашықтығы 9,3 см. Егер екінші картаның масштабы 1:9 000 000 болса, онда бірінші картаның масштабын қандай? / Расстояние между городами A и B на первой карте составляет 3,1 см, а на второй - 9,3 см. Найдите масштаб первой карты, если масштаб второй карты равен 1:9 000 000.",
+     "options": [
+      "1: 837 000",
+      "1: 27 000",
+      "1: 27 000 000",
+      "1: 837",
+      "1: 31 000 000"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "реальное расстояние 9,3 * 9 000 000 = 83 700 000 см; 83 700 000 : 3,1 = 27 000 000"
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "Теңіз суы салмағының 9 %-ы тұз. 90 кг теңіз суына ондағы тұз үлесі 3 % болуы үшін қанша тұщы су қосу қажет? / 9% массы морской воды-соль. Сколько пресной воды нужно добавить в 90 кг морской воды, чтобы доля соли в ней составляла 3%?",
+     "options": [
+      "90 кг",
+      "270 кг",
+      "8,1 кг",
+      "180 кг",
+      "243 кг"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "соли 8,1 кг; для 3% нужна масса 8,1 : 0,03 = 270 кг; добавить 270 - 90 = 180 кг"
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "Катер өзең ағысымен 36 км жүзу үшін 67,5 мин жұмсайды, ал ағысқа қарсы 42 км жүзу үшін 1,75 сағ жұмсайды. Катер жылдамдығының ағыс жылдамдығына қатынасын табыңыз. / Катер проплывает 36 км по течению реки за 67,5 мин, а 42 км против течения проплывает за 1,75 часов. Найдите отношение скорости катера к скорости течения.",
+     "options": [
+      "7",
+      "6",
+      "4",
+      "8",
+      "3"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "по течению 36 : 1,125 ч = 32 км/ч, против 42 : 1,75 = 24 км/ч; катер 28, течение 4; 28 : 4 = 7"
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "және сандар аралықтарының қиылысуындағы ең кіші бүтін санды табыңыз. / Найдите наименьшее целое число из пересечения интервалов и .",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "пересечение [-2;5), (-7;8], [2;6) = [2;5); наименьшее целое 2",
+     "blockImage": "images/g6m-q17.png"
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "Квадраттың периметрі 4 сантиметрден артық, бірақ 16 сантиметрден кем. Квадраттың қабырғасын х деп алып, ұзындығын бағалаңыз. / Периметр квадрата больше 4 см, но меньше 16 см. Обозначив сторону квадрата как х, оцените ее длину.",
+     "options": [
+      "1<x<16",
+      "2≤x≤4",
+      "1<x<4",
+      "2≤x≤8",
+      "4<x<16"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "4 < 4x < 16 -> 1 < x < 4"
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "Сағат 12:20 болғанда сағаттық тілі мен минуттық тілі арасындағы бұрыштың градустық өлшемін табыңыз. / Найдите градусную меру угла между часовой и минутной стрелкой часов, если время 12:20.",
+     "options": [
+      "120",
+      "110",
+      "100",
+      "105",
+      "115"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "минутная стрелка 120°, часовая 10° от 12; угол 110°"
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "8 құмырашы 4 күнде 32 құмыра жасайды. Сонда 5 құмырашы 6 күнде қанша құмыра жасайды? / 8 гончаров изготавливают 32 кувшина за 4 дня. Сколько кувшинов сделают 5 гончаров за 6 дней при такой же производительности?",
+     "options": [
+      "48",
+      "40",
+      "20",
+      "24",
+      "30"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "производительность 32/(8*4) = 1 кувшин на гончара в день; 5*6 = 30"
+    },
+    {
+     "n": 21,
+     "topic": null,
+     "text": "RОM бұрышының өлшемі 182. Оның ішінен ОЕ сәулесі жүргізілген. RОЕ және ЕОM бұрыштарының өлшемдерінің қатынасы 5:9 қатынасындай. Пайда болған екі бұрыштың өлшемдерінің айырмасын табыңыз. / Величина угла RОM равна 182°. Внутри этого угла проведен луч ОЕ. Величины полученных углов RОЕ и ЕОМ относятся как 5:9. Найдите разность градусных величин этих углов.",
+     "options": [
+      "52",
+      "14",
+      "13",
+      "65",
+      "117"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "182 : 14 = 13; углы 65° и 117°; разность 52°"
+    },
+    {
+     "n": 22,
+     "topic": null,
+     "text": "108 беті бар кітапты 1-ші беттен бастап нөмірлеу үшін қанша цифр қолданылады? / Сколько цифр понадобится для нумерации книги со 108 страницами, если нумеровать ее с 1-й страницы?",
+     "options": [
+      "972",
+      "216",
+      "324",
+      "189",
+      "207"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "9*1 + 90*2 + 9*3 = 9 + 180 + 27 = 216"
+    },
+    {
+     "n": 23,
+     "topic": null,
+     "text": "Бағасы 2250 теңгелік кітап алдымен 28%-ға арзандады, ал одан кейін соңғы бағасы 15%-ға қымбаттады. Заттың соңғы бағасы неше теңге? / Книга стоимостью 2250 тенге сначала подешевела на 28%, а затем подорожала на 15%. Какова окончательная цена книги?",
+     "options": [
+      "1620",
+      "1377",
+      "630",
+      "1863",
+      "724,5"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "2250 * 0,72 = 1620; 1620 * 1,15 = 1863"
+    },
+    {
+     "n": 24,
+     "topic": null,
+     "text": "Теңсіздіктер жүйесін шешіңіз: / Решите систему уравнений:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "первое: x+6-64x > 8x+2+8x -> 4 > 79x -> x < 4/79; второе x <= 3; пересечение (-беск.; 4/79)",
+     "blockImage": [
+      "images/g6m-q24-1.png",
+      "images/g6m-q24-2.png"
+     ]
+    },
+    {
+     "n": 25,
+     "topic": null,
+     "text": "2; 7; 5 цифрларынан құралған барлық екі таңбалы тақ сандардың қосындысын табыңыз. Цифрлар қайталанады. / Найдите сумму всех двузначных нечетных чисел, образованных с помощью цифр 2; 7; 5. Цифры могут повторяться.",
+     "options": [
+      "184",
+      "316",
+      "363",
+      "154",
+      "132"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "нечётные: 27+57+77+25+55+75 = 316"
+    },
+    {
+     "n": 26,
+     "topic": null,
+     "text": "△ амалы келесі заңдылықпен анықталған. Белгісіз мәнді табыңыз. / Действие △ задано следующей закономерностью. Найди неизвестное значение.\n1△2=1+11\n4△4=4+44+444+4444\n8△3=?",
+     "options": [
+      "96",
+      "9872",
+      "369",
+      "984",
+      "976"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "число слагаемых равно второму операнду: 8△3 = 8 + 88 + 888 = 984"
+    },
+    {
+     "n": 27,
+     "topic": null,
+     "text": "Өрнектің мәнінің бүтін бөлігін табыңыз: / Найдите целую часть значения выражения:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "ПРОБЛЕМА: (-2 5/9 + 0,6) : (12 4/7 - 16,5) * 7 = (-88/45) : (-55/14) * 7 = 784/225 ≈ 3,484, целая часть 3. Среди вариантов (-27,775; -26; -26,775; -27; -28) верного нет — вероятна ошибка в условии или в вариантах. Нужна проверка предметника",
+     "blockImage": "images/g6m-q27.png"
+    },
+    {
+     "n": 28,
+     "topic": null,
+     "text": "Төрт баланың орташа жасы 13 ке тең. Бұл балаларға тағы бір бала қосылса, онда орташа жас 11 болады. Соңғы қосылған баланың жасы қанша? / Средний возраст четверых детей равен 13. Если к этим детям присоединится еще один ребенок, то средний возраст составит 11 лет. Сколько лет ребенку, который присоединился последним?",
+     "options": [
+      "11",
+      "8",
+      "15",
+      "9",
+      "3"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "сумма 4*13 = 52; сумма 5*11 = 55; возраст пятого 3"
+    },
+    {
+     "n": 29,
+     "topic": null,
+     "text": "Нүктелердің қайсысы 6х+9у=15 теңдеуімен берілген графиінде жатады? / Какая из точек лежит на графике, заданном уравнением 6х+9у=15?",
+     "options": [
+      "(1;1)",
+      "(-1;1)",
+      "(0;1)",
+      "(1;0)",
+      "(-1;-1)"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "6*1 + 9*1 = 15 — точка (1;1) подходит, остальные нет"
+    },
+    {
+     "n": 30,
+     "topic": null,
+     "text": "Көкшетаудан сағат 13:00 шыққан пойыз 100 км/сағ тұрақты жылдамдықпен жүріп Нұр-Сұлтанға сағат 16:00 жетті. Осы екі қала арасы масштабы 1:6 000 000 болатын картада қанша болады? / Поезд из Кокшетау выехал в 13:00 и доехал до Нур-Султана в 16:00, двигаясь с постоянной скоростью 100 км/ч. Чему равно соответствующее расстояние между этими городами на карте с масштабом 1:6 000 000?",
+     "options": [
+      "18 см",
+      "5 см",
+      "6 cм",
+      "50 см",
+      "18 км"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "3 ч * 100 = 300 км = 30 000 000 см; : 6 000 000 = 5 см"
+    },
+    {
+     "n": 31,
+     "topic": null,
+     "text": "Екі құйма бар. Бірінші құйманың құрамында 10% никель, екіншісінде 20% никель бар. Осы екі құймадан құрамында 14,4% никель болатын, массасы 625 кг үшінші құйма алады. Бірінші құйманың массасы екінші құйманың массасынан қанша килограммға артық? / Есть два сплава металлов. Первый сплав содержит 10% никеля, второй – 20% никеля. Из этих двух сплавов получили третий сплав массой 625 кг, содержащий 14,4% никеля. На сколько килограммов масса первого сплава больше массы второго сплава?",
+     "options": [
+      "275 кг",
+      "105 кг",
+      "50 кг",
+      "75 кг",
+      "350 кг"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "0,1x + 0,2(625-x) = 90 -> x = 350 (первый), второй 275; разность 75 кг"
+    },
+    {
+     "n": 32,
+     "topic": null,
+     "text": "ABC үшбұрышының AC қабырғасы 9см. Сурет бойынша ABC үшбұрышының ауданын табыңдар. / У треугольника ABC длина стороны АС равна 9см. Найдите площадь данного треугольника на рисунке.",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "AC = 9 см — основание на нижней стороне прямоугольника, высота из B равна 6 см; S = 9*6/2 = 27 см²",
+     "blockImage": "images/g6m-q32.png"
+    },
+    {
+     "n": 33,
+     "topic": null,
+     "text": "МА+ТЕ+МА+ТИ+КА қосындысы қандай ең кіші мәнді қабылдайды (бірдей әріптің орнына бірдей цифрды, әр түрлі әріптің орнына әр түрлі цифрды қою қажет) / Какое наименьшее значение может принять сумма МА + ТЕ + МА + ТИ + КА (вместо одной и той же буквы нужно поставить одну и ту же цифру, вместо другой буквы-другую цифру)",
+     "options": [
+      "128",
+      "99",
+      "101",
+      "98",
+      "116"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "сумма = 20М + 20Т + 10К + 3А + Е + И; М,Т = 1,2; К = 3; А = 0; Е,И = 4,5 -> 60+30+0+9 = 99"
+    },
+    {
+     "n": 34,
+     "topic": null,
+     "text": "екені белгілі болса, онда өрнегінің мәнін табыңыз. Найдите значение выражения , если известно, что .",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "4b - 12a = -4*(3a-b) = -32/11; 64 : (-32/11) = -22",
+     "blockImage": "images/g6m-q34.png"
+    },
+    {
+     "n": 35,
+     "topic": null,
+     "text": "Жасыл түс алу үшін 270 г көк және 630 г сары бояуды араластырды. Сонда шыққан қоспадағы көк түстің концентрациясы қанша пайыз? / Для получения зеленого цвета смешали 270 г голубой и 630 г желтой краски. Чему равна концентрация синего цвета в смеси?",
+     "options": [
+      "43%",
+      "70%",
+      "23%",
+      "30%",
+      "33,75%"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "270 : (270+630) = 270/900 = 30%"
+    },
+    {
+     "n": 36,
+     "topic": null,
+     "text": "теңдеуінің түбірі қандай теңсіздікті қанағаттандырады? / Укажите неравенство, которому удовлетворяет корень уравнения ?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "18 - 6x = 54 -> x = -6; из вариантов подходит только -7 < x < 0 (в -6<x<0 неравенство строгое)",
+     "blockImage": "images/g6m-q36.png"
+    },
+    {
+     "n": 37,
+     "topic": null,
+     "text": "Шаршының әр қабырғасына жарты дөңгелек салынған. Шаршының қабырғасы 6 см болса, фигураның ауданын табыңдар / На каждой стороне квадрата построены полукруги. Какова площадь полученной фигуры, если длина стороны квадрата равна 6 см? )",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "36 + 4 * (3,14*9/2) = 36 + 56,52 = 92,52 см²",
+     "blockImage": "images/g6m-q37.png"
+    },
+    {
+     "n": 38,
+     "topic": null,
+     "text": "Суреттегi шаршы санын анықтаңыз. / Определите количество квадратов на изображении. /Определите количество квадратов на изображении.",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "НЕЧИТАЕМО: в снимках блока есть только текст задания (g6m-q38-1) и варианты 22..26 (g6m-q38-2), сам рисунок с квадратами не извлечён из PDF. Решить невозможно",
+     "blockImage": [
+      "images/g6m-q38-1.png",
+      "images/g6m-q38-2.png"
+     ],
+     "needsReview": "Рисунок с квадратами не извлёкся из PDF — на экране только текст задания и варианты. Нужна картинка."
+    },
+    {
+     "n": 39,
+     "topic": null,
+     "text": "Ербол каспи дүкенінен төмендегі сызбадағыдай велосипед көрді. Ол берілген мәліметтерге негізделіп велосипед дөңгелегінің 250 рет айналым жасағандағы жүріп өтетінін арақашықтығын есептеді. Ол қандай арақашықтықты жүріп өтеді? / Ербол увидел в магазине каспи велосипед, похожий на тот, что на фотографии ниже. На основании предоставленной информации он рассчитал расстояние, пройденное колесом велосипеда за 250 оборотов. Какое расстояние он проедет?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "R на схеме 1,5 см, масштаб 10:280 -> реальный R = 1,5*28 = 42 см; 250 * 2*пи*42. СОМНИТЕЛЬНО: ровно 630 м получается только при пи = 3 (вариант C); при пи = 3,14 выходит 659,4 м — такого варианта нет. Требует проверки предметника",
+     "blockImage": [
+      "images/g6m-q39-1.png",
+      "images/g6m-q39-2.png"
+     ]
+    },
+    {
+     "n": 40,
+     "topic": null,
+     "text": "А, В, С, D нүктелерi координаталық түзуде сәйкесiнше орналасқан. А нүктесінің координатасы берiлген. Eгep , А жане С нүктелерi координаталық түзуде қарама-қарсы нүктелер екендігі белгiлi болса, онда В, D нүктелерiнің коордннатасын табыңыз. / Точки A, B, C и D расположены на координатной оси, дано значение точки А. Если , , и точки A и C противоположны, найдите координаты точек B и D.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "СОМНИТЕЛЬНО: два условия задачи (формулы) утеряны и в тексте, и на картинке. Вывод только по рисунку: A = -9, C противоположна A -> C = 9; по чертежу A < B < C < D, значит B между -9 и 9, D > 9 — этому отвечает лишь вариант D: B(3); D(12). Требует проверки предметника",
+     "blockImage": "images/g6m-q40.png"
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "51/53; независимо совпал с моим решением задач 38 из 38"
+  },
+  "7-algebra": {
+   "id": "7-algebra",
+   "grade": 7,
+   "subject": {
+    "ru": "Алгебра и геометрия",
+    "kz": "Алгебра-геометрия"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "7-сынып Алгебра-геометрия сынқ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. Вопросы только на казахском языке (русской половины в источнике нет).",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Өрнекті ықшамда:",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "(3^8)^3·3^5 / ((3^2)^11·(3^4)^2) = 3^29/3^30 = 3^-1 — сверено по перекропленной картинке",
+     "blockImage": "images/g7a-q01.png"
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "y = −x³ және y = −x функцияларының графиктері неше нүктеде қиылысады?",
+     "options": [
+      "бір нүктеде",
+      "екі нүктеде",
+      "қиылыспайды",
+      "үш нүктеде"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "−x³ = −x → x(x²−1) = 0 → x = −1; 0; 1 — три точки"
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "(x − 2)(x² + 2x + 4) − x³ − 1 ≤ 5x + 6 теңсіздігін шешіңдер.",
+     "options": [
+      "(−∞; −3]",
+      "[−3; +∞)",
+      "(−∞; −3)",
+      "(−∞; 3]"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "(x−2)(x²+2x+4) = x³−8, слева −9; −9 ≤ 5x+6 → x ≥ −3 → [−3; +∞)"
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "3x³ − 3 көпмүшесін көбейткіштерге жіктеңдер.",
+     "options": [
+      "3(x − 1)(x + 1)",
+      "3(x − 1)³",
+      "3(x² + 1)",
+      "3(x − 1)(x² + x + 1)"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "3(x³−1) = 3(x−1)(x²+x+1)"
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "(2x + 3)(4x² + 9 − 6x) көбейтіндісін көпмүше түрінде жазыңдар.",
+     "options": [
+      "8x³ − 27",
+      "8x³ + 27",
+      "8x³ − 18x",
+      "18x − 8x³"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Сумма кубов: (2x+3)(4x²−6x+9) = 8x³ + 27"
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "(4a − 1)(4a + 1) − (5a − 1)(25a² + 5a + 1) өрнегін ықшамдаңдар.",
+     "options": [
+      "16a² − 125a³",
+      "16a² + 2",
+      "2 − 125a³",
+      "16a²"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "(16a²−1) − (125a³−1) = 16a² − 125a³"
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "a = −1 болғандағы (a + 3)³ − (a − 3)³ + (a + 5)² − a² өрнегінің мәнін есептеңдер.",
+     "options": [
+      "72",
+      "88",
+      "87",
+      "−41"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "При a = −1: 8 − (−64) + 16 − 1 = 87"
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "(x + 1)(x² − x + 1) − x(x² − 5) = 6x + 11 теңдеуін шешіңдер.",
+     "options": [
+      "−1",
+      "1",
+      "10",
+      "−10"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "(x³+1) − (x³−5x) = 5x+1; 5x+1 = 6x+11 → x = −10"
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "амалын орындаңдар.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: 3x⁷/(x²−9) · 5/(6x⁴) · (2x²−18)/(5x²) = x → вариант B",
+     "blockImage": "images/g7a-q09.png"
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "амалын орындаңдар.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: (9−x⁴)/x⁴ · x⁴/(x²−3) = −(x²−3)(x²+3)/(x²−3) = −x²−3 → вариант B",
+     "blockImage": [
+      "images/g7a-q10-1.png",
+      "images/g7a-q10-2.png"
+     ]
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Егер үшбұрыштың бір бұрышы 60°, екіншісі 90° болса, үшінші бұрыш қанша градус?",
+     "options": [
+      "30°",
+      "60°",
+      "90°",
+      "120°"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "180° − 60° − 90° = 30°"
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Тең қабырғалы үшбұрыштың табаны 6 см, ал бүйір қабырғалары 8 см. Осы үшбұрыштың периметрі неге тең?",
+     "options": [
+      "22 см",
+      "18 см",
+      "24 см",
+      "20 см"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "P = 6 + 8 + 8 = 22 см. Замечание: в условии сказано «тең қабырғалы» (равносторонний), но по данным треугольник равнобедренный — вероятно опечатка в формулировке"
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Төмендегі суретте ΔPQR = ΔMNK болса, ΔMNK периметрін табыңыз.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "По картинке: треугольники равны, P = 5 + 6 + 4 = 15 см → вариант C",
+     "blockImage": "images/g7a-q13.png"
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "ABC үшбұрышында |AB| = |BD| = |DC|, <DBC = 20°, <ABD = x болса, x-тің мәнін табыңыз.",
+     "options": [
+      "95°",
+      "100°",
+      "115°",
+      "120°"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "BD = DC → ∠DCB = 20°, ∠BDC = 140°, ∠BDA = 40°; AB = BD → ∠A = ∠ADB = 40°, значит x = 100°"
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "Тікбұрышты үшбұрыштың сүйір бұрыштары 1:5 қатынасында. Осы бұрыштарды табыңыз.",
+     "options": [
+      "15°, 75°",
+      "10°, 80°",
+      "20°, 70°",
+      "12°, 78°"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 0,
+     "solutionNote": "Сумма острых углов 90°, 90:6 = 15 → 15° и 75°",
+     "needsReview": "№15 не сходится ни с одним из четырёх вариантов в нашем файле — похоже, в форме у этого вопроса пять вариантов, а при выгрузке из PDF остались четыре. Нужен исходник."
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "39/40; независимо совпал с моим решением 14 из 15"
+  },
+  "7-english": {
+   "id": "7-english",
+   "grade": 7,
+   "alsoGrades": [
+    6,
+    8,
+    9
+   ],
+   "subject": {
+    "ru": "Английский язык (General English)",
+    "kz": "Ағылшын тілі (General English)"
+   },
+   "minutes": 45,
+   "answersFilled": true,
+   "source": "Placement test (General English).docx — общий тест для 6, 7, 8 и 9 классов",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В вопросах 1–35 пропуски (подчёркивания) в исходном тексте не сохранились. Вопросы 36–40 относятся к тексту для чтения «Play to win» (см. readingPassage).",
+   "readingPassage": {
+    "title": "Play to win",
+    "text": "Read the text and answer the questions below Play to win\n\n16-year-old Harry Moore writes about his hobby, tennis.\n\nMy parents have always loved tennis and they're members of a tennis club. My older brother was really good at it and they supported him – taking him to lessons all the time. So I guess when I announced that I wanted to be a tennis champion when I grew up I just intended for them to notice me. My mother laughed. She knew I couldn't possibly be serious, I was just a 4-year-old kid!\n\nLater, I joined the club's junior coaching group and eventually took part in my first proper contest, confident that my team would do well. We won, which was fantastic, but I wasn't so successful. I didn't even want to be in the team photo because I didn't feel I deserved to be. When my coach asked what happened in my final match, I didn't know what to say. I couldn't believe I'd lost – I knew I was the better player. But every time I attacked, the other player defended brilliantly. I couldn't explain the result.\n\nAfter that, I decided to listen more carefully to my coach because he had lots of tips. I realised that you need the right attitude to be a winner. On court I have a plan but sometimes the other guy will do something unexpected so I'll change it. If I lose a point, I do my best to forget it and find a way to win the next one.\n\nAt tournaments, it's impossible to avoid players who explode in anger. Lots of players can be negative – including myself sometimes. Once I got so angry that I nearly broke my racket! But my coach has helped me develop ways to control those feelings. After all, the judges have a hard job and you just have to accept their decisions.\n\nMy coach demands that I train in the gym to make sure I'm strong right to the end of a tournament. I'm getting good results: my shots are more accurate and I'm beginning to realise that with hard work there's a chance that I could be a champion one day."
+   },
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "you interested in sport?",
+     "options": [
+      "Be",
+      "Am",
+      "Is",
+      "Are"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "My is a writer and his books are very popular.",
+     "options": [
+      "aunt",
+      "uncle",
+      "sister",
+      "mother"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Paul is very . He’s very good at art.",
+     "options": [
+      "honest",
+      "friendly",
+      "polite",
+      "creative"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "We live in the city centre and our house have a big garden.",
+     "options": [
+      "doesn’t",
+      "isn’t",
+      "aren’t",
+      "don’t"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "I arrive at school before nine o’clock.",
+     "options": [
+      "has to",
+      "have to",
+      "doesn’t have to",
+      "haven’t to"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "The beach was very crowded Monday.",
+     "options": [
+      "in",
+      "on",
+      "at",
+      "to"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "You eat all that cake! It isn’t good for you.",
+     "options": [
+      "don’t",
+      "may not",
+      "shouldn’t",
+      "will not"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Cathy a game on her computer at the moment.",
+     "options": [
+      "plays",
+      "is playing",
+      "to play",
+      "play"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "There a lot of people outside the school. What’s the problem?",
+     "options": [
+      "are",
+      "is",
+      "be",
+      "am"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "you like to come out with us tonight?",
+     "options": [
+      "Do",
+      "Would",
+      "Are",
+      "Will"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "How time have we got to do this exercise?",
+     "options": [
+      "long",
+      "many",
+      "much"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Turn and you’ll see the museum on the left.",
+     "options": [
+      "on the right",
+      "rightly",
+      "by the right",
+      "right"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Don’t forget to get the bus at Station Road",
+     "options": [
+      "out",
+      "off",
+      "over",
+      "down"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Tom got the marks in the class for his homework.",
+     "options": [
+      "worse",
+      "worst",
+      "baddest",
+      "most bad"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "There wasn’t milk for breakfast this morning so I had toast and orange juice.",
+     "options": [
+      "a",
+      "some",
+      "the",
+      "any"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "My sister speak French when she was only six years old.",
+     "options": [
+      "was",
+      "should",
+      "could",
+      "had"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "Did you shopping after school yesterday?",
+     "options": [
+      "went",
+      "goed",
+      "going",
+      "go"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "I five emails before school today.",
+     "options": [
+      "sent",
+      "sended",
+      "did send",
+      "was send"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "Our teacher speaks English to us so that we can understand her",
+     "options": [
+      "slow",
+      "slower",
+      "more slow",
+      "slowly"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "Quick- get the food inside! It any moment.",
+     "options": [
+      "rains",
+      "is raining",
+      "is going to rain",
+      "can rain"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 21,
+     "topic": null,
+     "text": "I the new Batman film yet. Is it any good?",
+     "options": [
+      "haven’t seen",
+      "didn’t see",
+      "don’t see",
+      "am not seen"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 22,
+     "topic": null,
+     "text": "I hope you a good time at the moment in Greece! Phone soon.",
+     "options": [
+      "are having",
+      "have",
+      "have had",
+      "had"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 23,
+     "topic": null,
+     "text": "I wanted to see Harry. How long ago ?",
+     "options": [
+      "he left",
+      "has he left",
+      "did he leave",
+      "could he leave"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 24,
+     "topic": null,
+     "text": "Do students in your country have to stand when the teacher arrives?",
+     "options": [
+      "on",
+      "at",
+      "in",
+      "up"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 25,
+     "topic": null,
+     "text": "Which train for when I saw you on the platform on Sunday?",
+     "options": [
+      "did you wait",
+      "were you waiting",
+      "have you waited",
+      "are you waiting"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 26,
+     "topic": null,
+     "text": "You hurry as we’ve still got twenty minutes before the film starts.",
+     "options": [
+      "mustn’t",
+      "can’t",
+      "may not",
+      "needn’t"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 27,
+     "topic": null,
+     "text": "That car is dangerous to drive.",
+     "options": [
+      "too",
+      "enough",
+      "not enough",
+      "the worst"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 28,
+     "topic": null,
+     "text": "I you in the café at about 4.30 and we can discuss our plans then, OK?",
+     "options": [
+      "’ll see",
+      "am going to see",
+      "am seeing",
+      "see"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 29,
+     "topic": null,
+     "text": "My father has been a pilot twenty years and he still loves his job.",
+     "options": [
+      "since",
+      "for",
+      "until",
+      "by"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 30,
+     "topic": null,
+     "text": "I really enjoy new languages and I’d like to learn Italian soon.",
+     "options": [
+      "A to learn",
+      "learning",
+      "learn",
+      "learned"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 31,
+     "topic": null,
+     "text": "If we in the countryside, we’d have much better views than we do now.",
+     "options": [
+      "lived",
+      "were live",
+      "would live",
+      "live"
+     ],
+     "image": null,
+     "correct": 0
+    },
+    {
+     "n": 32,
+     "topic": null,
+     "text": "I wish Joe to Hawaii on holiday. They’re talking about an eruption there on the news.",
+     "options": [
+      "doesn’t go",
+      "didn’t go",
+      "hasn’t gone",
+      "hadn’t gone"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 33,
+     "topic": null,
+     "text": "Could I possibly some money for the bus fare home? I’ve lost my bag.",
+     "options": [
+      "lend",
+      "owe",
+      "borrow",
+      "need"
+     ],
+     "image": null,
+     "correct": 2
+    },
+    {
+     "n": 34,
+     "topic": null,
+     "text": "Sam asked me if I a lift home after the concert.",
+     "options": [
+      "had wanted",
+      "wanted",
+      "would want",
+      "want"
+     ],
+     "image": null,
+     "correct": 1
+    },
+    {
+     "n": 35,
+     "topic": null,
+     "text": "People say that an avalanche by loud noises in the area but I don’t know if that’s true.",
+     "options": [
+      "causes",
+      "has caused",
+      "is causing",
+      "is caused"
+     ],
+     "image": null,
+     "correct": 3
+    },
+    {
+     "n": 36,
+     "topic": null,
+     "text": "Harry thinks he said that he was going to be a tennis champion in order to",
+     "options": [
+      "get some attention",
+      "to please his parents",
+      "annoy his older brother.",
+      "persuade people that he was serious."
+     ],
+     "image": null,
+     "correct": 0,
+     "usesPassage": "Play to win"
+    },
+    {
+     "n": 37,
+     "topic": null,
+     "text": "How did Harry feel after his first important competition?",
+     "options": [
+      "confused about his defeat.",
+      "proud to be a member of the winning team.",
+      "ashamed of the way he treated another player.",
+      "amazed that he had got so far in the tournament."
+     ],
+     "image": null,
+     "correct": 0,
+     "usesPassage": "Play to win"
+    },
+    {
+     "n": 38,
+     "topic": null,
+     "text": "What does Harry try to remember when he’s on the court?",
+     "options": [
+      "Don’t let the other player surprise you.",
+      "Follow your game plan.",
+      "Respect the other player.",
+      "Don’t keep thinking about your mistakes."
+     ],
+     "image": null,
+     "correct": 3,
+     "usesPassage": "Play to win"
+    },
+    {
+     "n": 39,
+     "topic": null,
+     "text": "What does Harry say about his behaviour in tournaments?",
+     "options": [
+      "He broke his racket once when he was angry",
+      "He stays away from players who behave badly",
+      "He tries to keep calm during the game.",
+      "He found it difficult to deal with one judge’s decisions."
+     ],
+     "image": null,
+     "correct": 2,
+     "usesPassage": "Play to win"
+    },
+    {
+     "n": 40,
+     "topic": null,
+     "text": "What might a sports journalist write about Harry now?",
+     "options": [
+      "Harry needs to believe in his own abilities and stop depending on good luck when he plays.",
+      "Harry has really grown up since his first tournament and discovered that tennis is a battle of minds not just rackets.",
+      "Harry looked exhausted when he finished his last match so maybe he should think about working out.",
+      "Harry could be a great player but he needs to find a coach to take him all the way to the big competitions."
+     ],
+     "image": null,
+     "correct": 1,
+     "usesPassage": "Play to win"
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "32/32, ключ единственный, есть работа на 40/40"
+  },
+  "7-fizika": {
+   "id": "7-fizika",
+   "grade": 7,
+   "subject": {
+    "ru": "Физика",
+    "kz": "Физика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "7-сынып ФИЗИКА сынақ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В тесте по 5 вариантов ответа (A–E), а не 4. Вопросы только на казахском языке.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Физика табиғат туралы ғылым ретінде алғаш рет кімнің шығармаларында баяндалды.",
+     "options": [
+      "М. Ломоносов",
+      "С. Аристотель",
+      "Әбу Насыр Әл-Фавраби",
+      "И. Кеплер",
+      "И. Ньютон"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Термин «физика» и первое изложение науки о природе — труд Аристотеля «Физика»."
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Астрономия грекше ........ ұғымды білдіреді.",
+     "options": [
+      "Астрон – табиғат, номос – заң",
+      "Астрон – жұлдыз, номос – заң",
+      "Астрон – күн, номос – заң",
+      "Астрон – аспан, номос – заң",
+      "Астрон – планета, номос – заң"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Греч. astron — звезда, nomos — закон."
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Космогония –",
+     "options": [
+      "Аспан денелерінің пайда болуын және дамуын зерттейді.",
+      "Әлем кеңістігіндегі ғарыш аппараттарының қозғалысын талдап зерттейді.",
+      "Бүкіл әлем және оның жалпы қасиеттерін зерттейді.",
+      "Космосқа ұшқан адамдарды зерттейді.",
+      "Космостық аппараттарды құрастырып, жасап шығару үшін зерттеу жүргізеді."
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "Космогония изучает происхождение и развитие небесных тел."
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Астрономияның негізгі құралын атаңыз?",
+     "options": [
+      "Микроскоп",
+      "Телескоп",
+      "Лупа",
+      "Бинокль",
+      "Динамометр"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Основной инструмент астрономии — телескоп."
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Материя дегеніміз –",
+     "options": [
+      "Тастар",
+      "Ағаштар",
+      "Өсімдіктер",
+      "Табиғаттағы кез-келген зат",
+      "Жануарлар мен адамдар"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Материя — любое вещество (и поле) в природе."
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "5 кН-күште неше Н бар?",
+     "options": [
+      "50 Н",
+      "0,5 Н",
+      "500 Н",
+      "5000 Н",
+      "50000 Н"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "5 кН = 5·1000 Н = 5000 Н."
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Молекула дегеніміз –",
+     "options": [
+      "Заттың химиялық қасиетін бойына сақтаған ең кіші бөлшегі.",
+      "Заттың құрамдас бөлшегі.",
+      "Заттың ұсақ бөлшектері.",
+      "Заттың химиялық элементтерінің қасиетін бойына сақтаған ең кіші бөлшегі.",
+      "Дұрыс жауабы жоқ"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Молекула — наименьшая частица вещества, сохраняющая его химические свойства."
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Диффузия құбылысы дегеніміз –",
+     "options": [
+      "Бөлшектердің тез қозғалысы.",
+      "Бөлшектердің белгілі бір ретпен орналасуы.",
+      "Қатты денедегі бөлшектердің ретсіз қозғалысы.",
+      "Бөлшектердің баяу қозғалысы.",
+      "Бөлшектердің ретсіз қозғалысы."
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "СОМНИТЕЛЬНО: точного определения диффузии (взаимное проникновение веществ) среди вариантов нет; ближайший по смыслу — беспорядочное движение частиц."
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Табиғатта заттың неше күйі кездеседі.",
+     "options": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Три агрегатных состояния: твёрдое, жидкое, газообразное."
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Температура нені сипаттайды?",
+     "options": [
+      "Дененің қозғалыс әрекетін.",
+      "Дененің жылдамдығын.",
+      "Дененің жылулық күйін.",
+      "Дененің температурасын.",
+      "Дененің қызулық дәрежесін."
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "НЕ УВЕРЕН: подходят два варианта — «жылулық күйін» (тепловое состояние, инд. 2) и «қызулық дәрежесін» (степень нагретости, инд. 4); оба встречаются как определение в учебниках."
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Құрал қателігі қалай анықталады?",
+     "options": [
+      "Аспап шкаласын санаймыз.",
+      "Бөлік құнына тең болады.",
+      "Бөлік құнын екіге бөлеміз.",
+      "Кез-келген екі санның айырымын табамыз.",
+      "Құралдың қателігі болмайды."
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Погрешность прибора = половина цены деления шкалы."
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Қысымның өлшем бірлігі қандай?",
+     "options": [
+      "м/Н²",
+      "Вт",
+      "м²·Н²",
+      "Па",
+      "Дж"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Единица давления в СИ — паскаль (Па)."
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Гук заңы қалай өрнектеледі?",
+     "options": [
+      "F = Gm₁m₂/R²",
+      "F = ma",
+      "F = mN",
+      "F = kΔx",
+      "F = mg"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Закон Гука: F = k·Δx."
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Тығыздық қандай формуламен анықталады?",
+     "options": [
+      "ρ = mv",
+      "ρ = m/v",
+      "ρ = v/m",
+      "ρ = mg/v",
+      "ρ = m/vg"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Плотность ρ = m/V."
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "Судың 0,06 м тереңдіктегі қысымы қандай болады? Судың тығыздығы 1000 кг/м³.",
+     "options": [
+      "58,8 Па",
+      "588 Па",
+      "5880 Па",
+      "58,8 кПа",
+      "588 кПа"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "p = ρgh = 1000·9,8·0,06 = 588 Па."
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "44/44, ключ единственный"
+  },
+  "7-himiya": {
+   "id": "7-himiya",
+   "grade": 7,
+   "subject": {
+    "ru": "Химия",
+    "kz": "Химия"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "7-сынып ХИМИЯ сынақ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. Вопросы только на казахском языке.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Заттың ең кіші бөлшегі қалай аталады?",
+     "options": [
+      "Молекула",
+      "Атом",
+      "Ион",
+      "Зат"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "НЕ УВЕРЕН: «наименьшая частица вещества» без уточнения — атом (инд. 1) как химически неделимая частица, но по формулировке учебника часто ожидают молекулу (инд. 0). Скорее атом."
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Таза зат дегеніміз не?",
+     "options": [
+      "Бірнеше элементтен тұратын",
+      "Бір ғана заттан тұратын",
+      "Қоспа",
+      "Газ тәрізді зат"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Чистое вещество состоит из одного вещества (частиц одного вида)."
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Химиялық реакция кезінде не сақталады?",
+     "options": [
+      "Температура",
+      "Заттың түсі",
+      "Масса",
+      "Көлем"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Закон сохранения массы веществ при химических реакциях."
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Қайсысы метал емес?",
+     "options": [
+      "Кальций",
+      "Сутек",
+      "Темір",
+      "Алюминий"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Водород (сутек) — неметалл; кальций, железо, алюминий — металлы."
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Оттектің салыстырмалы атомдық массасы қанша?",
+     "options": [
+      "1",
+      "12",
+      "14",
+      "16"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Ar(O) = 16."
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Қай зат органикалық емес?",
+     "options": [
+      "Сахароза",
+      "Крахмал",
+      "NaCl",
+      "Этанол"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "NaCl — неорганическое; сахароза, крахмал, этанол — органические."
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Заттың тығыздығын қалай табамыз?",
+     "options": [
+      "Масса / Уақыт",
+      "Көлем / Температура",
+      "Масса / Көлем",
+      "Көлем / Масса"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "ρ = масса / объём."
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Екі немесе одан да көп элемент атомдарынан тұратын заттар қалай аталады?",
+     "options": [
+      "Химиялық элементтер",
+      "Молекулалар",
+      "Қоспалар",
+      "Химиялық қосылыстар"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Вещества из атомов двух и более элементов — химические соединения."
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Мына заттардың қайсысы тек металдардан тұрады?",
+     "options": [
+      "NaCl",
+      "H₂SO₄",
+      "CuZn",
+      "CO₂"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "CuZn (латунь) состоит только из металлов."
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Қайсысы бейорганикалық қышқыл?",
+     "options": [
+      "HCl",
+      "CH₃COOH",
+      "C₂H₅OH",
+      "C₆H₁₂O₆"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "HCl — неорганическая кислота; остальные — органические соединения."
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Күкірт қышқылының формуласы қандай?",
+     "options": [
+      "HNO₃",
+      "H₂SO₄",
+      "H₂CO₃",
+      "HCl"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Серная кислота — H₂SO₄."
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Мына реакцияның қай түріне жатады: Zn + HCl → ZnCl₂ + H₂",
+     "options": [
+      "Айырылу",
+      "Қосылу",
+      "Алмасу",
+      "Тотығу"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "НЕТ ВЕРНОГО ВАРИАНТА: Zn + 2HCl → ZnCl₂ + H₂ — реакция замещения (орынбасу), её среди вариантов нет. Вопрос требует правки."
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Ауа құрамындағы ең көп газ:",
+     "options": [
+      "Көмірқышқыл газы",
+      "Сутек",
+      "Азот",
+      "Оттек"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Азот — около 78 % воздуха."
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "18 г судың молекула саны қанша? (NA = 6.02×10²³)",
+     "options": [
+      "6.02×10²³",
+      "1.2×10²⁴",
+      "3.01×10²³",
+      "2×10²³"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "n = 18/18 = 1 моль → N = 6,02·10²³ молекул."
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "4 г сутек (H₂) неше моль болады? (Mr(H₂) = 2 г/моль)",
+     "options": [
+      "1 моль",
+      "2 моль",
+      "4 моль",
+      "0.5 моль"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "n = 4/2 = 2 моль."
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "20/20, ключ единственный"
+  },
+  "8-fizika": {
+   "id": "8-fizika",
+   "grade": 8,
+   "subject": {
+    "ru": "Физика",
+    "kz": "Физика"
+   },
+   "minutes": 20,
+   "answersFilled": false,
+   "proposedBy": "claude",
+   "proposedNote": "Ответы решены мной и частично перепроверены по баллам 10 работ. Совпало у 13 вопросов, разошлось у 0, ещё 7 проверить было не на чем.",
+   "source": "8-сынып ФИЗИКА сынақ тесті(бітірушілер үшін).docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В тесте по 5 вариантов ответа (A–E), а не 4. Вопросы только на казахском языке.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Жарықтың түзу сызықты таралу заңының дұрыс тұжырымдамасын көрсет:",
+     "options": [
+      "вакуумде жарық сәулелері түзу сызықты таралады;",
+      "ауада жарық сәулелері түзу сызықты таралады;",
+      "мөлдір ортада жарық сәулелері түзу сызықты таралады;",
+      "мөлдір біртекті ортада жарық сәулелері түзу сызықты таралады;",
+      "біртекті ортада жарық сәулелері түзу сызықты таралады;"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 3,
+     "solutionNote": "Закон прямолинейного распространения света формулируется для прозрачной ОДНОРОДНОЙ среды → вариант D | По баллам восстановить не удалось: работ мало (10 на 20 вопросов)."
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Көлеңкенің пайда болуы, Күннің және Айдың тұтылуы жарықтың қандай қасиетін сипаттайды?",
+     "options": [
+      "жарықтың шағылуы;",
+      "жарықтың сынуы;",
+      "жарықтың толық шағылуы;",
+      "жарықтың түзу сызықты таралуы;",
+      "жарықтың жұтылуы."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 3,
+     "solutionNote": "Тень, солнечные и лунные затмения — следствие прямолинейного распространения света | По баллам восстановить не удалось: работ мало (10 на 20 вопросов)."
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Төмендегі тұжырымдардың қайсысы жарықтың шағылу заңын сипаттайды?\n1) Түскен сәуле мен шағылған сәуле, сәуленің түсу нүктесінен шағылдырушы бетке тұрғызылған перпендикуляр бір жазықтықта жатады;\n2) Түсу бұрышының синусының сыну бұрышы синусына қатынасы берілген екі орта үшін тұрақты шама болып табылады;\n3) Түскен сәуле мен сынған сәуле, сәуленің түсу нүктесінен шағылдырушы бетке тұрғызылған перпендикуляр бір жазықтықта жатады;\n4) Шағылу бұрышы түсу бұрышына тең;",
+     "options": [
+      "1,2;",
+      "3,4;",
+      "2,4;",
+      "1,4;",
+      "1,3."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 3,
+     "solutionNote": "Закону отражения отвечают утверждения 1 (лучи и перпендикуляр в одной плоскости) и 4 (угол отражения = углу падения); 2 и 3 — про преломление → вариант D «1,4» | По баллам учеников выходит D — совпадает с моим ответом."
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Жазық айнаға сәуле 45° бұрышпен түссе, онда жарық сәулесінің айнадан шағылу бұрышы неге тең?",
+     "options": [
+      "55°",
+      "45°",
+      "30°",
+      "22,5°",
+      "90°"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "Угол отражения равен углу падения → 45° | По баллам учеников выходит B — совпадает с моим ответом."
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Түсу бұрышы 54° болғанда, слюдада жарықтың сыну бұрышы 30°-ты құрайды. Слюданың салыстырмалы сыну көрсеткіші қандай? (sin54° = 0,8, sin30° = 0,5)",
+     "options": [
+      "1,6",
+      "0,6",
+      "0,3",
+      "1,3",
+      "0,4"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 0,
+     "solutionNote": "n = sin54°/sin30° = 0,8/0,5 = 1,6 | По баллам учеников выходит A — совпадает с моим ответом."
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Шағылу бұрышы дегеніміз - бұл:",
+     "options": [
+      "түскен сәуле мен шағылған сәуле арасындағы бұрыш;",
+      "шағылған сәуле мен түсу жазықтығы арасындағы бұрыш;",
+      "шағылған сәуле мен түсу жазықтығына перпендикуляр арасындағы бұрыш;",
+      "шағылған сәуле мен түсу жазықтығындағы кез келген сәуле арасындағы бұрыш;",
+      "жауап сәуленің түсу бұрышына байланысты."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 2,
+     "solutionNote": "Угол отражения отсчитывается от отражённого луча до перпендикуляра к поверхности → вариант C. Замечание: в казахском тексте вариантов написано «түсу жазықтығы» (плоскость падения) вместо «отражающая поверхность» — формулировка в источнике неточная | По баллам учеников выходит C — совпадает с моим ответом."
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Нүктелік А денесінің жазық айнада кескіні қай нүктеде болады?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 3,
+     "solutionNote": "По картинке: точка A — это точка 1 (над зеркалом слева); изображение в плоском зеркале симметрично относительно плоскости зеркала, т.е. лежит на перпендикуляре к зеркалу — это точка 4 (та же абсцисса, под зеркалом). Замечание: рисунок схематичный, расстояния до зеркала на нём не равны | По баллам восстановить не удалось: работ мало (10 на 20 вопросов).",
+     "blockImage": "images/g8f-q07.png"
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Жинағыш линзаның көмегімен нәрсенің кішірейтілген жалған кескінін алуға бола ма? Егер мүмкін болса нәрсені қалай орналастыру қажет?",
+     "options": [
+      "жоқ;",
+      "иә, линза мен фокус аралығында;",
+      "иә, F пен 2F арасында;",
+      "иә, 2F -тен ары ;",
+      "иә, 2F-те."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 0,
+     "solutionNote": "Собирающая линза даёт мнимое изображение только при d < F, и оно всегда увеличенное → уменьшенное мнимое получить нельзя | По баллам восстановить не удалось: работ мало (10 на 20 вопросов)."
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Егер нәрсені шашыратқыш линзаның фокусында орналастырса, онда оның кескіні қандай болады?",
+     "options": [
+      "шын, үлкейтілген;",
+      "жалған, кішірейтілген ;",
+      "жалған, үлкейтілген;",
+      "жалған, өлшемі өзіне тең;",
+      "кескін пайда болмайды."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "Рассеивающая линза, d = F: 1/f = −1/F − 1/F → |f| = F/2, увеличение 0,5 → мнимое, уменьшенное | По баллам учеников выходит B — совпадает с моим ответом."
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Жинағыш линзаның фокус аралығы 0,2 м. Кескіннің өлшемі өзіне тең болу үшін нәрсені линзаға дейін қандай қашықтыққа қою керек?",
+     "options": [
+      "10 см;",
+      "20 см;",
+      "40 см;",
+      "80 см;",
+      "ондай жағдай мүмкін емес."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 2,
+     "solutionNote": "Изображение равно предмету при d = 2F = 2·0,2 м = 0,4 м = 40 см | По баллам учеников выходит C — совпадает с моим ответом."
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Фокус қашықтығы 2 м. Линзаның оптикалық күші неге тең?",
+     "options": [
+      "1,5 дптр;",
+      "2 дптр;",
+      "3,5 дптр;",
+      "4 дптр;",
+      "0,5 дптр."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 4,
+     "solutionNote": "D = 1/F = 1/2 = 0,5 дптр | По баллам учеников выходит E — совпадает с моим ответом."
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Линзаның оптикалық күшінің өлшем бірлігі:",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 4,
+     "solutionNote": "По картинке варианты: Н, 1/Н, м, 1/м², дптр — оптическая сила измеряется в диоптриях → вариант E | По баллам учеников выходит E — совпадает с моим ответом.",
+     "blockImage": "images/g8f-q12.png"
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Егер жинағыш линзаның екі фокус аралығынан алыс орналасқан нәрсені линзадан алыстата бастаса, онда нәрсенің өлшемі қалай өзгереді?",
+     "options": [
+      "үлкейеді;",
+      "кішірейеді;",
+      "алдымен үлкейеді, сосын кішірейеді;",
+      "алдымен кішірейеді, сосын үлкейеді;",
+      "жауап нәрсенің өлшемі мен линзаның фокус аралығына байланысты."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "Предмет за 2F, удаляем дальше — изображение уменьшается. Замечание: в казахском тексте написано «нәрсенің өлшемі» (размер предмета), по смыслу имеется в виду размер изображения | По баллам учеников выходит B — совпадает с моим ответом."
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Нәрсе жинағыш линзаның оптикалық бас осінде одан 20 см қашықтықта орналасқан. Егер нәрсенің шын кескіні линзадан f = 4F (F - фокус аралығы) қашықтықта пайда болса, онда F шамасы неге тең?",
+     "options": [
+      "5 см;",
+      "10 см;",
+      "15 см;",
+      "20 см;",
+      "40 см."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 2,
+     "solutionNote": "1/F = 1/d + 1/f, f = 4F, d = 20 см: 1/F − 1/(4F) = 1/20 → 3/(4F) = 1/20 → F = 15 см | По баллам учеников выходит C — совпадает с моим ответом."
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "Нәрсе оптикалық күші 2,5 дптр линзадан 50 см қашықтықта орналасқан. Кескіннің линзадан орналасу қашықтығы:",
+     "options": [
+      "20 см",
+      "200 см",
+      "2 см",
+      "0,2 см",
+      "200 м"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "F = 1/2,5 = 0,4 м = 40 см; 1/f = 1/40 − 1/50 = 1/200 → f = 200 см | По баллам учеников выходит B — совпадает с моим ответом."
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "Суретте көрсетілген нүктелердің қайсысы S жарық көзінің кескіні болып табылады?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "По картинке: луч из S параллельно оси после линзы идёт через фокус, второй луч через оптический центр; оба пересекаются в левом нижнем углу построения — это точка 2 (d ≈ 2F, изображение действительное, перевёрнутое, равное) | По баллам учеников выходит B — совпадает с моим ответом.",
+     "blockImage": "images/g8f-q16.png"
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "Шашыратқыш линзаның көмегімен нәрсенің үлкейтілген кескінін алуға бола ма? Егер мүмкін болса, онда нәрсені қалай орналастыру қажет?",
+     "options": [
+      "жоқ;",
+      "иә, линза мен фокус аралығына;",
+      "иә, F пен 2F арасында;",
+      "иә, 2F-тан тысқары;",
+      "иә, 2F-та."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 0,
+     "solutionNote": "Рассеивающая линза при любом положении предмета даёт мнимое уменьшенное изображение → увеличенное получить нельзя | По баллам восстановить не удалось: работ мало (10 на 20 вопросов)."
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "Қос дөңес линзаның көмегімен нәрсенің жалған кескіні алынған. Төмендегі формулалардың қайсысы осы жағдайға сәйкес келеді?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "Двояковыпуклая (собирающая) линза, изображение мнимое → f отрицательно: 1/d − 1/f = 1/F → вариант B | По баллам восстановить не удалось: работ мало (10 на 20 вопросов).",
+     "blockImage": "images/g8f-q18.png"
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "Төмендегі приборлардың қайсысы нәрсенің нақты және кішірейтілген кескінін береді?",
+     "options": [
+      "микроскоп;",
+      "телескоп;",
+      "көру трубасы;",
+      "фотоаппарат;",
+      "фильмоскоп."
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 3,
+     "solutionNote": "Действительное уменьшенное изображение даёт фотоаппарат | По баллам восстановить не удалось: работ мало (10 на 20 вопросов)."
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "Екі ортаны бөліп тұрған шекара бетіне түсу бұрышының α қандай да бір мәнінде түсу бұрышы синусының сыну бұрышы синусына қатынасы n-ге тең. Түсу бұрышын 2 есе арттырса, осы қатынас неге тең болады?",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": 1,
+     "solutionNote": "По закону Снеллиуса sinα/sinβ = n — величина постоянная для данной пары сред и от угла падения не зависит → останется n | По баллам учеников выходит B — совпадает с моим ответом.",
+     "blockImage": "images/g8f-q20.png"
+    }
+   ]
+  },
+  "8-himiya": {
+   "id": "8-himiya",
+   "grade": 8,
+   "subject": {
+    "ru": "Химия",
+    "kz": "Химия"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "8-сынып ХИМИЯ сынақ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В тесте по 5 вариантов ответа (A–E), а не 4. Вопросы только на казахском языке.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Орынбасу реакциясы",
+     "options": [
+      "HCl + AgNO₃ → AgCl + HNO₃",
+      "2H₂ + O₂ → 2H₂O",
+      "Mg + 2HCl → MgCl₂ + H₂",
+      "2HgO → 2Hg + O₂",
+      "2Fe(OH)₃ → Fe₂O₃ + 3H₂O"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Замещение: Mg + 2HCl → MgCl₂ + H₂ (простое вещество вытесняет элемент из сложного)."
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Салыстырмалы молекулалық массасы үлкен қосылысты көрсетіңдер:",
+     "options": [
+      "хлорсутек HCl",
+      "фторсутек HF",
+      "су H2 O",
+      "күкіртсутек H2 S",
+      "бромсутек HBr"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "Mr: HCl 36,5; HF 20; H₂O 18; H₂S 34; HBr 81 — наибольшая у HBr."
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "P₂O₅ + H₂O → H₃PO₄ реакция теңдеуіндегі фосфор (V) оксидінің алдындағы коэффициент:",
+     "options": [
+      "4",
+      "1",
+      "5",
+      "2",
+      "3"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "P₂O₅ + 3H₂O → 2H₃PO₄, перед P₂O₅ коэффициент 1."
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "64/29 Cu атом ядросының құрамында:",
+     "options": [
+      "29 протон, 29 нейтрон",
+      "29 протон, 64 нейтрон",
+      "29 протон, 30 нейтрон",
+      "35 протон, 29 нейтрон",
+      "29 протон, 35 нейтрон"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "Z = 29 → 29 протонов; N = 64 − 29 = 35 нейтронов."
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Көмірқышқыл газының салыстырмалы молекулалық массасы:",
+     "options": [
+      "46",
+      "44",
+      "54",
+      "64",
+      "45"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Mr(CO₂) = 12 + 2·16 = 44."
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Мырыш пен тұзқышқылы әрекеттескенде түзілетін өнімдер:",
+     "options": [
+      "мырыш, сутек, хлор",
+      "мырыш хлориді, су",
+      "мырыш гидроксиді және сутек",
+      "мырыш хлориді және сутек",
+      "мырыш оксиді және су"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "Zn + 2HCl → ZnCl₂ + H₂: хлорид цинка и водород."
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Кез келген қышқыл құрамына міндетті түрде кіретін атом:",
+     "options": [
+      "сутек",
+      "металл",
+      "азот",
+      "күкірт",
+      "оттек"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "В составе любой кислоты обязательно есть водород."
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Хлорлылау қышқылдың (HClO) құрамындағы хлордың тотығу дәрежесі:",
+     "options": [
+      "0",
+      "+1",
+      "−2",
+      "+2",
+      "−1"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "В HClO: H(+1), O(−2) → Cl = +1."
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Оттектің массалық үлесі көп гидроксид:",
+     "options": [
+      "натрий",
+      "кальций",
+      "алюминий",
+      "барий",
+      "бериллий"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "ω(O): NaOH 40 %, Ca(OH)₂ 43 %, Al(OH)₃ 62 %, Ba(OH)₂ 19 %, Be(OH)₂ 32/43 = 74 % — максимум у бериллия."
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Тұз қышқылынан сутекті ығыстырып шығара алатын металдар қатары:",
+     "options": [
+      "Na, Cu, Fe",
+      "Mg, Zn, K",
+      "Au, Na, Al",
+      "K, Ba, Pt",
+      "Cu, Ag, Au"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Mg, Zn, K стоят до водорода в ряду активности; в остальных рядах есть Cu, Au или Pt."
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Табиғатта O2 түзілуінің реакциясы:",
+     "options": [
+      "6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ ↑",
+      "2KClO₃ → 2KCl + 3O₂ ↑",
+      "2HgO → 2Hg + O₂",
+      "2H₂O₂ → 2H₂O + O₂ ↑",
+      "2KMnO₄ → K₂MnO₄ + MnO₂ + O₂ ↑"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "В природе кислород образуется при фотосинтезе: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂."
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Электрондық формуласы 1s²2s²2p⁶3s²3p⁵ болатын элемент:",
+     "options": [
+      "F",
+      "S",
+      "Na",
+      "O",
+      "Cl"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "Сумма электронов 2+2+6+2+5 = 17 → хлор."
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Мыс оксидіндегі (CuO) мыстың массалық үлесі:",
+     "options": [
+      "70 %",
+      "80 %",
+      "84 %",
+      "90 %",
+      "60 %"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "ω(Cu) = 64/80 = 0,80 = 80 %."
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Теңдеудің коэффициенттерін тап: ... P + ... O2 = ... P2 O5",
+     "options": [
+      "1, 2, 3",
+      "4, 5, 2",
+      "5, 4, 2",
+      "2, 4, 5",
+      "4, 3, 1"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "4P + 5O₂ = 2P₂O₅ → 4, 5, 2."
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "K2S қосылысындағы күкірттің валенттілігі:",
+     "options": [
+      "III",
+      "II",
+      "I",
+      "IV",
+      "V"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "K одновалентен, K₂S → сера двухвалентна (II)."
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "13/13, ключ единственный"
+  },
+  "8-matematika": {
+   "id": "8-matematika",
+   "grade": 8,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "8-сынып МАТЕМАТИКА сынақ тесті.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. Заголовок документа — «8 – СЫНЫП АЛГЕБРА-ГЕОМЕТРИЯ СЫНАҚ ТЕСТІ» (предмет задан как «Математика»). Вопросы 1–6, 9, 10, 12, 15 полностью совпадают с тестом 7 класса по алгебре-геометрии. Вопросы только на казахском языке.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Өрнекті ықшамда:",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "(3^8)^3·3^5 / ((3^2)^11·(3^4)^2) = 3^29/3^30 = 3^-1 — сверено по перекропленной картинке",
+     "blockImage": "images/g8m-q01.png"
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "y = −x³ және y = −x функцияларының графиктері неше нүктеде қиылысады?",
+     "options": [
+      "бір нүктеде",
+      "екі нүктеде",
+      "қиылыспайды",
+      "үш нүктеде"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "−x³ = −x → x(x²−1) = 0 → x = −1; 0; 1 — три точки"
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "(x − 2)(x² + 2x + 4) − x³ − 1 ≤ 5x + 6 теңсіздігін шешіңдер.",
+     "options": [
+      "(−∞; −3]",
+      "[−3; +∞)",
+      "(−∞; −3)",
+      "(−∞; 3]"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "(x−2)(x²+2x+4) = x³−8, слева остаётся −9; −9 ≤ 5x+6 → x ≥ −3 → [−3; +∞)"
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "3x³ − 3 көпмүшесін көбейткіштерге жіктеңдер.",
+     "options": [
+      "3(x − 1)(x + 1)",
+      "3(x − 1)³",
+      "3(x² + 1)",
+      "3(x − 1)(x² + x + 1)"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "3(x³−1) = 3(x−1)(x²+x+1)"
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "(2x + 3)(4x² + 9 − 6x) көбейтіндісін көпмүше түрінде жазыңдар.",
+     "options": [
+      "8x³ − 27",
+      "8x³ + 27",
+      "8x³ − 18x",
+      "18x − 8x³"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Сумма кубов: (2x+3)(4x²−6x+9) = 8x³ + 27"
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "(4a − 1)(4a + 1) − (5a − 1)(25a² + 5a + 1) өрнегін ықшамдаңдар.",
+     "options": [
+      "16a² − 125a³",
+      "16a² + 2",
+      "2 − 125a³",
+      "16a²"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "(16a²−1) − (125a³−1) = 16a² − 125a³"
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Көпмүшесін көбейткіштерге жіктеңдер / Разложите многочлен на множители\n(5 − x)² + 2a(5 − x)² + (a(5 − x))²",
+     "options": [
+      "(5 − x)(1 + a)²",
+      "(x − 5)²·(a − 1)²",
+      "(5 − x)²(1 + a)",
+      "((5 − x)·(1 + a))²"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "При u = 5−x: u² + 2au² + a²u² = u²(1+a)² = ((5−x)(1+a))²"
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Өрнегін көбейткіштерге жіктеңдер",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: (9k−7)² − (2k−7)² = (7k)(11k−14) — разность квадратов → вариант B",
+     "blockImage": [
+      "images/g8m-q08-1.png",
+      "images/g8m-q08-2.png"
+     ]
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "a = −1 болғандағы (a + 3)³ − (a − 3)³ + (a + 5)² − a² өрнегінің мәнін есептеңдер.",
+     "options": [
+      "72",
+      "88",
+      "87",
+      "−41"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "При a = −1: 2³ − (−4)³ + 4² − 1 = 8 + 64 + 16 − 1 = 87"
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "(x + 1)(x² − x + 1) − x(x² − 5) = 6x + 11 теңдеуін шешіңдер.",
+     "options": [
+      "−1",
+      "1",
+      "10",
+      "−10"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "(x³+1) − (x³−5x) = 5x+1; 5x+1 = 6x+11 → x = −10"
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "a-ның қандай мәнінде теңдік орындалады?",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: 4/(x²−4) = 1/(x−2) + a/(x+2) → (x+2)+a(x−2) = 4 при всех x → 1+a = 0 → a = −1",
+     "blockImage": "images/g8m-q11.png"
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "амалын орындаңдар.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: 3x⁷/(x²−9) · 5/(6x⁴) : 5x²/(2x²−18) = 30x⁷/(30x⁶) = x → вариант B",
+     "blockImage": "images/g8m-q12.png"
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "x = 1 болғандағы өрнегінің мәнін табыңдар.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "По картинке: (x−4)/(x−5)² · (5−x)²/(16−x²) = (x−4)/(16−x²); при x = 1 это −3/15 = −0,2 → вариант C",
+     "blockImage": "images/g8m-q13.png"
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "өрнегін ықшамдаңдар",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: (x/y − 1)² · y/(x−y) = (x−y)²/y² · y/(x−y) = (x−y)/y = x/y − 1 → вариант B",
+     "blockImage": "images/g8m-q14.png"
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "амалын орындаңдар.",
+     "options": [
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: (9−x⁴)/x⁴ · x⁴/(x²−3) = (3−x²)(3+x²)/(x²−3) = −x²−3 → вариант B",
+     "blockImage": "images/g8m-q15.png"
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "Үшбұрыштың екі бұрышы 40° және 60°. Осы бұрыштардың төбелерінен жүргізілген биіктіктердің арасындағы сүйір бұрышты табыңдар.",
+     "options": [
+      "20°",
+      "40°",
+      "80°",
+      "100°"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Третий угол 80°; угол между высотами из двух других вершин равен 180°−80° = 100°, острый из пары — 80°"
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "Тікбұрышты үшбұрыштың бір сүйір бұрышы 40°. Үшбұрыштың тік бұрышының төбесінен жүргізілген биіктігі мен биссектрисасы арасындағы бұрышты табыңдар.",
+     "options": [
+      "5°",
+      "10°",
+      "15°",
+      "20°"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "Острые углы 40° и 50°; угол между высотой и биссектрисой из прямого угла = (50°−40°)/2 = 5°"
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "Теңбүйірлі үшбұрыштың екі қабырғасы 10 см және 5 см. Оның үшінші қабырғасын табыңдар.",
+     "options": [
+      "5 см",
+      "10 см",
+      "15 см",
+      "20 см"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Стороны 5, 5, 10 дают вырожденный треугольник, значит боковые по 10, основание 5 → третья сторона 10 см"
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "Теңбүйірлі үшбұрыштың табаны 8 см. Табанындағы бір төбесінен жүргізілген медиана үшбұрыштың периметрін бірі екіншісінен 2 см үлкен болатындай екі бөлікке бөледі. Үшбұрыштың бүйір қабырғасын тап.",
+     "options": [
+      "4 см",
+      "8 см",
+      "10 см",
+      "12 см"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Медиана из вершины основания к середине боковой стороны b: |(b + b/2) − (8 + b/2)| = |b−8| = 2 → b = 10 или 6; в вариантах есть только 10. Замечание: b = 6 тоже даёт верный треугольник, но его в списке нет"
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "Теңбүйірлі үшбұрыштың периметрі 32 см. Табанына қарсы жатқан бұрыштың биссектрисасы үшбұрышты периметрлері 24 см болатын екі үшбұрышқа бөледі. Осы биссектрисаның ұзындығын тап.",
+     "options": [
+      "6 см",
+      "8 см",
+      "12 см",
+      "16 см"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "2b + a = 32; биссектриса из вершины при основании-противолежащем угле — она же медиана и высота: b + a/2 + h = 24, а b + a/2 = 16 → h = 8 см (проверка: a = 12, b = 10)"
+    }
+   ],
+   "keySource": "solved",
+   "keyNote": "29/32; независимо совпал с моим решением 19 из 20 (спорный №20)"
+  },
+  "9-matematika": {
+   "id": "9-matematika",
+   "grade": 9,
+   "subject": {
+    "ru": "Математика",
+    "kz": "Математика"
+   },
+   "minutes": 20,
+   "answersFilled": true,
+   "source": "9-synyp-matematika-synaq-testi.docx",
+   "needsReview": "В документе нет таблицы ключа ответов — все correct = null. В тесте по 5 вариантов ответа (A–E), а не 4. Часть выражений и вариантов ответа в исходном .docx вставлены изображениями и в текст не извлеклись.",
+   "questions": [
+    {
+     "n": 1,
+     "topic": null,
+     "text": "Есептеңдер / Вычислите\n(3²)² =",
+     "options": [
+      "9",
+      "81",
+      "243",
+      "1/81",
+      "12"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "(3²)² = 3⁴ = 81"
+    },
+    {
+     "n": 2,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите\n(-0,4x)² =",
+     "options": [
+      "-0,16x",
+      "-0,16x²",
+      "0,4x²",
+      "0,16x²",
+      "1,6x²"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "(−0,4x)² = 0,16x²"
+    },
+    {
+     "n": 3,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "По картинке: 7⁻³ : 49⁻² = 7⁻³ : 7⁻⁴ = 7¹ = 7 → вариант A",
+     "blockImage": "images/g9m-q03.png"
+    },
+    {
+     "n": 4,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "По картинке: (m⁶n³·m⁸n¹⁰)/(m¹²n¹⁵) = m²n⁻² = m²/n² → вариант E",
+     "blockImage": [
+      "images/g9m-q04-1.png",
+      "images/g9m-q04-2.png"
+     ]
+    },
+    {
+     "n": 5,
+     "topic": null,
+     "text": "Ықшамдаңдар / Упростите выражение\n(5x − 2y)² =",
+     "options": [
+      "25x² − 20xy + 4y²",
+      "25x² − 4y²",
+      "25x² + 4y²",
+      "25x² − 10xy + 4y²",
+      "5x² − 10xy + 2y²"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "Квадрат разности: 25x² − 20xy + 4y²"
+    },
+    {
+     "n": 6,
+     "topic": null,
+     "text": "Ықшамдаңдар / Упростите выражение\n(b² − a²)(a² + b²) =",
+     "options": [
+      "a⁴ − b⁴",
+      "a⁴ + b⁴",
+      "b⁴ − a⁴",
+      "a²b² − b⁴",
+      "a²b² + b⁴"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "Разность квадратов: (b²−a²)(b²+a²) = b⁴ − a⁴"
+    },
+    {
+     "n": 7,
+     "topic": null,
+     "text": "Ықшамдаңдар / Упростите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "По картинке: x²/((x−y)(x+y)) · (x−y)/x = x/(x+y) → вариант C",
+     "blockImage": "images/g9m-q07.png"
+    },
+    {
+     "n": 8,
+     "topic": null,
+     "text": "Ықшамдаңдар / Упростите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "По картинке: в скобках (a+b)/b + b/(a−b) = a²/(b(a−b)); a/(a−b) : это = b/a → вариант E",
+     "blockImage": "images/g9m-q08.png"
+    },
+    {
+     "n": 9,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "По картинке: √0,49 + 1 = 0,7 + 1 = 1,7 → вариант B",
+     "blockImage": "images/g9m-q09.png"
+    },
+    {
+     "n": 10,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "По картинке: (4/5)·√625 = (4/5)·25 = 20 → вариант A",
+     "blockImage": "images/g9m-q10.png"
+    },
+    {
+     "n": 11,
+     "topic": null,
+     "text": "Есептеңіз / Вычислите",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "По картинке: 4√5 − 6√5 + 3√5 = √5 → вариант D",
+     "blockImage": "images/g9m-q11.png"
+    },
+    {
+     "n": 12,
+     "topic": null,
+     "text": "Теңдеуді шешіңдер / Решите уравнение\nx² − 81 = 0",
+     "options": [
+      "±81",
+      "9",
+      "±9",
+      "81",
+      "-9"
+     ],
+     "image": null,
+     "correct": 2,
+     "solutionNote": "x² = 81, x = ±9"
+    },
+    {
+     "n": 13,
+     "topic": null,
+     "text": "Теңдеуді шешіңдер / Решите уравнение\nx² − 2x − 8 = 0",
+     "options": [
+      "1; −8",
+      "-2; 2",
+      "6",
+      "-6",
+      "-2; 4"
+     ],
+     "image": null,
+     "correct": 4,
+     "solutionNote": "Дискриминант 36; корни 4 и −2"
+    },
+    {
+     "n": 14,
+     "topic": null,
+     "text": "Теңдеуді шешіңдер / Решите уравнение\nx² + 3x + 2 < 0",
+     "options": [
+      "(-∞; −2) ∪ (-1; +∞)",
+      "(-2; −1)",
+      "Нет решений",
+      "(-1; 2)",
+      "(0; 2)"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Корни −2 и −1, парабола ветвями вверх → (−2; −1)"
+    },
+    {
+     "n": 15,
+     "topic": null,
+     "text": "Теңдеуді шешіңдер / Решите уравнение\n(x − 1)/(x + 1) ≥ 2",
+     "options": [
+      "(1; 3)",
+      "(1; +∞)",
+      "(-∞; −3] ∪ (1; +∞)",
+      "[-3; 1)",
+      "(-∞; +∞)"
+     ],
+     "image": null,
+     "correct": null,
+     "correctProposed": null,
+     "solutionNote": "СОМНИТЕЛЬНО: решение неравенства (x−1)/(x+1) ≥ 2 равно [−3; −1), такого варианта нет. Вариант D «[-3; 1)» похож на опечатку (потерян минус перед 1); вариант C «(-∞;−3] ∪ (1;+∞)» — это решение противоположного неравенства, тоже с потерянным минусом. Нужна сверка с оригиналом",
+     "needsReview": "№15: (x−1)/(x+1) ≥ 2 решается как [−3; −1), а в документе вариант D записан как «[-3; 1)» — в самом источнике потерян минус. Верного варианта нет, вопрос скрыт."
+    },
+    {
+     "n": 16,
+     "topic": null,
+     "text": "Тікбұрышты трапецияның екі кіші қабырғасының әрқайсысы 12 см-ден, ең үлкен бұрышы 135°. Трапецияның ауданын табыңдар. / В прямоугольной трапеции две меньшие стороны по 12 см, наибольший угол равен 135°. Найдите площадь трапеции.",
+     "options": [
+      "216 см²",
+      "144 см²",
+      "72 см²",
+      "48 см²",
+      "81 см²"
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "Меньшие стороны — высота 12 и меньшее основание 12; при угле 135° снос равен 12, большее основание 24; S = (12+24)/2·12 = 216"
+    },
+    {
+     "n": 17,
+     "topic": null,
+     "text": "Трапецияның ауданы 60 см², биіктігі 2 см. Оның 5:7 қатынасында болатын табанын табыңдар. / Площадь трапеции равна 60 см², высота — 2 см. Основания относятся как 5:7. Найдите основания.",
+     "options": [
+      "45 см және 15 см",
+      "30 см және 42 см",
+      "10 см және 14 см",
+      "25 см және 35 см",
+      "35 см және 45 см"
+     ],
+     "image": null,
+     "correct": 3,
+     "solutionNote": "S = (a+b)/2·h → a+b = 60; 5k+7k = 60, k = 5 → 25 и 35 см"
+    },
+    {
+     "n": 18,
+     "topic": null,
+     "text": "Теңбүйірлі трапецияның табандары 15 см және 17 см, бүйір қабырғасы оның бір табанымен 45° бұрыш жасайды. Трапецияның ауданын табыңдар. / В равнобедренной трапеции основания 15 см и 17 см, боковая сторона образует угол 45° с одним из оснований. Найдите площадь трапеции.",
+     "options": [
+      "8 см²",
+      "16 см²",
+      "32 см²",
+      "127,5 см²",
+      "129,5 см²"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "Снос (17−15)/2 = 1, при 45° высота = 1; S = (15+17)/2·1 = 16"
+    },
+    {
+     "n": 19,
+     "topic": null,
+     "text": "Теңбүйірлі үшбұрыштың табаны 6 см, бүйір қабырғасы 10 см. Оның ауданын табыңдар. / В равнобедренном треугольнике основание — 6 см, боковая сторона — 10 см. Найдите площадь.",
+     "options": [
+      "",
+      "",
+      "",
+      "",
+      ""
+     ],
+     "image": null,
+     "correct": 0,
+     "solutionNote": "По картинке: h = √(10²−3²) = √91; S = ½·6·√91 = 3√91 → вариант A",
+     "blockImage": "images/g9m-q19.png"
+    },
+    {
+     "n": 20,
+     "topic": null,
+     "text": "Қабырғалары 10 см және 20 см болатын үшбұрыштың ең үлкен мүмкін болатын ауданын табыңдар. / В треугольнике со сторонами 10 см и 20 см найдите максимально возможную площадь.",
+     "options": [
+      "40 см²",
+      "100 см²",
+      "200 см²",
+      "400 см²",
+      "150 см²"
+     ],
+     "image": null,
+     "correct": 1,
+     "solutionNote": "S = ½·10·20·sinα, максимум при α = 90°: 100 см²"
+    }
+   ],
+   "keySource": "computed",
+   "keyNote": "ключа нет ни в форме, ни в таблице ответов. Каждый ответ посчитан символьно (_src/proverka_9_klass.py) по дословному тексту из 9synypmatematikasynaqtesti.docx; 19 из 20 сошлись с вариантами однозначно"
   }
-})();
+ }
+}
