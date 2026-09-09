@@ -7,7 +7,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 25,
+   "minutes": 20,
    "questions": 15,
    "ready": true,
    "proposed": false,
@@ -20,7 +20,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -33,7 +33,7 @@
     "ru": "Английский язык",
     "kz": "Ағылшын тілі"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -46,7 +46,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -59,7 +59,7 @@
     "ru": "Английский язык",
     "kz": "Ағылшын тілі"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -72,7 +72,7 @@
     "ru": "Казахский язык",
     "kz": "Қазақ тілі"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 18,
    "ready": true,
    "proposed": false,
@@ -85,7 +85,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 60,
+   "minutes": 45,
    "questions": 39,
    "ready": true,
    "proposed": false,
@@ -98,7 +98,7 @@
     "ru": "Русский язык",
     "kz": "Орыс тілі"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 19,
    "ready": true,
    "proposed": false,
@@ -111,7 +111,7 @@
     "ru": "Количественные характеристики",
     "kz": "Сандық сипаттама"
    },
-   "minutes": 90,
+   "minutes": 45,
    "questions": 41,
    "ready": true,
    "proposed": false,
@@ -124,7 +124,7 @@
     "ru": "Естествознание",
     "kz": "Жаратылыстану"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -137,7 +137,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 60,
+   "minutes": 45,
    "questions": 39,
    "ready": true,
    "proposed": false,
@@ -150,7 +150,7 @@
     "ru": "Алгебра и геометрия",
     "kz": "Алгебра-геометрия"
    },
-   "minutes": 25,
+   "minutes": 20,
    "questions": 14,
    "ready": true,
    "proposed": false,
@@ -163,7 +163,7 @@
     "ru": "Английский язык (General English)",
     "kz": "Ағылшын тілі (General English)"
    },
-   "minutes": 60,
+   "minutes": 45,
    "questions": 40,
    "ready": true,
    "proposed": false,
@@ -176,7 +176,7 @@
     "ru": "Физика",
     "kz": "Физика"
    },
-   "minutes": 25,
+   "minutes": 20,
    "questions": 15,
    "ready": true,
    "proposed": false,
@@ -189,7 +189,7 @@
     "ru": "Химия",
     "kz": "Химия"
    },
-   "minutes": 25,
+   "minutes": 20,
    "questions": 15,
    "ready": true,
    "proposed": false,
@@ -202,7 +202,7 @@
     "ru": "Физика",
     "kz": "Физика"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": false,
    "proposed": true,
@@ -215,7 +215,7 @@
     "ru": "Химия",
     "kz": "Химия"
    },
-   "minutes": 25,
+   "minutes": 20,
    "questions": 15,
    "ready": true,
    "proposed": false,
@@ -228,7 +228,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 20,
    "ready": true,
    "proposed": false,
@@ -241,7 +241,7 @@
     "ru": "Математика",
     "kz": "Математика"
    },
-   "minutes": 30,
+   "minutes": 20,
    "questions": 19,
    "ready": true,
    "proposed": false,
