@@ -48,8 +48,14 @@ function filialyStroka(l){ return FILIALY.map(f=> f[l]).join('; '); }
 // Движок теста берёт адрес приёмника из window. Ставим его отсюда, чтобы
 // правился он в одном месте — в CONFIG выше, а не в двух файлах сразу.
 // Лендинг подключается раньше движка, так что тот увидит уже готовое значение.
-if (typeof window !== 'undefined' && !window.ZERDELI_ENDPOINT) {
-  window.ZERDELI_ENDPOINT = CONFIG.endpoint;
+if (typeof window !== 'undefined') {
+  if (!window.ZERDELI_ENDPOINT) window.ZERDELI_ENDPOINT = CONFIG.endpoint;
+  // Где движку искать tests.json и images.json. Тот же репозиторий, что и манифест.
+  if (!window.ZERDELI_TESTS_BASE) {
+    window.ZERDELI_TESTS_BASE = CONFIG.manifest.replace(/manifest\.json$/, '');
+  }
+  // Движок сам ничего не открывает: тест запускает лендинг по клику на предмет.
+  window.ZERDELI_TEST_EMBEDDED = true;
 }
 
 /* ============================================================
@@ -181,6 +187,7 @@ ru:{
   testsOne:'Открыть тест', testsSoon:'Тест готовится',
   qOne:'вопрос', qFew:'вопроса', qMany:'вопросов',
   testsNone:'Тесты для этого класса ещё готовятся — менеджер пришлёт ссылку в WhatsApp.',
+  engineErr:'Тест не загрузился. Обновите страницу, а если не поможет — напишите нам в WhatsApp.',
 
 
   catEyebrow:'Охват',
@@ -300,6 +307,7 @@ kz:{
   testsOne:'Тестті ашу', testsSoon:'Тест әзірленуде',
   qOne:'сұрақ', qFew:'сұрақ', qMany:'сұрақ',
   testsNone:'Бұл сыныпқа тестер әзірленуде — менеджер WhatsApp-қа сілтеме жібереді.',
+  engineErr:'Тест жүктелмеді. Бетті жаңартып көріңіз, көмектеспесе — WhatsApp-қа жазыңыз.',
 
 
   catEyebrow:'Қамту',
@@ -577,7 +585,14 @@ kz:{
   }
 
   function openTest(id){
-    if(!window.ZerdeliTest){ return; }
+    // Молчать здесь нельзя: если движок не загрузился, клик по предмету
+    // просто ничего не делает, и понять почему — невозможно.
+    if(!window.ZerdeliTest){
+      const box = $('#subjects');
+      if(box) box.innerHTML = `<p class="tests-note">${T[lang].engineErr}</p>`;
+      console.error('Zerdeli: test.js не загрузился — window.ZerdeliTest отсутствует');
+      return;
+    }
     $('#zayavka').classList.add('running');
     $('#gate').hidden = true;
     $('#zd-test').hidden = false;
