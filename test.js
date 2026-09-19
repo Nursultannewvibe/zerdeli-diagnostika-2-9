@@ -97,7 +97,14 @@
     var r = root();
     if (!r) return;
     r.innerHTML = html;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Раньше здесь было window.scrollTo(0). На странице Webflow тест стоит
+    // не в самом верху, и каждый новый экран выбрасывал человека на первый
+    // экран лендинга. Подводим к началу карточки — и только если она
+    // действительно ушла из поля зрения.
+    var y = r.getBoundingClientRect().top;
+    if (y < 0 || y > window.innerHeight * 0.4) {
+      window.scrollTo({ top: window.pageYOffset + y - 12, behavior: 'smooth' });
+    }
   }
   function save() {
     try { localStorage.setItem(KEY + state.test.id, JSON.stringify({ a: state.answers, i: state.i, s: state.student })); } catch (e) {}
