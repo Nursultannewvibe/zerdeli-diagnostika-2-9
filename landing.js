@@ -568,17 +568,23 @@ kz:{
       box.innerHTML = `<p class="tests-note">${t.testsNone}</p>`;
       return;
     }
+    // ready:false означает, что в тесте ещё не проставлены правильные ответы.
+    // Открывать его нельзя: ребёнок получит 0% независимо от того, как ответил,
+    // и этот ноль уйдёт в отчёт, в таблицу и в телеграм как настоящий результат.
     box.innerHTML = list.map((x,i)=>`
-      <a href="#" data-test="${x.id}">
+      <a href="#" data-test="${x.id}"${x.ready?'':' class="off" aria-disabled="true"'}>
         <i>${i+1}</i>
         <span class="tt">
           <b>${x.subject[lang]}</b>
-          <em>${x.questions} ${qPlural(x.questions)} · ~${x.minutes} мин${x.ready?'':' · '+t.testsSoon}${state.done[x.id]?' · '+t.testDone:''}</em>
+          <em>${x.ready
+              ? `${x.questions} ${qPlural(x.questions)} · ~${x.minutes} мин${state.done[x.id]?' · '+t.testDone:''}`
+              : t.testsSoon}</em>
         </span>
       </a>`).join('');
     box.querySelectorAll('a[data-test]').forEach(a=>{
       a.addEventListener('click', e=>{
         e.preventDefault();
+        if(a.classList.contains('off')) return;
         openTest(a.dataset.test);
       });
     });
