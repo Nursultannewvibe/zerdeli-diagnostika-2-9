@@ -646,7 +646,10 @@ kz:{
     try{
       const r = await fetch(CONFIG.endpoint, Object.assign({mode:'cors'}, opts));
       const d = await r.json().catch(()=>null);
-      if(d && d.ok)    return {sent:true,  note:'принято приёмником'};
+      // Приёмник собирает PDF сразу и возвращает ссылку на него. Отдать её
+      // движку напрямую надёжнее, чем вести человека через страницу-прослойку
+      // Apps Script: та живёт в песочнице, и файл из неё открывается не всегда.
+      if(d && d.ok)    return {sent:true,  note:'принято приёмником', pdf: d.pdf || ''};
       if(d && d.error) return {sent:true,  note:'приёмник ответил ошибкой: ' + d.error};
       return {sent:true, note:'запрос дошёл, ответ непонятный, код ' + r.status};
     }catch(err){
@@ -713,7 +716,7 @@ kz:{
     $('#zd-test').hidden = false;
     btn.disabled = false; btn.style.opacity = '';
     if(window.ZerdeliTest && window.ZerdeliTest.reveal){
-      window.ZerdeliTest.reveal(state.student, itog.sent);
+      window.ZerdeliTest.reveal(state.student, itog.sent, itog.pdf);
     }
     $('#zd-test').scrollIntoView({behavior:'smooth', block:'start'});
   });
