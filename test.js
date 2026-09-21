@@ -77,7 +77,7 @@
   // карточкой клиента, а язык переключается кнопкой на странице
   var hooks = {};
 
-  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false, sent: false, started: 0 };
+  var state = { test: null, answers: {}, i: 0, student: null, res: null, view: null, gated: false, sent: false, started: 0, pdf: '' };
   var KEY = 'zd-test-';
 
   // короткий код отчёта: по нему потом собирается PDF на стороне Google.
@@ -444,9 +444,9 @@
         (overall === null ? '' : ', ' + overall + '%'));
     // Отчёт собирается на стороне Google по коду: ссылка обычная, открывается
     // в новой вкладке и работает с телефона без сохранения страницы.
-    var pdf = CONFIG.endpoint
+    var pdf = state.pdf || (CONFIG.endpoint
       ? CONFIG.endpoint + (CONFIG.endpoint.indexOf('?') < 0 ? '?' : '&') + 'pdf=' + state.res.uid
-      : '';
+      : '');
 
     el('<div class="zd-card">' + head() +
       '<h1 class="zd-h1">' + esc(t.resultTitle) + '</h1>' +
@@ -552,10 +552,13 @@
     },
     // контакт получен — показываем отчёт
     // second argument — дошла ли отправка: лендинг знает это, а движок нет
-    reveal: function (student, sent) {
+    reveal: function (student, sent, pdfUrl) {
       if (!state.res || !student) return;
       state.student = student;
       state.sent = !!sent;
+      // Готовая ссылка на файл от приёмника, если она дошла. Без неё кнопка
+      // ведёт на …/exec?pdf=КОД — приёмник найдёт отчёт по коду сам.
+      state.pdf = pdfUrl || '';
       showResult();
     },
     // отчёт посчитан и ждёт контакта
